@@ -9,7 +9,8 @@ class Call
   private $username;
   private $call;
   private $auth;
-  
+  private $xml; 
+  private $ouput;
 
   public function __construct($url, $username, $password, $auth)
   {
@@ -19,16 +20,19 @@ class Call
 	  {
 	    $r = new REST($url, array(), '', $username, $password);			
 	    $r->fetch();
-	    $xml = simplexml_load_string($r->getResponse());
-	    print_r($xml);
+	    $this->output = $r->getResponse();
+	    $this->xml = simplexml_load_string($this->output);
+
+	    /*
 	    if(isset($xml->status->text))
 	      {
 		$tweet = $xml->status->text;
 		$data['tweet'] = $tweet;
 	      }
-	    
-	    
+	    */	   	
+    
 	    $this->writeToCache();
+
 	  }
 	else
 	  {
@@ -41,6 +45,16 @@ class Call
 	print_r($tweet);
 	//$this->presenter->assign('twitter', $tweet);
       }
+  }
+
+  public function getOutput()
+  {
+    return $this->output;
+  }
+
+  public function getXML()
+  {
+    return $this->xml;
   }
 
   public function checkCache()

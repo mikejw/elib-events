@@ -52,7 +52,6 @@ class Curl
   public function fetch()
   {
     $this->response = curl_exec($this->ch);
-    echo $this->response;
     curl_close($this->ch);
   }
 }

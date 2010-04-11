@@ -9,18 +9,18 @@ class Twitter
   private $password;
   private $format;
   private $calls;
+  private $calls_yaml;
 
   public function __construct($username, $password, $format='XML')
   {
+    $this->calls_yaml = dirname(__FILE__).'/Twitter/twitter_calls.yml';
     $this->username = $username;
     $this->password = $password;
-    $this->initCalls();
 
-    $s = new \spyc();
-    $yaml = $s->YAMLDump($this->calls, 4, 60);
-    $fh = fopen(DOC_ROOT.'/logs/twitter_calls.yml', "w");
-    fwrite($fh, $yaml);
-    fclose($fh);	
+    //$this->initCalls();
+    $this->initCallsFromYaml();
+
+    //$this->saveCalls();
 
     if($format != 'XML')
       {
@@ -28,8 +28,17 @@ class Twitter
       }
   }
 
-  public function doCall($call, $params=array())
+  public function saveCalls()
   {
+    $s = new \spyc();
+    $yaml = $s->YAMLDump($this->calls, 4, 60);
+    $fh = fopen($this->calls_yaml, "w");
+    fwrite($fh, $yaml);
+    fclose($fh);	
+  }
+
+  public function doCall($call, $params=array(), $raw=false)
+  {    
     $call_arr = explode('/', $call);
     $a = $call_arr[0];
     $b = $call_arr[1];
@@ -37,8 +46,23 @@ class Twitter
     $mycall = $this->calls[$a][$b];
     $url = $mycall['url'].'.xml';
     $c = new Call($url, $this->username, $this->password, true);
+    if($raw)
+      {
+	return $c->getOutput();
+      }
+    else
+      {
+	return $c->getXML();
+      }
   }
   
+  public function initCallsFromYaml()
+  {
+    $s = new \spyc();
+    $this->calls = $s->YAMLLoad($this->calls_yaml);
+  }
+
+  // deprecated
   public function initCalls()
   {
     $this->calls = array(
