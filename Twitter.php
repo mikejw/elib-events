@@ -2,6 +2,7 @@
 
 namespace ELib;
 use ELib\Twitter\Call;
+use ELib\YAML;
 
 class Twitter
 {
@@ -30,11 +31,7 @@ class Twitter
 
   public function saveCalls()
   {
-    $s = new \spyc();
-    $yaml = $s->YAMLDump($this->calls, 4, 60);
-    $fh = fopen($this->calls_yaml, "w");
-    fwrite($fh, $yaml);
-    fclose($fh);	
+    YAML::save($this->calls, $this->calls_yaml);
   }
 
   public function doCall($call, $params=array(), $raw=false)
@@ -42,24 +39,37 @@ class Twitter
     $call_arr = explode('/', $call);
     $a = $call_arr[0];
     $b = $call_arr[1];
-    
+
+    $signature = $this->genCallSignature($call_arr, $params);
+        
     $mycall = $this->calls[$a][$b];
+    if(!isset($mycall['url']))
+      {
+	die('Twitter error (ELib). Call: '.$call.' not found!');
+      }
+
     $url = $mycall['url'].'.xml';
-    $c = new Call($url, $this->username, $this->password, true);
+    $c = new Call($url, $this->username, $this->password, true, $signature);
     if($raw)
       {
 	return $c->getOutput();
       }
     else
       {
-	return $c->getXML();
+	//return $c->getXML();
+	return $c->getOutputArray();
       }
   }
   
+  public function genCallSignature($call_arr, $params)
+  {
+    ksort($params);
+    return implode('-', $call_arr).implode('-', $params);
+  }
+
   public function initCallsFromYaml()
   {
-    $s = new \spyc();
-    $this->calls = $s->YAMLLoad($this->calls_yaml);
+    $this->calls = YAML::load($this->calls_yaml);
   }
 
   // deprecated

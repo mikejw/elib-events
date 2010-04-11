@@ -2,6 +2,7 @@
 
 namespace ELib\Twitter;
 use ELib\REST;
+use ELib\YAML;
 
 class Call
 {
@@ -11,40 +12,47 @@ class Call
   private $auth;
   private $xml; 
   private $ouput;
+  private $output_arr;
+  private $cache_dir;
+  private $signature;
+  private $timestamp;
+  private $cached;
 
-  public function __construct($url, $username, $password, $auth)
+  public function __construct($url, $username, $password, $auth, $signature)
   {
-    if($this->checkCache())
-      {		
-	if($this->checkExpired())
-	  {
-	    $r = new REST($url, array(), '', $username, $password);			
-	    $r->fetch();
-	    $this->output = $r->getResponse();
-	    $this->xml = simplexml_load_string($this->output);
+    $this->signature = $signature;
+    $this->timestamp = time();
+    $this->cache_dir = DOC_ROOT.'/data/twitter';
 
-	    /*
-	    if(isset($xml->status->text))
-	      {
-		$tweet = $xml->status->text;
-		$data['tweet'] = $tweet;
-	      }
-	    */	   	
-    
-	    $this->writeToCache();
-
-	  }
-	else
+    if(!$this->checkCache() || $this->checkExpired())
+      {
+	$r = new REST($url, array(), '', $username, $password);			
+	$r->fetch();
+	$this->output = $r->getResponse();
+	$this->xml = simplexml_load_string($this->output);
+	$this->output_arr = $this->objectToArray($this->xml);
+	
+	/*
+	  if(isset($xml->status->text))
 	  {
-	    $tweet = $data['tweet'];
+	  $tweet = $xml->status->text;
+	  $data['tweet'] = $tweet;
 	  }
+	*/	   	
+	$this->writeToCache();
       }
-
+    else
+      {
+	$output_arr = $this->cached;
+      }
+      
+    /*
     if(isset($tweet))
       {
 	print_r($tweet);
-	//$this->presenter->assign('twitter', $tweet);
+	$this->presenter->assign('twitter', $tweet);
       }
+    */
   }
 
   public function getOutput()
@@ -57,27 +65,37 @@ class Call
     return $this->xml;
   }
 
+  public function getOutputArray()
+  {
+    return $this->output_arr;
+  }
+
   public function checkCache()
   {
-    //    $s = new \spyc();
-    //$data = $s->YAMLLoad(DOC_ROOT.'/logs/twitter.yml');
-    //    if(isset($data['stamp']) && is_numeric($data['stamp'])
-    //{
-	// blah
-    //}
-
-    return 1;
+    $success = false;
+    $this->cached = YAML::load($this->cache_dir.'/'.$this->signature.'.yml');
+    if(isset($this->cached['elib_stamp']) && is_numeric($this->cached['elib_stamp']))
+      {
+	$success = true;
+      }
+      return $success;
   }
 
   public function checkExpired()
   {
-    //$now = time();
-    //if($now - $data['stamp'] > 600)	
-    return 1;
+    $expired = false;
+    if(isset($cached['elib_stamp']) &&
+       $this->timestamp - $cached['elib_stamp'] > 600)
+      {
+	$expired = true;
+      } 
+    return $expired;
   }
 
   public function writeToCache()
   {
+    $this->output_arr['elib_stamp'] = $this->timestamp;
+    YAML::save($this->output_arr, $this->cache_dir.'/'.$this->signature.'.yml');
 
     /*
 $data['stamp'] = $now;			    
@@ -90,6 +108,19 @@ $data['stamp'] = $now;
 
 
   //  public function 
+
+  function objectToArray($object)
+  {
+    if(!is_object( $object ) && !is_array($object))
+      {
+	return $object;
+      }
+    if(is_object($object))
+      {
+	$object = get_object_vars($object);
+      }
+    return array_map(array($this, 'objectToArray'), $object);
+  }
 
 
 
