@@ -11,12 +11,14 @@ class Twitter
   private $format;
   private $calls;
   private $calls_yaml;
+  private $timeout;
 
-  public function __construct($username, $password, $format='XML')
+  public function __construct($username, $password, $format='XML', $timeout=600)
   {
     $this->calls_yaml = dirname(__FILE__).'/Twitter/twitter_calls.yml';
     $this->username = $username;
     $this->password = $password;
+    $this->timeout = $timeout;
 
     //$this->initCalls();
     $this->initCallsFromYaml();
@@ -39,8 +41,9 @@ class Twitter
     $call_arr = explode('/', $call);
     $a = $call_arr[0];
     $b = $call_arr[1];
-
     $signature = $this->genCallSignature($call_arr, $params);
+    $auth = false;
+
         
     $mycall = $this->calls[$a][$b];
     if(!isset($mycall['url']))
@@ -48,8 +51,14 @@ class Twitter
 	die('Twitter error (ELib). Call: '.$call.' not found!');
       }
 
+    if($mycall['auth'] === true)
+      {
+	$auth = true;
+      }
+    
+
     $url = $mycall['url'].'.xml';
-    $c = new Call($url, $this->username, $this->password, true, $signature);
+    $c = new Call($url, $this->username, $this->password, $auth, $signature, $this->timeout);
     if($raw)
       {
 	return $c->getOutput();

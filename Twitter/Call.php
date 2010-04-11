@@ -17,17 +17,18 @@ class Call
   private $signature;
   private $timestamp;
   private $cached;
+  private $timeout;
 
-  public function __construct($url, $username, $password, $auth, $signature)
+  public function __construct($url, $username, $password, $auth, $signature, $timeout)
   {
+    $this->timeout = $timeout;
     $this->signature = $signature;
     $this->timestamp = time();
-    $this->cache_dir = DOC_ROOT.'/data/twitter';
-
+    $this->cache_dir = DOC_ROOT.'/data/twitter';    
 
     if(!$this->checkCache() || $this->checkExpired())
       {
-	$r = new REST($url, array(), '', $username, $password);			
+	$r = new REST($url, array(), '', $username, $password, $auth);			
 	$r->fetch();
 	$this->output = $r->getResponse();
 	$this->xml = simplexml_load_string($this->output);
@@ -70,7 +71,7 @@ class Call
   {
     $expired = false;
     if(isset($this->cached['elib_stamp']) &&
-       $this->timestamp - $this->cached['elib_stamp'] > 120)
+       $this->timestamp - $this->cached['elib_stamp'] > $this->timeout)
       {
 	$expired = true;
       } 

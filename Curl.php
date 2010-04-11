@@ -12,13 +12,14 @@ class Curl
   protected $pass;
   protected $header;
   protected $post_fields;
+  protected $auth;
 
   public function getResponse()
   {
     return $this->response;
   }
   
-  public function __construct($url, $header, $post_fields, $user, $pass)
+  public function __construct($url, $header, $post_fields, $user, $pass, $auth)
   {
     $this->ch = curl_init();
     $this->url = $url;
@@ -26,6 +27,7 @@ class Curl
     $this->user = $user;
     $this->pass = $pass;
     $this->post_fields = $post_fields;
+    $this->auth = $auth;
     $this->configure();
   }
 
