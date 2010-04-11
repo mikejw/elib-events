@@ -24,6 +24,7 @@ class Call
     $this->timestamp = time();
     $this->cache_dir = DOC_ROOT.'/data/twitter';
 
+
     if(!$this->checkCache() || $this->checkExpired())
       {
 	$r = new REST($url, array(), '', $username, $password);			
@@ -43,7 +44,7 @@ class Call
       }
     else
       {
-	$output_arr = $this->cached;
+	$this->output_arr = $this->cached;
       }
       
     /*
@@ -84,8 +85,8 @@ class Call
   public function checkExpired()
   {
     $expired = false;
-    if(isset($cached['elib_stamp']) &&
-       $this->timestamp - $cached['elib_stamp'] > 600)
+    if(isset($this->cached['elib_stamp']) &&
+       $this->timestamp - $this->cached['elib_stamp'] > 120)
       {
 	$expired = true;
       } 
