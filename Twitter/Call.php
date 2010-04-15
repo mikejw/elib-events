@@ -50,9 +50,12 @@ class Call
       {
       	$restore = true;      	      
       }
-      
+            
       if($restore) // and restore possible?
       {
+      	// TODO: need to update timestamp
+      	// otherwise will continue to make failed calls
+      	// on ever request?
         $this->output_arr = $this->cached;      	      
       }
       
