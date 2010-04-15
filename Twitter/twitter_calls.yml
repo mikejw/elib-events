@@ -51,3 +51,12 @@ statuses:
             auth: true
             required_params: 
                 - id
+    friends:
+        url: 'http://api.twitter.com/1/statuses/friends'
+        auth: true
+    followers:
+        url: 'http://api.twitter.com/1/statuses/followers'
+        auth: true
+        
+      
+      

@@ -21,26 +21,54 @@ class Call
 
   public function __construct($url, $username, $password, $auth, $signature, $timeout)
   {
+    $call_params = array(
+    	    'url' => $url,
+    	    'username' => $username,
+    	    'password' => $password,
+    	    'auth' => $auth);
+  	  
     $this->timeout = $timeout;
     $this->signature = $signature;
     $this->timestamp = time();
-    $this->cache_dir = DOC_ROOT.'/data/twitter';    
+    $this->cache_dir = DOC_ROOT.'/data/twitter';
+    $restore = false;
 
     if(!$this->checkCache() || $this->checkExpired())
       {
-	$r = new REST($url, array(), '', $username, $password, $auth);			
-	$r->fetch();
-	$this->output = $r->getResponse();
-	$this->xml = simplexml_load_string($this->output);
-	$this->output_arr = $this->objectToArray($this->xml);	
-	$this->writeToCache();
+      	if(!$this->call($call_params))
+      	{
+      	  $restore = true;	
+      	}
+      	else
+      	{	  
+	  $this->xml = simplexml_load_string($this->output);
+	  $this->output_arr = $this->objectToArray($this->xml);	
+	  $this->writeToCache();
+	}
       }
     else
       {
-	$this->output_arr = $this->cached;
-      }      
+      	$restore = true;      	      
+      }
+      
+      if($restore) // and restore possible?
+      {
+        $this->output_arr = $this->cached;      	      
+      }
+      
   }
 
+  public function call($call_params)
+  {
+    $r = new REST($call_params['url'], array(), '', $call_params['username'],
+    	    $call_params['password'], $call_params['auth']);    
+    if($r->fetch())
+    {
+      $this->output = $r->getResponse();
+    }
+    return $r->getSuccess();
+  }
+  
   public function getOutput()
   {
     return $this->output;

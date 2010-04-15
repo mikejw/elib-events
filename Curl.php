@@ -13,6 +13,7 @@ class Curl
   protected $header;
   protected $post_fields;
   protected $auth;
+  protected $success;
 
   public function getResponse()
   {
@@ -36,7 +37,6 @@ class Curl
     curl_setopt($this->ch, CURLOPT_URL, $this->url);
     curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
 
-
     //    curl_setopt($this->ch, CURLOPT_HTTPHEADER, array());
     
 
@@ -53,8 +53,16 @@ class Curl
 
   public function fetch()
   {
-    $this->response = curl_exec($this->ch);
+    $this->response = curl_exec($this->ch);        
+    $this->success = (curl_getinfo($this->ch, CURLINFO_HTTP_CODE) == 200);       
     curl_close($this->ch);
+    return $this->success;
   }
+  
+  public function getSuccess()
+  {
+   return $this->success;	  
+  }
+  
 }
 ?>
