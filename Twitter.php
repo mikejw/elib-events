@@ -39,13 +39,27 @@ class Twitter
   public function doCall($call, $params=array(), $raw=false)
   {    
     $call_arr = explode('/', $call);
-    $a = $call_arr[0];
-    $b = $call_arr[1];
+    
+    $i = 0;
+    $level = $this->calls;
+    while($i < sizeof($call_arr))
+    {
+      $new_index = $call_arr[$i];
+      $level = $level[$new_index];
+      $i++;
+    }
+    
+//    $a = $call_arr[0];
+//    $b = $call_arr[1];
     $signature = $this->genCallSignature($call_arr, $params);
     $auth = false;
 
-        
-    $mycall = $this->calls[$a][$b];
+    $mycall = $level;    
+    
+//    print_r($mycall);
+  //  exit();
+    
+  //  $mycall = $this->calls[$a][$b];
     if(!isset($mycall['url']))
       {
 	die('Twitter error (ELib). Call: '.$call.' not found!');
@@ -56,9 +70,35 @@ class Twitter
 	$auth = true;
       }
     
+    if(isset($mycall['format']))
+      {
+	$format = $mycall['format'];
+      }
+    else
+      {
+	$format = 'xml';
+      }
 
-    $url = $mycall['url'].'.xml';
-    $c = new Call($url, $this->username, $this->password, $auth, $signature, $this->timeout);
+    $url = $mycall['url'].'.'.$format;
+
+    $param_string = '';
+    $i = 0;
+    foreach($params as $index => $value)
+      {
+	if($i == 0)
+	  {
+	    $param_string .= '?';
+	  }
+	else
+	  {
+	    $param_string .= '&';
+	  }
+	$param_string .= $index.'='.$value;
+	$i++;
+      }
+    $url .= $param_string;
+        
+    $c = new Call($url, $this->username, $this->password, $auth, $signature, $this->timeout, $format);
     if($raw)
       {
 	return $c->getOutput();

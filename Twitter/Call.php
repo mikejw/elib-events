@@ -18,8 +18,9 @@ class Call
   private $timestamp;
   private $cached;
   private $timeout;
+  private $format;
 
-  public function __construct($url, $username, $password, $auth, $signature, $timeout)
+  public function __construct($url, $username, $password, $auth, $signature, $timeout, $format)
   {
     $call_params = array(
     	    'url' => $url,
@@ -27,6 +28,7 @@ class Call
     	    'password' => $password,
     	    'auth' => $auth);
   	  
+    $this->format = $format;
     $this->timeout = $timeout;
     $this->signature = $signature;
     $this->timestamp = time();
@@ -34,15 +36,22 @@ class Call
     $restore = false;
 
     if(!$this->checkCache() || $this->checkExpired())
-      {
+      {	
       	if(!$this->call($call_params))
       	{
       	  $restore = true;	
       	}
       	else
       	{	  
-	  $this->xml = simplexml_load_string($this->output);
-	  $this->output_arr = $this->objectToArray($this->xml);	
+	  if($this->format == 'xml')
+	    {
+	      $this->xml = simplexml_load_string($this->output);
+	      $this->output_arr = $this->objectToArray($this->xml);	
+	    }
+	  else
+	    {
+	      $this->output_arr = $this->objectToArray(json_decode($this->output));
+	    }
 	  $this->writeToCache();
 	}
       }
@@ -64,7 +73,7 @@ class Call
   public function call($call_params)
   {
     $r = new REST($call_params['url'], array(), '', $call_params['username'],
-    	    $call_params['password'], $call_params['auth']);    
+    	    $call_params['password'], $call_params['auth']);       
     if($r->fetch())
     {
       $this->output = $r->getResponse();
