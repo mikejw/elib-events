@@ -7,7 +7,6 @@ class SectionsTree extends Tree
 {
   private $section;
   private $data_item;
-  private $markup;
   private $data;
   private $section_ancestors;
   private $data_item_ancestors;
@@ -82,11 +81,6 @@ class SectionsTree extends Tree
   }
 
 
-
-  public function getMarkup()
-  {
-    return $this->markup;
-  }
 
   private function buildMarkup($data, $level, $current_id, $last_id, $last_node_data, $current_is_section)
   {
@@ -177,27 +171,7 @@ class SectionsTree extends Tree
   }
 
 
-  // taken from news controller
-  public function truncate($desc, $max_length)
-  {
-    if(strlen($desc) > $max_length)
-      {
-        $char = 'A';
-	if(preg_match('/ /', substr($desc, 0, $max_length))) // do trunc                                                                             
-          {
-            //while($max_length > 0 && $char != ' ')                                                                                                 
-            while(preg_match('/\w/', $char))
-              {
-                $char = substr($desc, $max_length, 1);
-                $max_length--;
-              }
-            //echo $max_length;                                                                                                                      
-            $desc = substr($desc, 0, $max_length+1);
-            $desc = preg_replace('/\W$/', '', $desc).'...';
-          }
-      }
-    return $desc;
-  }
+
 
 
 }

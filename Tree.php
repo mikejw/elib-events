@@ -2,22 +2,16 @@
 
 namespace ELib;
 
-abstract class Tree
+class Tree
 {
-  private $markup;
-	
- 
-  abstract public function buildTree($id, $is_section, $tree);
-
-  abstract protected function buildMarkup($data, $level, $current_id, $last_id, $last_node_data, $current_is_section);
-
-
-
+  protected $markup;
+  
+  
   public function getMarkup()
   {
     return $this->markup;
   }
-    
+  
   // taken from news controller
   protected function truncate($desc, $max_length)
   {
@@ -39,7 +33,7 @@ abstract class Tree
       }
     return $desc;
   }
-
+  
 
 }
 ?>

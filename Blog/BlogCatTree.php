@@ -1,11 +1,12 @@
 <?php
 
+namespace ELib\Blog;
+use ELib\Tree;
 use Empathy\Model\BlogCategory as BlogCategory;
 
-class BlogCatTree
+class BlogCatTree extends Tree
 {
   private $blog_category;
-  private $markup;
   private $data;
   private $blog_category_ancestors;
 
@@ -54,12 +55,6 @@ class BlogCatTree
     return $nodes;
   }
 
-
-
-  public function getMarkup()
-  {
-    return $this->markup;
-  }
 
   private function buildMarkup($data, $level, $current_id, $last_id, $last_node_data, $current_is_dir)
   {
