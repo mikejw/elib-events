@@ -109,7 +109,7 @@ class SectionsTree extends Tree
       { 	
 	$toggle = '+';
 	$folder = 't_folder_closed.gif';
-	$url = 'section';
+	$url = 'dsection';
 
 	if($value['data'] == 1)
 	  {
@@ -128,7 +128,7 @@ class SectionsTree extends Tree
 	if($value['data'] == 1)
 	  {
 	    $folder = 'data.gif';
-	    $url = 'data_item';
+	    $url = 'dsection/data_item';
 	    $value['label'] = $this->truncate($value['label'], 10); // trunc
 	  }
 	$children = sizeof($value['children']);
