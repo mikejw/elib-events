@@ -1,13 +1,13 @@
 <?php
 
 namespace ELib\Admin;
-use Empathy\Controller\CustomController;
+use ELib\AdminController;
 
-class Controller extends CustomController
+class Controller extends AdminController
 { 
   public function default_event()
   {        
-    $this->setTemplate('admin/admin.tpl');
+    $this->setTemplate('elib:/admin/admin.tpl');
   }
 
   public function password()
@@ -51,6 +51,22 @@ class Controller extends CustomController
       }
     $this->templateFile = 'password.tpl';
   }
+
+
+  public function toggle_help()
+  {
+    if($_SESSION['help_shown'])
+      {
+        $_SESSION['help_shown'] = false;
+      }
+    else
+      {
+        $_SESSION['help_shown'] = true;
+      }
+    echo json_encode(1);
+    exit();
+  }
+
 
 }
 ?>

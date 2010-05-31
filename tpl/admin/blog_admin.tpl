@@ -1,5 +1,4 @@
-
-{include file="admin/admin_header.tpl"}
+{include file="elib:/admin/admin_header.tpl"}
 
 
 
@@ -12,7 +11,7 @@
 
 <div class="grey" style="padding:0.5em;">
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog_cat" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/category" method="get">
 <div><button type="submit" name="edit_categories" value="1">Edit Categories</button></div>
 </form>
 
@@ -116,4 +115,4 @@
 
 
 
-{include file="admin/admin_footer.tpl"}
+{include file="elib:/admin/admin_footer.tpl"}

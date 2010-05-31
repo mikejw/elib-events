@@ -5,33 +5,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>{$TITLE}</title>
 <link rel="stylesheet" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/css/init.css" type="text/css" media="all" />
-<link rel="stylesheet" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/css/{$module}.css" type="text/css" media="all" />
+
+<link rel="stylesheet" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin.css" type="text/css" media="all" />
 
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/common.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin.js"></script>
-<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/tiny_mce/tiny_mce.js"></script>
-
-
-<script type="text/javascript">
-{literal}
-tinyMCE.init({
-mode : "textareas",
-theme : "advanced",
-theme_advanced_buttons1 : "formatselect,bold,italic,link,unlink,code",
-theme_advanced_buttons2: "",
-theme_advanced_blockformats : "p,h2,h3",
-theme_advanced_toolbar_location : "top",
-plugins : "paste,inlinepopups",
-paste_remove_styles: true,
-paste_preprocess : function(pl, o) {
-            // Content string containing the HTML from the clipboard
-            //alert(o.content);
-o.content = o.content.replace(/(<([^>]+)>)/gi, '');
-}
-});
-{/literal}
-</script>
+<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/tiny_mce/tiny_mce.js"></script>
 
 </head>
 
@@ -82,4 +62,19 @@ o.content = o.content.replace(/(<([^>]+)>)/gi, '');
 </h1>
 </div>
 
+
+{if isset($help_file)}
+<div id="help_wrapper1">
+  <div id="help_wrapper2">
+    <div class="grey{if $help_shown eq true} shown{/if}" id="help">
+      <a href="#" id="help_tab"><span>Help</span></a>
+      <div id="help_inner"><div>
+          {include file=$help_file}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p style="line-height: 0.5em;">&nbsp;</p>
+{/if}
 

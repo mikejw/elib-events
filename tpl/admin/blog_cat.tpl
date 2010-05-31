@@ -1,4 +1,4 @@
-{include file="admin/admin_header.tpl"}
+{include file="elib:/admin/admin_header.tpl"}
 
 
 <div id="operations">
@@ -10,14 +10,14 @@
 
 <div class="grey" style="padding:0.5em;">
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog_cat/add_cat/{$blog_cat_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/add_cat/{$blog_cat_id}" method="get">
 <div><button type="submit" name="add_cat" value="1"{if $class neq 'blog_cat'}disabled="disabled"{/if}>Add Category</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog_cat/rename/{$blog_cat_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/rename_category/{$blog_cat_id}" method="get">
 <div><button type="submit" name="rename" value="1"{if $class neq 'blog_cat' || $event eq 'rename'}disabled="disabled"{/if}>Rename</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog_cat/delete/{$blog_cat_id}" method="get">
-<div><button type="submit" name="delete" value="1">Delete</button></div>
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/delete_category/{$blog_cat_id}" method="get">
+<div><button type="submit" name="delete" value="1"{if $blog_cat_id eq 0} disabled="disabled"{/if}>Delete</button></div>
 </form>
 
 
@@ -78,7 +78,7 @@
 <div class="grey clear">
 
 {if $blog_cat_id != 0 || !isset($blog_cat_id)}
-<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog_cat/0">Top Level</a></p>
+<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/category/0">Top Level</a></p>
 {/if}
 
 
@@ -99,7 +99,7 @@
 
 {if $class eq 'blog_cat'}
 {if $event eq 'rename'}
-{include file="admin/blog/rename.tpl"}
+{include file="elib:/admin/blog/rename.tpl"}
 {/if}
 {/if}
 
@@ -124,4 +124,4 @@
 
 
 
-{include file="admin/admin_footer.tpl"}
+{include file="elib:/admin/admin_footer.tpl"}

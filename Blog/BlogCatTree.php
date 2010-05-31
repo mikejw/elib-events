@@ -76,7 +76,7 @@ class BlogCatTree extends Tree
       { 	
 	$toggle = '+';
 	$folder = 't_folder_closed.gif';
-	$url = 'blog_cat';
+	$url = 'blog/category';
        	
 	if(in_array($value['id'], $ancestors))
 	  {

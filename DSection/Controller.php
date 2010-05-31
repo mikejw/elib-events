@@ -2,18 +2,17 @@
 
 namespace ELib\DSection;
 
-use Empathy\Controller\CustomController;
-use Empathy\Model\SectionItem as SectionItem;
-use Empathy\Model\DataItem as DataItem;
-use Empathy\Model\Container as Container;
-
+use ELib\AdminController;
 use ELib\File\Image as ImageUpload;
 use ELib\DSection\SectionsUpdate;
 use ELib\DSection\SectionsDelete;
 use ELib\DSection\SectionsTree;
 
+use Empathy\Model\SectionItem as SectionItem;
+use Empathy\Model\DataItem as DataItem;
+use Empathy\Model\Container as Container;
 
-class Controller extends CustomController
+class Controller extends AdminController
 {   
   // functions that are similar to those in data_item
   public function getDataTypes()
@@ -227,7 +226,7 @@ class Controller extends CustomController
 
   public function buildNav()
   {
-    $this->setTemplate('admin/section.tpl');
+    $this->setTemplate('elib:/admin/section.tpl');
     $this->assertID();
     $s = new SectionItem($this);
     $d = new DataItem($this);
@@ -411,7 +410,7 @@ class Controller extends CustomController
 
     $this->buildNavData();
     $this->presenter->assign('data_item_id', $_GET['id']);
-    $this->setTemplate('admin/section.tpl');
+    $this->setTemplate('elib:/admin/section.tpl');
     
     // fake event
     $this->assign('event', 'default_event');

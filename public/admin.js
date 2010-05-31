@@ -1,5 +1,73 @@
 
 
+
+
+
+var help = new function()
+    {
+        this.on = false;
+        this.speed = 500;
+        var self = this;
+	
+	this.init = function()
+	{
+	    if($('#help #help_inner').css('display') == "block")
+		{
+		    self.on = true;
+		}
+	};
+	
+	this.continueToggle = function()
+	{
+	    if(!self.on)
+		{
+		    $('#help #help_inner').slideDown(self.speed, self.contentIn);
+		}
+	    else
+		{
+		    self.contentOut();
+		}
+	};
+	
+	this.toggle = function()
+	{
+	    $.ajax({
+		    url: "http://"+WEB_ROOT+PUBLIC_DIR+"/admin/toggle_help",
+		    timeout: 5000,
+		    type: 'GET',
+		    dataType: 'json',
+		    success: function(data, textStatus){
+			self.continueToggle();
+		    },
+		    error: function(x, txt, e){
+			alert(txt);
+		    }
+		});
+	};
+	
+	this.contentIn = function()
+	{
+	    $('#help #help_inner div').fadeTo(self.speed/3, 1, function(){
+		    self.on = true;
+		});
+	};
+	       	
+	
+	this.contentOut = function()
+	{
+	    $('#help #help_inner div').fadeTo(self.speed/3, 0, self.hideHelp);
+	    
+	};
+	
+	this.hideHelp = function()
+	{
+	    $('#help #help_inner').slideUp(self.speed, function(){
+		    self.on = false;
+		});
+	};	       
+    };
+
+
 var toggle = function(link)
 {	    	   
     var item = link.parent();
@@ -204,6 +272,31 @@ $(document).ready(function(){
 
 
 
+	if($('#help').length > 0)
+            {
+		help.init();
+                $('#help_tab').bind("click", function(e){
+                        e.preventDefault();
+			help.toggle();
+                    });
+            }
 
+
+	tinyMCE.init({
+		mode : "textareas",
+		    theme : "advanced",
+		    theme_advanced_buttons1 : "formatselect,bold,italic,link,unlink,code",
+		    theme_advanced_buttons2: "",
+		    theme_advanced_blockformats : "p,h2,h3",
+		    theme_advanced_toolbar_location : "top",
+		    plugins : "paste,inlinepopups",
+		    paste_remove_styles: true,
+		    paste_preprocess : function(pl, o) {
+		    // Content string containing the HTML from the clipboard
+		    //alert(o.content);
+		    o.content = o.content.replace(/(<([^>]+)>)/gi, '');
+		}
+	    });
+	
 
     });
