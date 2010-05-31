@@ -1,4 +1,4 @@
-{include file="admin/admin_header.tpl"}
+{include file="elib:/admin/admin_header.tpl"}
 
 
 <div class="grey_top">
@@ -134,4 +134,4 @@
 </div>
 </div>
 
-{include file="admin/admin_footer.tpl"}
+{include file="elib:/admin/admin_footer.tpl"}
