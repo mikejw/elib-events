@@ -19,19 +19,19 @@
 </div>
 
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/add_section/{$section_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_section/{$section_id}" method="get">
 <div><button type="submit" name="add_section" value="1"{if $class eq 'data_item'} disabled="disabled"{/if}>Add Section</button></div>
 </form>
 
 {if $class eq 'section'}
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/add_data/{$section_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_data/{$section_id}" method="get">
 <div><button type="submit" name="add_data_item" value="1"{if $event eq 'add_data'} disabled="disabled"{/if}>Add Data</button></div>
 </form>
-<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/delete/{$section_id}" method="get">
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/delete/{$section_id}" method="get">
 <div><button type="submit" name="delete_section" value="1"{if $section_id eq 0} disabled="disabled"{/if}>Delete</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/rename/{$section_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/rename/{$section_id}" method="get">
 <div><button type="submit" name="rename" value="1"{if $section->id eq 0 || $event eq 'rename'} disabled="disabled"{/if}>Rename</button></div>
 </form>
 
@@ -40,29 +40,29 @@
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/add_data/{$data_item_id}" method="get">
 <div><button type="submit" name="add_data_item" value="1"{if $event eq 'add_data' || !$is_container} disabled="disabled"{/if}>Add Data</button></div>
 </form>
-<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/delete/{$data_item_id}" method="get">
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/delete_data_item/{$data_item_id}" method="get">
 <div><button type="submit" name="delete_data_item" value="1">Delete</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/rename/{$data_item_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/rename_data_item/{$data_item_id}" method="get">
 <div><button type="submit" name="rename" value="1"{if $event eq 'rename'} disabled="disabled"{/if}>Rename</button></div>
 </form>
 
 {/if}
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/change_template/{$section_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/change_template/{$section_id}" method="get">
 <div><button type="submit" name="change_template" value="1"{if $class eq 'data_item' || $event eq 'change_template' || $section_id eq 0} disabled="disabled"{/if}>Change Template</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/edit_meta/{$data_item_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/edit_data_item_meta/{$data_item_id}" method="get">
 <div><button type="submit" name="edit_meta" value="1"{if $event eq 'edit_meta' || $class eq 'section'} disabled="disabled"{/if}>Edit Meta</button></div>
 </form>
 
 
 {if $class eq 'data_item'}
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/toggle_hidden/{$data_item_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/data_item_toggle_hidden/{$data_item_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $data_item->hidden}Show{else}Hide{/if}</button></div>
 </form>
 {elseif $class eq 'section'}
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/toggle_hidden/{$section_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/toggle_hidden/{$section_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $section->hidden}Show{else}Hide{/if}</button></div>
 </form>
 {/if}
@@ -96,7 +96,7 @@
 
 
 {if $section_id != 0}
-<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section/0">Top Level</a></p>
+<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/0">Top Level</a></p>
 {/if}
 
 {$sections}
@@ -117,35 +117,35 @@
 
 {if $event eq 'rename'}
 {if $class eq 'section'}
-{include file="admin/sections/rename_section.tpl"}
+{include file="elib:/admin/sections/rename_section.tpl"}
 {elseif $class eq 'data_item'}
-{include file="admin/sections/rename_data_item.tpl"}
+{include file="elib:/admin/sections/rename_data_item.tpl"}
 {/if}
 
 {elseif $event eq 'add_data'}
 
-{include file="admin/sections/add_data.tpl"}
+{include file="elib:/admin/sections/add_data.tpl"}
 
 {elseif $event eq 'add_data_heading'}
-{include file="admin/sections/add_data_heading.tpl"}
+{include file="elib:/admin/sections/add_data_heading.tpl"}
 {elseif $event eq 'add_data_body'}
-{include file="admin/sections/add_data_body.tpl"}
+{include file="elib:/admin/sections/add_data_body.tpl"}
 {elseif $event eq 'add_data_image'}
-{include file="admin/sections/add_data_image.tpl"}
+{include file="elib:/admin/sections/add_data_image.tpl"}
 {elseif $event eq 'add_data_video'}
-{include file="admin/sections/add_data_video.tpl"}
+{include file="elib:/admin/sections/add_data_video.tpl"}
 {elseif $class eq 'data_item' && $event eq 'default_event'}
-{include file="admin/sections/data_item.tpl"}
+{include file="elib:/admin/sections/data_item.tpl"}
 {elseif $class eq 'data_item' && $event eq 'edit_heading'}
-{include file="admin/sections/edit_heading.tpl"}
+{include file="elib:/admin/sections/edit_heading.tpl"}
 {elseif $class eq 'data_item' && $event eq 'edit_body'}
-{include file="admin/sections/edit_body.tpl"}
+{include file="elib:/admin/sections/edit_body.tpl"}
 {elseif $event eq 'change_template'}
-{include file="admin/sections/change_template.tpl"}
+{include file="elib:/admin/sections/change_template.tpl"}
 {elseif $event eq 'edit_meta'}
-{include file="admin/sections/edit_meta.tpl"}
+{include file="elib:/admin/sections/edit_meta.tpl"}
 {elseif $event eq 'edit_containers'}
-{include file="admin/sections/edit_containers.tpl"}
+{include file="elib:/admin/sections/edit_containers.tpl"}
 {/if}
 
 </div>

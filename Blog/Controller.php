@@ -195,7 +195,7 @@ class Controller extends AdminController
   
   public function view()
   {
-    if(isset($_POST['upload']))
+    if(isset($_POST['upload_image']))
       {
 	$this->upload_image();
       }
