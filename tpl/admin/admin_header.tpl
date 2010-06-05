@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin.css" type="text/css" media="all" />
 
-<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/common.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/tiny_mce/tiny_mce.js"></script>
@@ -16,14 +16,16 @@
 </head>
 
 <body>
+
+<h1 style="font-size:4em; text-transform:uppercase;"><br />{$NAME}</h1>
 <div id="page">
 
 <div id="admin_head">
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/misc/logout" method="post">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/user/logout" method="post">
 <p>{$current_user} <button type="submit" name="logout">Logout</button></p>
 </form>
 
-<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}"><img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/img/new_twitter.png" alt="" /></a></p>
+<p><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}"><img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/new_twitter.png" alt="" /></a></p>
 
 <h1>
 {if $class eq 'admin' && $event eq 'default_event'}Admin{else}<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/">Admin</a>{/if}

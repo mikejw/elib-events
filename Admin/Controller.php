@@ -3,6 +3,8 @@
 namespace ELib\Admin;
 use ELib\AdminController;
 
+use Empathy\Model\User;
+
 class Controller extends AdminController
 { 
   public function default_event()
@@ -12,6 +14,7 @@ class Controller extends AdminController
 
   public function password()
   {
+    $this->setTemplate('elib:/admin/password.tpl');
     if(isset($_POST['submit']))
       {
 	$errors = array();
@@ -49,7 +52,10 @@ class Controller extends AdminController
 	    $this->presenter->assign('error', $errors);
 	  }
       }
-    $this->templateFile = 'password.tpl';
+    elseif(isset($_POST['cancel']))
+      {
+	$this->redirect('admin');
+      }
   }
 
 

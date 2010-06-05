@@ -1,19 +1,16 @@
 <?php
 
 namespace ELib;
-use Empathy\Controller\CustomController;
 use Empathy\Model\User as User;
 
-class AdminController extends CustomController
+class AdminController extends EController
 {	
   public function __construct($boot)
   {
     parent::__construct($boot);  
 
-
     $u = new User($this);
            
-
     if(isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 && is_numeric($_SESSION['user_id']))
       {
 	$u->id = $_SESSION['user_id'];
@@ -21,15 +18,14 @@ class AdminController extends CustomController
 	$this->presenter->assign('current_user', $u->username);
       }
            
-    if($this->module == "admin") // can we safely assume we are in admin?
+    if($this->module == "admin") // can we (actually) safely assume we are in admin?
       {				
 	if((!(isset($_SESSION['user_id']))) || (!($u->getAuth($_SESSION['user_id']))))
 	  {
-	    $this->redirect("misc/login");
+	    $this->redirect("user/login");
 	  }	
        
 	$this->detectHelp();
-	$this->assignELibTemplateDir();	
       }     
   }
 
@@ -50,11 +46,6 @@ class AdminController extends CustomController
 	$help_file = 'elib:/'.$help_file;
         $this->presenter->assign('help_file', $help_file);
       }
-  }
-
-  public function assignELibTemplateDir()
-  {
-    $this->assign('elibtpl', Util::getLocation().'/tpl');
   }
 
 }

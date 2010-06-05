@@ -15,7 +15,7 @@
 {/if}
 
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/misc/" method="post">
+<form action="" method="post">
 <p><label for="username">Username</label>
 <input id="username" type="text" name="username"
 {if isset($username)}
