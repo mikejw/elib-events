@@ -10,10 +10,10 @@
 <div class="grey" style="padding:0.5em;">
 
 <div id="op_right">
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/containers" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/containers" method="get">
 <div><button type="submit" name="edit_containers" value="1"{if $event eq 'edit_containers'} disabled="disabled"{/if}>Containers</button></div>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/image_sizes" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/image_sizes" method="get">
 <div><button type="submit" name="edit_image_sizes" value="1"{if $event eq 'edit_image_sizes'} disabled="disabled"{/if}>Image Sizes</button></div>
 </form>
 </div>

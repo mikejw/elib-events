@@ -1,8 +1,7 @@
+{include file="elib:/admin/admin_header.tpl"}
 
-{include file="admin_header.tpl"}
 
-
-{if $event neq 'rename'}
+{if $event neq 'rename_container'}
 <div id="operations">
 <div class="grey_top">
 <div class="top_right">
@@ -12,7 +11,7 @@
 
 <div class="grey" style="padding:0.5em;">
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/containers/add" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_container" method="get">
 <div><button type="submit" name="add" value="1">Add</button></div>
 </form>
 
@@ -55,7 +54,7 @@
 {/if}
 
 
-{if $event eq 'rename'}
+{if $event eq 'rename_container'}
 <fieldset><legend>Rename Container</legend>
 <form action="" method="post">
 <p><label>Name</label>
@@ -78,8 +77,8 @@
 <fieldset><legend>{$container.name}</legend>
 
 <p class="f_actions">
-<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/containers/rename/{$id}">Rename</a> |
-<a class="confirm" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/containers/remove/{$id}">Remove</a></p>
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/rename_container/{$id}">Rename</a> |
+<a class="confirm" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/remove_container/{$id}">Remove</a></p>
 
 
 
@@ -157,6 +156,6 @@
 
 
 
-{include file="admin_footer.tpl"}
+{include file="elib:/admin/admin_footer.tpl"}
 
 

@@ -11,6 +11,7 @@ use ELib\DSection\SectionsTree;
 use Empathy\Model\SectionItem as SectionItem;
 use Empathy\Model\DataItem as DataItem;
 use Empathy\Model\Container as Container;
+use Empathy\Model\ImageSize;
 
 class Controller extends AdminController
 {   
@@ -542,6 +543,208 @@ class Controller extends AdminController
     $d->hidden = ($d->hidden)? 0 : 1;
     $d->save(DataItem::$table, array(), 0);
     $this->redirect('admin/dsection/data_item/'.$d->id);
+  }
+
+
+  // containers
+  public function add_container()
+  {
+    $c = new Container($this);
+    $c->name = '#New Container';
+    $c->insert(Container::$table, 1, array(), 0);
+    $this->redirect('admin/dsection/containers');
+  }
+
+  public function containers()
+  {
+    if(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/dsection');
+      }
+    elseif(isset($_POST['save']))
+      {
+	foreach($_POST['image_size'] as $index => $value)
+	  {
+	    $c = new Container($this);
+	    $c->update($index, $value);	    
+	  }
+	$this->redirect('admin/dsection');
+      }
+
+    $this->setTemplate('elib:/admin/containers.tpl');
+    $c = new Container($this);
+    $containers = $c->getAll();
+    $this->assign('containers', $containers);
+    $i = new ImageSize($this);
+    $image_sizes = $i->loadAsOptions(ImageSize::$table, 'name');
+    $this->presenter->assign('image_sizes', $image_sizes);        
+  }
+
+  public function remove_container()
+  {
+    $c = new Container($this);
+    $c->id = $_GET['id'];
+    $c->remove();
+    $this->redirect('admin/dsection/containers');   
+  }
+
+  public function rename_container()
+  {
+    $this->setTemplate('elib:/admin/containers.tpl');
+    if(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/dsection/containers');
+      }
+    elseif(isset($_POST['save']))
+      {
+	$c = new Container($this);
+	$c->id = $_GET['id'];
+	$c->load(Container::$table);
+	$c->name = $_POST['name'];
+	$c->validates();
+	if(!$c->hasValErrors())
+	  {
+	    $c->save(Container::$table, array(), 1);
+	    $this->redirect('admin/dsection/containers');
+	  }
+	else
+	  {
+	    $this->assign('container', $c);
+	    $this->presenter->assign('errors', $c->getValErrors());
+	  }
+      }
+    else
+      {
+	$c = new Container($this);
+	$c->id = $_GET['id'];
+	$c->load(Container::$table);
+	$this->assign('container', $c);
+      }
+  }
+
+
+
+
+
+  // image sizes  
+  public function add_image_size()
+  {
+    $i = new ImageSize($this);
+    $i->name = 'New Image Size';
+    $i->width = 0;
+    $i->height = 0;
+    $i->prefix = 'new';
+    $i->insert(ImageSize::$table, 1, array(), 0);
+    $this->redirect('admin/dsection/image_sizes');
+  }
+
+  public function image_sizes()
+  {
+    if($this->isXMLHttpRequest())
+      {
+	$return_code = 1;	
+	if(isset($_POST['id']) && is_numeric($_POST['id']))
+	  {
+	    $i = new ImageSize($this);
+	    $i->id = $_POST['id'];
+	    $i->load(ImageSize::$table);
+	    $field = $_POST['field'];
+	    $i->$field = $_POST['value'];
+	    $i->validates();
+	    if($i->hasValErrors())
+	      {		
+		//$this->logMe($i->getValErrors());
+		$return_code = 2;
+	      }
+	    else
+	      {
+		$i->save(ImageSize::$table, array(), 1);
+		$return_code = 0;
+	      }
+	  }       
+	header('Content-type: application/json');
+	echo json_encode($return_code);
+	exit();
+      }       
+
+    if(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/dsection');
+      }
+    elseif(isset($_POST['save']))
+      {
+	foreach($_POST['image_size'] as $index => $value)
+	  {
+	    $c = new Container($this);
+	    $c->update($index, $value);	    
+	  }
+	$this->redirect('admin/dsection');
+      }
+
+    $this->setTemplate('elib:/admin/image_sizes.tpl');
+
+    $i = new ImageSize($this);
+    $sql = ' ORDER BY name';
+    $image_sizes = $i->getAllCustom(ImageSize::$table, $sql);
+
+    $this->presenter->assign('image_sizes', $image_sizes);        
+  }
+
+  public function remove_image_size()
+  {
+    $i = new ImageSize($this);
+    $i->id = $_GET['id'];
+    $i->delete(ImageSize::$table);
+    $this->redirect('admin/dsection/image_sizes');   
+  }
+
+  /*
+  public function rename_image_size()
+  {
+    if(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/dsection/containers');
+      }
+    elseif(isset($_POST['save']))
+      {
+	$c = new Container($this);
+	$c->id = $_GET['id'];
+	$c->load(Container::$table);
+	$c->name = $_POST['name'];
+	$c->validates();
+	if(!$c->hasValErrors())
+	  {
+	    $c->save(Container::$table, array(), 1);
+	    $this->redirect('admin/containers');
+	  }
+	else
+	  {
+	    $this->assign('container', $c);
+	    $this->presenter->assign('errors', $c->getValErrors());
+	  }
+      }
+    else
+      {
+	$c = new Container($this);
+	$c->id = $_GET['id'];
+	$c->load(Container::$table);
+	$this->assign('container', $c);
+      }
+  }
+  */
+
+  public function update_image_size()
+  {
+    $i = new ImageSize($this);    
+    $i->id = $_GET['id'];
+    $i->load(ImageSize::$table);
+    $images = $i->getDataFiles();
+   
+    $d = array(array($i->prefix.'_', $i->width, $i->height));
+    $u = new ImageUpload('', false, $d);
+    set_time_limit(300);
+    $u->resize($images);    
+    $this->redirect('admin/image_sizes');
   }
 
 
