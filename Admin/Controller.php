@@ -4,6 +4,7 @@ namespace ELib\Admin;
 use ELib\AdminController;
 
 use Empathy\Model\User;
+use Empathy\Session;
 
 class Controller extends AdminController
 { 
@@ -23,7 +24,7 @@ class Controller extends AdminController
 	$password2 = $_POST['password2'];
 	
 	$u = new User($this);
-	$u->id = $_SESSION['user_id'];
+	$u->id = Session::get('user_id');
 	$u->load(User::$table);
 
 	if($old_password != $u->password)
@@ -61,13 +62,14 @@ class Controller extends AdminController
 
   public function toggle_help()
   {
-    if($_SESSION['help_shown'])
+    $help_shown = Session::get('help_shown');
+    if($help_shown)
       {
-        $_SESSION['help_shown'] = false;
+	Session::set('help_shown', false);
       }
     else
       {
-        $_SESSION['help_shown'] = true;
+	Session::set('help_shown', true);
       }
     echo json_encode(1);
     exit();

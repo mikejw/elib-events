@@ -3,6 +3,7 @@
 namespace ELib\User;
 use ELib\EController;
 
+use Empathy\Session;
 use Empathy\Model\User as User;
 
 class Controller extends EController
@@ -23,9 +24,12 @@ class Controller extends EController
       $n->password = $_POST['password'];
       $n->sanitize();
       
-      if(($_SESSION['user_id'] = $n->login()) > 0)
+      $user_id = $n->login();
+      if($user_id > 0)
       {
-	$n->id = $_SESSION['user_id'];
+	session_regenerate_id();
+	Session::set('user_id', $user_id);
+	$n->id = $user_id;
 	$n->load(User::$table);
 
 	if($n->auth)

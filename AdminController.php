@@ -1,7 +1,10 @@
 <?php
 
 namespace ELib;
+
 use Empathy\Model\User as User;
+use Empathy\Session;
+
 
 class AdminController extends EController
 {	
@@ -11,20 +14,24 @@ class AdminController extends EController
 
     $u = new User($this);
            
-    if(isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 && is_numeric($_SESSION['user_id']))
+    $user_id = Session::get('user_id');
+
+    if(is_numeric($user_id) && $user_id > 0)
       {
-	$u->id = $_SESSION['user_id'];
+	$u->id = $user_id;
 	$u->load(User::$table);
-	$this->presenter->assign('current_user', $u->username);
+	$this->presenter->assign('current_user', $u->username);	
       }
-           
-    if($this->module == "admin") // can we (actually) safely assume we are in admin?
-      {				
-	if((!(isset($_SESSION['user_id']))) || (!($u->getAuth($_SESSION['user_id']))))
-	  {
-	    $this->redirect("user/login");
-	  }	
        
+    //$u->getAuth($user_id);
+    
+    if($this->module == "admin" &&
+       ($user_id < 1 || !$u->getAuth($user_id)))
+      {      
+	$this->redirect("user/login");
+      }
+    else
+      {       
 	$this->detectHelp();
       }     
   }
@@ -32,12 +39,12 @@ class AdminController extends EController
 
   public function detectHelp()
   {
-    if(!isset($_SESSION['help_shown']))
+    if(!Session::get('help_shown'))
       {
-	$_SESSION['help_shown'] = false;
+	Session::set('help_shown', false);
       }
 
-    $this->presenter->assign('help_shown', $_SESSION['help_shown']);
+    $this->presenter->assign('help_shown', Session::get('help_shown'));
 
     $help_file = 'admin_help/'.$this->class.'_'.$this->event.'.tpl';
     if(file_exists(DOC_ROOT.'/presentation/'.$help_file)

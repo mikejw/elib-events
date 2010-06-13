@@ -12,6 +12,7 @@ use Empathy\Model\BlogImage as BlogImage;
 use Empathy\Model\BlogTag as BlogTag;
 use Empathy\Model\TagItem as TagItem;
 
+use Empathy\Session;
 
 define('REQUESTS_PER_PAGE', 12);
 define('DRAFT', 1);
@@ -40,7 +41,7 @@ class Controller extends AdminController
 
     // is superuser?
     $u = new User($this);
-    $u->id = $_SESSION['user_id'];
+    $u->id = Session::get('user_id');
     $u->load(User::$table);
     if($u->auth == 2)
       {
@@ -65,7 +66,7 @@ class Controller extends AdminController
 
     if(!$super)
       {
-	$sql .= ' AND user_id = '.$_SESSION['user_id'];
+	$sql .= ' AND user_id = '.Session::get('user_id');
       }
 
     $sql .= ' AND t1.user_id = t2.id';
@@ -274,7 +275,7 @@ class Controller extends AdminController
 	else
 	  {
 	    $b->assignFromPost(array('user_id', 'id', 'stamp', 'tags', 'status', 'blog_category_id'));
-	    $b->user_id = $_SESSION['user_id'];	    
+	    $b->user_id = Session::get('user_id');	    
 	    $b->stamp = date('Y-m-d H:i:s', time());	    
 	    $b->id = $b->insert(BlogItem::$table, 1, array(), 1);	    
 	    $this->processTags($b, $tags_arr);
