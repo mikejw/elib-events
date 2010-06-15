@@ -3,7 +3,7 @@
 namespace ELib\Admin;
 use ELib\AdminController;
 
-use Empathy\Model\User;
+use Empathy\Model\UserItem as User;
 use Empathy\Session;
 
 class Controller extends AdminController

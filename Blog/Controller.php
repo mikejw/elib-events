@@ -5,7 +5,7 @@ namespace ELib\Blog;
 use ELib\AdminController;
 use ELib\File\Image as ImageUpload;
 
-use Empathy\Model\User as User;
+use Empathy\Model\UserItem as User;
 use Empathy\Model\BlogCategory as BlogCategory;
 use Empathy\Model\BlogItem as BlogItem;
 use Empathy\Model\BlogImage as BlogImage;

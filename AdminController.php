@@ -2,7 +2,7 @@
 
 namespace ELib;
 
-use Empathy\Model\User as User;
+use Empathy\Model\UserItem as User;
 use Empathy\Session;
 
 

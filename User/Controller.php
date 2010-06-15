@@ -4,7 +4,7 @@ namespace ELib\User;
 use ELib\EController;
 
 use Empathy\Session;
-use Empathy\Model\User as User;
+use Empathy\Model\UserItem as User;
 
 class Controller extends EController
 {
