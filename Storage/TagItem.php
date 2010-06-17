@@ -1,7 +1,7 @@
 <?php
 
-namespace Empathy\Model;
-use Empathy\Entity as Entity;
+namespace ELib\Storage;
+use Empathy\Entity;
 
 class TagItem extends Entity
 {
