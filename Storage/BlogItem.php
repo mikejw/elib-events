@@ -7,6 +7,8 @@ define('PUBLISHED', 2);
 
 class BlogItem extends Entity
 {
+  const TABLE = 'blog';
+
   public $id;
   public $blog_category_id;
   public $status;
@@ -14,8 +16,6 @@ class BlogItem extends Entity
   public $stamp;
   public $heading;
   public $body;
-
-  public static $table = 'blog';
   
 
   public function validates()
@@ -34,7 +34,7 @@ class BlogItem extends Entity
   public function getFeed()
   {
     $entry = array();
-    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::$table
+    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
       .' WHERE status = '.PUBLISHED.' ORDER BY stamp DESC LIMIT 0, 5';
     $error = 'Could not get blog feed.';
     $result = $this->query($sql, $error);
@@ -86,7 +86,7 @@ class BlogItem extends Entity
   public function getStamp()
   {
     $stamp = 0;
-    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::$table
+    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
       .' WHERE id = '.$this->id;
     $error = 'Could not get stamp.';
     $result = $this->query($sql, $error);
@@ -102,7 +102,7 @@ class BlogItem extends Entity
   public function getRecentlyModified()
   {
     $stamp = 0;
-    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::$table
+    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
       .' ORDER BY stamp DESC LIMIT 0,1';
     $error = 'Could not get recently modified blogs';
     $result = $this->query($sql, $error);
@@ -117,7 +117,7 @@ class BlogItem extends Entity
   public function getAllForSiteMap()
   {
     $blogs = array();
-    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::$table.' b'
+    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE.' b'
       .' WHERE status = 2';
     $error = 'Could not get blogs for sitemap';
     $result = $this->query($sql, $error);
@@ -138,11 +138,11 @@ class BlogItem extends Entity
     /*
     $sql = 'SELECT MAX(UNIX_TIMESTAMP(stamp)) AS max,'
       .' MIN(UNIX_TIMESTAMP(stamp)) AS min'
-      .' FROM '.BlogItem::$table;
+      .' FROM '.BlogItem::TABLE;
     */
 
     $sql = 'SELECT id, YEAR(stamp) AS year, MONTH(stamp) AS month,'
-      .' MONTHNAME(stamp) AS monthname, heading FROM '.BlogItem::$table
+      .' MONTHNAME(stamp) AS monthname, heading FROM '.BlogItem::TABLE
       .' WHERE status = 2 ORDER BY stamp DESC';
     $error = 'Could not get blog archive.';
     $result = $this->query($sql, $error);
@@ -161,7 +161,7 @@ class BlogItem extends Entity
     //    $max = $row['stamp'];
 
     /*
-    $sql = 'SELECT MIN(UNIX_TIMESTAMP(stamp)) AS stamp FROM '.BlogItem::$table;
+    $sql = 'SELECT MIN(UNIX_TIMESTAMP(stamp)) AS stamp FROM '.BlogItem::TABLE;
     $result = $this->query($sql, $error);
     $row = $result->fetch();
     $max = $row['stamp'];

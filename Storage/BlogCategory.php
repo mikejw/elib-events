@@ -5,13 +5,12 @@ use Empathy\Entity;
 
 class BlogCategory extends Entity
 {
+  const TABLE = 'blog_category';
+
   public $id;  
   public $blog_category_id;
   public $label;
   
-  public static $table = "blog_category";
-
-
   public function validates()
   {
     if($this->label == '' || !ctype_alnum(str_replace(' ', '', $this->label)))
@@ -25,7 +24,7 @@ class BlogCategory extends Entity
   {     
     $i = 0;   
     $nodes = array();
-    $sql = 'SELECT id,label FROM '.BlogCategory::$table.' WHERE blog_category_id = '.$current;
+    $sql = 'SELECT id,label FROM '.BlogCategory::TABLE.' WHERE blog_category_id = '.$current;
     $error = 'Could not get child blog categories.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -48,7 +47,7 @@ class BlogCategory extends Entity
   public function getAncestorIDs($id, $ancestors)
   {
     $section_id = 0;
-    $sql = 'SELECT blog_category_id FROM '.BlogCategory::$table.' WHERE id = '.$id;
+    $sql = 'SELECT blog_category_id FROM '.BlogCategory::TABLE.' WHERE id = '.$id;
     $error = 'Could not get parent id from blog category.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -67,7 +66,7 @@ class BlogCategory extends Entity
   public function hasCats($id)
   {
     $cats = 0;
-    $sql = 'SELECT id FROM '.BlogCategory::$table.' WHERE blog_category_id = '.$id;
+    $sql = 'SELECT id FROM '.BlogCategory::TABLE.' WHERE blog_category_id = '.$id;
     $error = 'Could not check for existing child categories.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)

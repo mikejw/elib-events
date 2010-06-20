@@ -5,16 +5,16 @@ use Empathy\Entity;
 
 class BlogTag extends Entity
 {
+  const TABLE = 'blog_tag';
+
   public $blog_id;
   public $tag_id;
 
 
-  public static $table = 'blog_tag';
-
 
   public function removeAll($blog_id)
   {
-    $table = $this->appendPrefix(self::$table);
+    $table = $this->appendPrefix(self::TABLE);
     $sql = 'DELETE FROM '.$table.' WHERE blog_id = '.$blog_id;
     $error = 'Could not clear existing tags for blog item.';
     $this->query($sql, $error);
@@ -23,8 +23,8 @@ class BlogTag extends Entity
   public function getTags($blog_id)
   {
     $tags = array();
-    $sql = 'SELECT t.tag FROM '.$this->appendPrefix(TagItem::$table).' t, '
-      .$this->appendPrefix(BlogTag::$table).' b WHERE t.id = b.tag_id AND b.blog_id = '.$blog_id;
+    $sql = 'SELECT t.tag FROM '.$this->appendPrefix(TagItem::TABLE).' t, '
+      .$this->appendPrefix(BlogTag::TABLE).' b WHERE t.id = b.tag_id AND b.blog_id = '.$blog_id;
     $error = 'Could not get tags.';
     $result = $this->query($sql, $error);
     $i = 0;
@@ -39,12 +39,12 @@ class BlogTag extends Entity
   public function getBlogs($tags)
   {    
     $id = array();
-    $sql = 'SELECT DISTINCT b.id FROM '.$this->appendPrefix(BlogItem::$table).' b';
+    $sql = 'SELECT DISTINCT b.id FROM '.$this->appendPrefix(BlogItem::TABLE).' b';
     $i = 0;
     foreach($tags as $tag)
       {
 	$glue = 't'.($i + 1);
-	$sql .= ' LEFT JOIN '.$this->appendPrefix(BlogTag::$table).' '.$glue.' ON '.$glue.'.tag_id = '.$tag;
+	$sql .= ' LEFT JOIN '.$this->appendPrefix(BlogTag::TABLE).' '.$glue.' ON '.$glue.'.tag_id = '.$tag;
 	$i++;
       }
     $i = 0;

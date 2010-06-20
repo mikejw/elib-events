@@ -5,17 +5,17 @@ use Empathy\Entity;
 
 class ContainerImageSize extends Entity
 {
+  const TABLE = 'container_image_size';
+
   public $container_id;
   public $image_size_id;
   
-  public static $table = 'container_image_size';
-
 
   public function getImageSizes($container_id)
   {
     $sizes = array();
-    $sql = 'SELECT prefix, width, height FROM '.ImageSize::$table.' i, '
-      .ContainerImageSize::$table.' c WHERE c.image_size_id = i.id'
+    $sql = 'SELECT prefix, width, height FROM '.ImageSize::TABLE.' i, '
+      .ContainerImageSize::TABLE.' c WHERE c.image_size_id = i.id'
       .' AND c.container_id = '.$container_id;
     $error = 'Could not get image sizes for container.';
     $result = $this->query($sql, $error);
@@ -32,8 +32,8 @@ class ContainerImageSize extends Entity
   public function getContainerPrefixes($container_id)
   {
     $prefix = array();
-    $sql = 'SELECT prefix FROM '.ImageSize::$table.' i, '
-      .ContainerImageSize::$table.' c WHERE c.image_size_id = i.id'
+    $sql = 'SELECT prefix FROM '.ImageSize::TABLE.' i, '
+      .ContainerImageSize::TABLE.' c WHERE c.image_size_id = i.id'
       .' AND c.container_id = '.$container_id;
     $error = 'Could not get image sizes for container.';
     $result = $this->query($sql, $error);

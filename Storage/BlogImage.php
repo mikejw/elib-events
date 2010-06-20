@@ -5,11 +5,12 @@ use Empathy\Entity;
 
 class BlogImage extends Entity
 {
+  const TABLE = 'blog_image';
+
   public $id;
   public $blog_id;
   public $filename;
 
-  public static $table = 'blog_image';
 
   public function getForIDs($ids)
   {
@@ -17,7 +18,7 @@ class BlogImage extends Entity
     $i= 0;
     foreach($ids as $item)
       {
-	$sql = 'SELECT * FROM '.BlogImage::$table.' WHERE blog_id = '.$item
+	$sql = 'SELECT * FROM '.BlogImage::TABLE.' WHERE blog_id = '.$item
 	  .' ORDER BY id';
 	$error = 'Could not get blog images.';
 	$result = $this->query($sql, $error);

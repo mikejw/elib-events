@@ -5,6 +5,8 @@ use Empathy\Entity;
 
 class SectionItem extends Entity
 {
+  const TABLE = 'section_item';
+
   public $id;
   public $section_id;
   public $label;
@@ -14,12 +16,10 @@ class SectionItem extends Entity
   public $hidden;
   public $stamp;
 
-  public static $table = "section_item";
-
 
   public function updateTimeStamps($update)
   {
-    $sql = 'UPDATE '.SectionItem::$table
+    $sql = 'UPDATE '.SectionItem::TABLE
       .' SET stamp = NOW() WHERE id IN'.$update;
     $error = 'Could not update timestamps.';
     $this->query($sql, $error);   
@@ -29,8 +29,8 @@ class SectionItem extends Entity
   public function getContactCountries($section_id)
   {
     $country = array();
-    $sql = 'SELECT  d1.label, d3.body FROM '.DataItem::$table.' d1, '.DataItem::$table.' d2, '.DataItem::$table.' d3,'
-      .' '.SectionItem::$table.' s WHERE s.id =  '.$section_id
+    $sql = 'SELECT  d1.label, d3.body FROM '.DataItem::TABLE.' d1, '.DataItem::TABLE.' d2, '.DataItem::TABLE.' d3,'
+      .' '.SectionItem::TABLE.' s WHERE s.id =  '.$section_id
       .' AND d2.section_id = s.id AND d1.data_item_id = d2.id'
       .' AND d3.data_item_id = d1.id'
       .' ORDER BY d1.label';
@@ -58,7 +58,7 @@ class SectionItem extends Entity
   public function getAncestorIDs($id, $ancestors)
   {
     $section_id = 0;
-    $sql = 'SELECT section_id FROM '.SectionItem::$table.' WHERE id = '.$id;
+    $sql = 'SELECT section_id FROM '.SectionItem::TABLE.' WHERE id = '.$id;
     $error = 'Could not get parent id.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -80,7 +80,7 @@ class SectionItem extends Entity
     array_push($ids, $id);
     $tree->deleteData($id, 1);
 
-    $sql = 'SELECT id FROM '.SectionItem::$table.' WHERE section_id = '.$id;
+    $sql = 'SELECT id FROM '.SectionItem::TABLE.' WHERE section_id = '.$id;
     $error = 'Could not find section items for deletion.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -94,7 +94,7 @@ class SectionItem extends Entity
   
   public function doDelete($ids)
   {
-    $sql = 'DELETE FROM '.SectionItem::$table.' WHERE id IN'.$ids;
+    $sql = 'DELETE FROM '.SectionItem::TABLE.' WHERE id IN'.$ids;
     $error = 'Could not remove section item(s).';
     $this->query($sql, $error);
   }
@@ -106,7 +106,7 @@ class SectionItem extends Entity
   {     
     $i = 0;   
     $nodes = array();
-    $sql = 'SELECT id,label FROM '.SectionItem::$table.' WHERE section_id = '.$current;
+    $sql = 'SELECT id,label FROM '.SectionItem::TABLE.' WHERE section_id = '.$current;
     $error = 'Could not get child sections.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -122,7 +122,7 @@ class SectionItem extends Entity
 	  }		
       }
     
-    $sql = 'SELECT id,label FROM '.DataItem::$table.' WHERE section_id = '.$current;
+    $sql = 'SELECT id,label FROM '.DataItem::TABLE.' WHERE section_id = '.$current;
     $error = 'Could not get child data items.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -153,7 +153,7 @@ class SectionItem extends Entity
     $build = 1;
     while($build)
       {      
-	$sql = "SELECT section_id, label  FROM ".SectionItem::$table
+	$sql = "SELECT section_id, label  FROM ".SectionItem::TABLE
 	  ." WHERE id = $id";
 	$error = "Could not build URL.";
 	$result = $this->query($sql, $error);
@@ -179,7 +179,7 @@ class SectionItem extends Entity
   public function getAllForSitemap($ignore)
   {
     $sections = array();
-    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.SectionItem::$table
+    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.SectionItem::TABLE
       .' WHERE id NOT IN'.$this->buildUnionString($ignore);
     $error = 'Could not get sections for sitemap.';
     $result = $this->query($sql, $error);

@@ -5,6 +5,8 @@ use Empathy\Entity;
 
 class BlogComment extends Entity
 {
+  const TABLE = 'blog_comment';
+
   public $id;
   public $blog_id;
   public $user_id;
@@ -12,8 +14,6 @@ class BlogComment extends Entity
   public $stamp;
   public $heading;
   public $body;
-
-  public static $table = 'blog_comment';
 
 
   public function validates()

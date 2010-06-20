@@ -5,12 +5,12 @@ use Empathy\Entity;
 
 class Container extends Entity
 {
+  const TABLE = 'container';
+
   public $id;
   public $name;
   public $description;
   
-  public static $table = 'container';
-
 
   public function getAll()
   {
@@ -18,10 +18,10 @@ class Container extends Entity
     $sql = 'SELECT'
       .' c.id AS container_id, i.id AS image_size_id, '
       .' i.name AS image_size_name, c.name AS container_name'
-      .' FROM '.Container::$table.' c'
-      .' LEFT JOIN '.ContainerImageSize::$table.' ci'
+      .' FROM '.Container::TABLE.' c'
+      .' LEFT JOIN '.ContainerImageSize::TABLE.' ci'
       .' ON ci.container_id = c.id'
-      .' LEFT JOIN '.ImageSize::$table.' i'
+      .' LEFT JOIN '.ImageSize::TABLE.' i'
       .' ON i.id = ci.image_size_id';
     $error = 'Could not get containers.';
     $result = $this->query($sql, $error);
@@ -58,9 +58,9 @@ class Container extends Entity
 
   public function remove()
   {
-    $sql = 'DELETE FROM '.ContainerImageSize::$table
+    $sql = 'DELETE FROM '.ContainerImageSize::TABLE
       .' WHERE container_id = '.$this->id;   
-    $this->delete(Container::$table);
+    $this->delete(Container::TABLE);
   }
 
   public function validates()
@@ -73,13 +73,13 @@ class Container extends Entity
 
   public function update($id, $new_sizes)
   {
-    $sql = 'DELETE FROM '.ContainerImageSize::$table
+    $sql = 'DELETE FROM '.ContainerImageSize::TABLE
       .' WHERE container_id = '.$id;
     $error = 'Could not clear old image sizes from container.';
     $this->query($sql, $error);
     foreach($new_sizes as $index => $size_id)
       {
-	$sql = 'INSERT INTO '.ContainerImageSize::$table
+	$sql = 'INSERT INTO '.ContainerImageSize::TABLE
 	  .' VALUES('.$id.', '.$size_id.')';
 	$error = 'Could not inert new image size';
 	$this->query($sql, $error);

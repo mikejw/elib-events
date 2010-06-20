@@ -8,6 +8,8 @@ define('SALT', 'DRAGONFLY');
 
 class UserItem extends Entity
 {
+  const TABLE = 'ace_user';
+
   public $id;
   public $email;
   public $auth;
@@ -15,8 +17,6 @@ class UserItem extends Entity
   public $password;
   public $reg_code;
   public $active;
-
-  public static $table = "ace_user";
 
 
   public function validates()
@@ -33,7 +33,7 @@ class UserItem extends Entity
       }
     if(!$this->val->hasErrors())
       {
-	$sql = 'SELECT id FROM '.UserItem::$table.' WHERE username = \''.$this->username.'\'';
+	$sql = 'SELECT id FROM '.UserItem::TABLE.' WHERE username = \''.$this->username.'\'';
 	$error = 'Could not check for existing username.';
 	$result = $this->query($sql, $error);
 	if($result->rowCount() > 0)
@@ -41,7 +41,7 @@ class UserItem extends Entity
 	    $this->addValError('Username is already taken');
 	  }
 
-	$sql = 'SELECT id FROM '.UserItem::$table.' WHERE email = \''.$this->email.'\'';
+	$sql = 'SELECT id FROM '.UserItem::TABLE.' WHERE email = \''.$this->email.'\'';
 	$error = 'Could not check for existing email address.';
 	$result = $this->query($sql, $error);
 	if($result->rowCount() > 0)
@@ -53,7 +53,7 @@ class UserItem extends Entity
 
   public function getUsername($id)
   {
-    $sql = "SELECT username FROM ".UserItem::$table." WHERE id = $id";
+    $sql = "SELECT username FROM ".UserItem::TABLE." WHERE id = $id";
     $error = "Could not get username.";
     $result = $this->query($sql, $error);
     $row = $result->fetch();
@@ -77,7 +77,7 @@ class UserItem extends Entity
 
   public function getID($username, $password)
   {    
-    $sql = "SELECT id FROM ".UserItem::$table
+    $sql = "SELECT id FROM ".UserItem::TABLE
       ." WHERE username = '$username'"
       ." AND password = '$password'";
     //." AND password = '".md5($this->password)."'";
@@ -97,7 +97,7 @@ class UserItem extends Entity
   public function login()
   {
     $user_id = 0;
-    $sql = 'SELECT * FROM '.UserItem::$table
+    $sql = 'SELECT * FROM '.UserItem::TABLE
       .' WHERE username = BINARY \''.$this->username.'\''
       .' AND password = \''.md5(SALT.$this->password.SALT).'\''
       .' AND active = 1';
@@ -116,7 +116,7 @@ class UserItem extends Entity
   public function getAuth($id)
   {
     $auth = 0;
-    $sql = "SELECT auth FROM ".UserItem::$table." WHERE id = $id";
+    $sql = "SELECT auth FROM ".UserItem::TABLE." WHERE id = $id";
     $error = "Could not get auth code.";
     $result = $this->query($sql, $error);
     if($result->rowCount() == 1)
@@ -130,8 +130,8 @@ class UserItem extends Entity
   public function findUserForActivation($reg_code)
   {
     $user_id = 0;
-    //    $sql = 'SELECT id FROM '.User::$table.' WHERE reg_code = \''.md5($reg_code).'\''
-    $sql = 'SELECT id FROM '.UserItem::$table.' WHERE reg_code = \''.md5($reg_code).'\''
+    //    $sql = 'SELECT id FROM '.User::TABLE.' WHERE reg_code = \''.md5($reg_code).'\''
+    $sql = 'SELECT id FROM '.UserItem::TABLE.' WHERE reg_code = \''.md5($reg_code).'\''
       .' AND active = 0';
     $error = 'Could not get user based on registation code.';
     $result = $this->query($sql, $error);
