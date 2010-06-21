@@ -17,7 +17,7 @@
 
 <body>
 
-<h1 style="font-size:4em; text-transform:uppercase;"><br />{$NAME}</h1>
+{*<h1 style="font-size:4em; text-transform:uppercase;"><br />{$NAME}</h1>*}
 <div id="page">
 
 <div id="admin_head">
