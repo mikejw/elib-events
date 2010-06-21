@@ -1,6 +1,8 @@
 <?php
 
 namespace ELib\Storage;
+
+use ELib\Model;
 use Empathy\Entity;
 
 class BlogComment extends Entity

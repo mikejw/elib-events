@@ -2,8 +2,8 @@
 
 namespace ELib\Admin;
 use ELib\AdminController;
+use ELib\Model;
 
-use Empathy\Model\UserItem as User;
 use Empathy\Session;
 
 class Controller extends AdminController
@@ -23,9 +23,9 @@ class Controller extends AdminController
 	$password1 = $_POST['password1'];
 	$password2 = $_POST['password2'];
 	
-	$u = new User($this);
+	$u = Model::load('UserItem');
 	$u->id = Session::get('user_id');
-	$u->load(User::$table);
+	$u->load();
 
 	if($old_password != $u->password)
 	  {
@@ -45,7 +45,7 @@ class Controller extends AdminController
 	if(sizeof($errors) < 1)
 	  {
 	    $u->password = md5(SALT.$password1.SALT);
-	    $u->save(User::$table, array(), 0);
+	    $u->save(Model::getTable('UserItem'), array(), 0);
 	    $this->redirect('admin');
 	  }
 	else

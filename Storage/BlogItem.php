@@ -1,6 +1,8 @@
 <?php
 
 namespace ELib\Storage;
+
+use ELib\Model;
 use Empathy\Entity;
 
 define('PUBLISHED', 2);
@@ -34,7 +36,7 @@ class BlogItem extends Entity
   public function getFeed()
   {
     $entry = array();
-    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
+    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.Model::getTable('BlogItem')
       .' WHERE status = '.PUBLISHED.' ORDER BY stamp DESC LIMIT 0, 5';
     $error = 'Could not get blog feed.';
     $result = $this->query($sql, $error);
@@ -86,7 +88,7 @@ class BlogItem extends Entity
   public function getStamp()
   {
     $stamp = 0;
-    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
+    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.Model::getTable('BlogItem')
       .' WHERE id = '.$this->id;
     $error = 'Could not get stamp.';
     $result = $this->query($sql, $error);
@@ -102,7 +104,7 @@ class BlogItem extends Entity
   public function getRecentlyModified()
   {
     $stamp = 0;
-    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE
+    $sql = 'SELECT UNIX_TIMESTAMP(stamp) AS stamp FROM '.Model::getTable('BlogItem')
       .' ORDER BY stamp DESC LIMIT 0,1';
     $error = 'Could not get recently modified blogs';
     $result = $this->query($sql, $error);
@@ -117,7 +119,7 @@ class BlogItem extends Entity
   public function getAllForSiteMap()
   {
     $blogs = array();
-    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.BlogItem::TABLE.' b'
+    $sql = 'SELECT *, UNIX_TIMESTAMP(stamp) AS stamp FROM '.Model::getTable('BlogItem').' b'
       .' WHERE status = 2';
     $error = 'Could not get blogs for sitemap';
     $result = $this->query($sql, $error);
@@ -138,11 +140,11 @@ class BlogItem extends Entity
     /*
     $sql = 'SELECT MAX(UNIX_TIMESTAMP(stamp)) AS max,'
       .' MIN(UNIX_TIMESTAMP(stamp)) AS min'
-      .' FROM '.BlogItem::TABLE;
+      .' FROM '.Model::getTable('BlogItem');
     */
 
     $sql = 'SELECT id, YEAR(stamp) AS year, MONTH(stamp) AS month,'
-      .' MONTHNAME(stamp) AS monthname, heading FROM '.BlogItem::TABLE
+      .' MONTHNAME(stamp) AS monthname, heading FROM '.Model::getTable('BlogItem')
       .' WHERE status = 2 ORDER BY stamp DESC';
     $error = 'Could not get blog archive.';
     $result = $this->query($sql, $error);
@@ -161,7 +163,7 @@ class BlogItem extends Entity
     //    $max = $row['stamp'];
 
     /*
-    $sql = 'SELECT MIN(UNIX_TIMESTAMP(stamp)) AS stamp FROM '.BlogItem::TABLE;
+    $sql = 'SELECT MIN(UNIX_TIMESTAMP(stamp)) AS stamp FROM '.Model::getTable('BlogItem');
     $result = $this->query($sql, $error);
     $row = $result->fetch();
     $max = $row['stamp'];

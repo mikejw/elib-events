@@ -1,6 +1,8 @@
 <?php
 
 namespace ELib\Storage;
+
+use ELib\Model;
 use Empathy\Entity;
 
 class Container extends Entity
@@ -18,10 +20,10 @@ class Container extends Entity
     $sql = 'SELECT'
       .' c.id AS container_id, i.id AS image_size_id, '
       .' i.name AS image_size_name, c.name AS container_name'
-      .' FROM '.Container::TABLE.' c'
-      .' LEFT JOIN '.ContainerImageSize::TABLE.' ci'
+      .' FROM '.Model::getTable('Container').' c'
+      .' LEFT JOIN '.Model::getTable('ContainerImageSize').' ci'
       .' ON ci.container_id = c.id'
-      .' LEFT JOIN '.ImageSize::TABLE.' i'
+      .' LEFT JOIN '.Model::getTable('ImageSize').' i'
       .' ON i.id = ci.image_size_id';
     $error = 'Could not get containers.';
     $result = $this->query($sql, $error);
@@ -58,9 +60,9 @@ class Container extends Entity
 
   public function remove()
   {
-    $sql = 'DELETE FROM '.ContainerImageSize::TABLE
+    $sql = 'DELETE FROM '.Model::getTable('ContainerImageSize')
       .' WHERE container_id = '.$this->id;   
-    $this->delete(Container::TABLE);
+    $this->delete();
   }
 
   public function validates()
@@ -73,13 +75,13 @@ class Container extends Entity
 
   public function update($id, $new_sizes)
   {
-    $sql = 'DELETE FROM '.ContainerImageSize::TABLE
+    $sql = 'DELETE FROM '.Model::getTable('ContainerImageSize')
       .' WHERE container_id = '.$id;
     $error = 'Could not clear old image sizes from container.';
     $this->query($sql, $error);
     foreach($new_sizes as $index => $size_id)
       {
-	$sql = 'INSERT INTO '.ContainerImageSize::TABLE
+	$sql = 'INSERT INTO '.Model::getTable('ContainerImageSize')
 	  .' VALUES('.$id.', '.$size_id.')';
 	$error = 'Could not inert new image size';
 	$this->query($sql, $error);

@@ -1,6 +1,8 @@
 <?php
 
 namespace ELib\Storage;
+
+use ELib\Model;
 use Empathy\Entity;
 
 class TagItem extends Entity
@@ -12,7 +14,7 @@ class TagItem extends Entity
 
   public function getIds($tags, $locked)
   {
-    $table = $this->appendPrefix(self::TABLE);
+    $table = Model::getTable('TagItem');
     $ids = array();
     $i = 0;
     foreach($tags as $tag)
@@ -42,15 +44,15 @@ class TagItem extends Entity
   public function getAllTags()
   {
     $total = 0;  
-    $sql = 'SELECT COUNT(b.blog_id) AS count FROM '.BlogTag::TABLE.' b,'
-      .BlogItem::TABLE.' c WHERE c.id = b.blog_id AND c.status = 2';
+    $sql = 'SELECT COUNT(b.blog_id) AS count FROM '.Model::getTable('BlogTag').' b,'
+      .Model::getTable('BlogItem').' c WHERE c.id = b.blog_id AND c.status = 2';
     $error = 'Could not get total number of tagging instances';
     $result = $this->query($sql, $error);
     $row = $result->fetch();
     $total = $row['count'];
     
     $tag = array();   
-    $sql = 'SELECT t.tag, COUNT(b.blog_id) AS count FROM '.BlogItem::TABLE.' c, '.TagItem::TABLE.' t LEFT JOIN '.BlogTag::TABLE
+    $sql = 'SELECT t.tag, COUNT(b.blog_id) AS count FROM '.Model::getTable('BlogItem').' c, '.Model::getTable('TagItem').' t LEFT JOIN '.Model::getTable('BlogTag')
       .' b ON (b.tag_id = t.id) WHERE c.status = 2 AND b.blog_id = c.id GROUP BY t.id';
     $error = 'Could not get all active tags';
     $result = $this->query($sql, $error);
@@ -77,7 +79,7 @@ class TagItem extends Entity
   public function cleanup()
   {
     $current = array();
-    $sql = 'SELECT DISTINCT b.tag_id FROM '.BlogTag::TABLE.' b';
+    $sql = 'SELECT DISTINCT b.tag_id FROM '.Model::getTable('BlogTag').' b';
     $error = 'Could not get all current tag ids.';
     $result = $this->query($sql, $error);
 
@@ -89,7 +91,7 @@ class TagItem extends Entity
       }
 
     $stored = array();
-    $sql = 'SELECT t.id FROM '.TagItem::TABLE.' t';
+    $sql = 'SELECT t.id FROM '.Model::getTable('TagItem').' t';
     $error = 'Could not get all tag ids';
     $result = $this->query($sql, $error);
     $i = 0;
@@ -113,7 +115,7 @@ class TagItem extends Entity
 
     if($dumped != '(0)')
       {
-	$sql = 'DELETE FROM '.TagItem::TABLE.' WHERE id IN'.$dumped;
+	$sql = 'DELETE FROM '.Model::getTable('TagItem').' WHERE id IN'.$dumped;
 	$error = 'Could not remove redundant tags.';
 	$this->query($sql, $error);
       }   

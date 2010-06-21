@@ -2,6 +2,7 @@
 
 namespace ELib\DSection;
 use ELib\DSection;
+use ELib\Model;
 use Empathy\Model\SectionItem as SectionItem;
 
 class SectionsUpdate
@@ -19,9 +20,9 @@ class SectionsUpdate
   public function update_timestamps()
   {
     // current section
-    $this->section->load(SectionItem::$table);   
+    $this->section->load();   
     $this->section->stamp = date('Y-m-d H:i:s', time()); 
-    $this->section->save(SectionItem::$table, array(), 2);
+    $this->section->save(Model::getTable('SectionItem'), array(), 2);
     
     // ancestors => make optional?    
     $ancestors = array();

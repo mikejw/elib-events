@@ -37,7 +37,7 @@
 
 {elseif $class eq 'data_item'}
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/add_data/{$data_item_id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/data_add_data/{$data_item_id}" method="get">
 <div><button type="submit" name="add_data_item" value="1"{if $event eq 'add_data' || !$is_container} disabled="disabled"{/if}>Add Data</button></div>
 </form>
 <form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/delete_data_item/{$data_item_id}" method="get">

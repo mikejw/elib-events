@@ -13,8 +13,8 @@ class BaseTemplate extends CustomController
   public function __construct($boot)
   {
     parent::__construct($boot);
-    $this->section = Model::load('SectionItem', $this);
-    $this->data_item = Model::load('DataItem', $this);
+    $this->section = Model::load('SectionItem');
+    $this->data_item = Model::load('DataItem');
   }
 
 

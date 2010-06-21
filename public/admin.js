@@ -81,7 +81,7 @@ var toggle = function(link)
 	    link.append('-');
 	    if(!/data/.test(img.attr('src')))
 		{
-		    img.attr('src', 'http://'+WEB_ROOT+PUBLIC_DIR+'/img/t_folder_open.gif');
+		    img.attr('src', 'http://'+WEB_ROOT+PUBLIC_DIR+'/elib/t_folder_open.gif');
 		}
 	}
     else
@@ -91,7 +91,7 @@ var toggle = function(link)
 	    link.append('+');
 	    if(!/data/.test(img.attr('src')))
 		{						      
-		    img.attr('src', 'http://'+WEB_ROOT+PUBLIC_DIR+'/img/t_folder_closed.gif');
+		    img.attr('src', 'http://'+WEB_ROOT+PUBLIC_DIR+'/elib/t_folder_closed.gif');
 		}
 	}
 };

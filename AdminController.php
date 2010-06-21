@@ -2,6 +2,8 @@
 
 namespace ELib;
 
+use ELib\Model;
+
 use Empathy\Model\UserItem as User;
 use Empathy\Session;
 
@@ -12,14 +14,14 @@ class AdminController extends EController
   {
     parent::__construct($boot);  
 
-    $u = new User($this);
+    $u = Model::load('UserItem');
            
     $user_id = Session::get('user_id');
 
     if(is_numeric($user_id) && $user_id > 0)
       {
 	$u->id = $user_id;
-	$u->load(User::$table);
+	$u->load();
 	$this->presenter->assign('current_user', $u->username);	
       }
        

@@ -1,6 +1,8 @@
 <?php
 
 namespace ELib\Storage;
+
+use ELib\Model;
 use Empathy\Entity;
 
 class DataItem extends Entity
@@ -38,7 +40,7 @@ class DataItem extends Entity
   public function getSectionData($section_id)
   {
     $ids = array();
-    $sql = 'SELECT id FROM '.DataItem::TABLE.' WHERE section_id = '.$section_id
+    $sql = 'SELECT id FROM '.Model::getTable('DataItem').' WHERE section_id = '.$section_id
       .' ORDER BY label';
     $error = 'Could not get data item id based on section id.';
     $result = $this->query($sql, $error);
@@ -64,7 +66,7 @@ class DataItem extends Entity
   public function findLastSection($id)
   {
     $section_id = 0;
-    $sql = 'SELECT id,section_id,data_item_id FROM '.DataItem::TABLE.' WHERE id = '.$id;
+    $sql = 'SELECT id,section_id,data_item_id FROM '.Model::getTable('DataItem').' WHERE id = '.$id;
     $error = 'Could not find last section.';
     
     $result = $this->query($sql, $error);
@@ -84,7 +86,7 @@ class DataItem extends Entity
   public function getAncestorIDs($id, $ancestors)
   {
     $data_item_id = 0;
-    $sql = 'SELECT data_item_id FROM '.DataItem::TABLE.' WHERE id = '.$id;
+    $sql = 'SELECT data_item_id FROM '.Model::getTable('DataItem').' WHERE id = '.$id;
     $error = 'Could not get parent id.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -104,11 +106,11 @@ class DataItem extends Entity
   {
     if($section_start)
       {
-	$sql = 'SELECT id FROM '.DataItem::TABLE.' WHERE section_id = '.$id;
+	$sql = 'SELECT id FROM '.Model::getTable('DataItem').' WHERE section_id = '.$id;
       }
     else
       {
-	$sql = 'SELECT id FROM '.DataItem::TABLE.' WHERE data_item_id = '.$id;
+	$sql = 'SELECT id FROM '.Model::getTable('DataItem').' WHERE data_item_id = '.$id;
 	array_push($ids, $id);
       }
     $error = 'Could not find data items for deletion.';
@@ -124,7 +126,7 @@ class DataItem extends Entity
 
   public function doDelete($ids)
   {
-    $sql = 'DELETE FROM '.DataItem::TABLE.' WHERE id IN'.$ids;
+    $sql = 'DELETE FROM '.Model::getTable('DataItem').' WHERE id IN'.$ids;
     $error = 'Could not remove data item(s).';
     $this->query($sql, $error);
   }
@@ -133,7 +135,7 @@ class DataItem extends Entity
   {     
     $i = 0;
     $nodes = array();
-    $sql = 'SELECT id,label FROM '.DataItem::TABLE.' WHERE data_item_id = '.$current
+    $sql = 'SELECT id,label FROM '.Model::getTable('DataItem').' WHERE data_item_id = '.$current
       .' ORDER BY id';
     $error = 'Could not get child data items.';
     $result = $this->query($sql, $error);
@@ -156,7 +158,7 @@ class DataItem extends Entity
   public function getImageFilenames($ids)
   {
     $images = array();
-    $sql = 'SELECT image FROM '.DataItem::TABLE.' WHERE image IS NOT NULL'
+    $sql = 'SELECT image FROM '.Model::getTable('DataItem').' WHERE image IS NOT NULL'
       .' AND id IN'.$ids;
     $error = 'Could not get matching data item image filenames.';
     $result = $this->query($sql, $error);
@@ -173,7 +175,7 @@ class DataItem extends Entity
   public function getVideoFilenames($ids)
   {
     $videos = array();
-    $sql = 'SELECT video FROM '.DataItem::TABLE.' WHERE video IS NOT NULL'
+    $sql = 'SELECT video FROM '.Model::getTable('DataItem').' WHERE video IS NOT NULL'
       .' AND id IN'.$ids;
     $error = 'Could not get matching data item video filenames.';
     $result = $this->query($sql, $error);
@@ -191,7 +193,7 @@ class DataItem extends Entity
   // ammended to perform search by position value
   {
     $id = 0;
-    $sql = 'SELECT id FROM '.DataItem::TABLE.' WHERE video IS NOT NULL ORDER BY position LIMIT 0,1';
+    $sql = 'SELECT id FROM '.Model::getTable('DataItem').' WHERE video IS NOT NULL ORDER BY position LIMIT 0,1';
     $error = 'Could not get most recent video.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
