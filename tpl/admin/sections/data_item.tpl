@@ -10,7 +10,7 @@
 
 {elseif $data_item->body neq ''}
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/data_item/edit_body/{$data_item->id}" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/edit_body/{$data_item->id}" method="get">
 <div><button type="submit" name="edit_body" value="1">Edit</button></div>
 </form>
 

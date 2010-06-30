@@ -680,7 +680,7 @@ class Controller extends AdminController
 	    $sizes = array();
 	  }
 	
-	$u = new \ImageUpload('data', true, $sizes);
+	$u = new ImageUpload('data', true, $sizes);
     
 	if($u->error != '')
 	  {
@@ -696,10 +696,12 @@ class Controller extends AdminController
 	    $d->hidden = 'DEFAULT';	
 	    $new_id = $d->insert(Model::getTable('DataItem'), 1, array(), 1);
 	    $this->update_timestamps($d->data_item_id);
-	    $this->redirect('admin/data_item/'.$new_id);
+	    $this->redirect('admin/dsection/data_item/'.$new_id);
 	  }      
       }
     $this->buildNavData();
+    $this->assign('class', 'data_item');
+    $this->assign('event', 'add_data_image');
     $this->setTemplate('elib:/admin/section.tpl');
   }
 
@@ -785,6 +787,40 @@ class Controller extends AdminController
     $this->presenter->assign('data_item', $d);    
   }
 
+  
+  public function edit_body()
+  {
+    if(isset($_POST['save']))
+      {
+	$d = Model::load('DataItem');
+	$d->id = $_POST['id'];
+	$d->load();
+	$d->body = $_POST['body'];
+	$d->validates();
+	if($d->hasValErrors())
+	  {
+	    $this->presenter->assign('data_item', $d);
+	    $this->presenter->assign('errors', $d->getValErrors());	     
+	  }
+	else
+	  {
+	    $d->save(Model::getTable('DataItem'), array(), 1);		
+	    $this->update_timestamps($d->id);
+	    $this->redirect('admin/dsection/data_item/'.$_GET['id']);
+	  }
+      }
+    elseif(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/dsection/data_item/'.$_GET['id']);
+      }
+
+    $this->buildNavData();
+    $this->setTemplate('elib:/admin/section.tpl');    
+    $d = Model::load('DataItem');
+    $d->id = $_GET['id'];
+    $d->load();
+    $this->presenter->assign('data_item', $d);    
+  }
 
 
 
