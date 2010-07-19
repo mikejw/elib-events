@@ -53,10 +53,17 @@ class File
 	      { 
 		$this->makeDerived($item[0], $item[1], $item[2]);
 	      }
-	    imageDestroy($this->orig);     	  
+	    $this->destroy($this->orig);     	  
 	  }    
       }
   }
+
+
+  public function destroy($image)
+  {
+    imageDestroy($image);     	  
+  }
+
   
   public function create()
   {
@@ -95,11 +102,8 @@ class File
       }
     $newX = $this->origX * $factor;
     $newY = $this->origY * $factor;    
-    $img = imagecreatetruecolor($newX, $newY);
-    imagecopyresampled($img, $this->orig, 0, 0, 0, 0, $newX, $newY, $this->origX, $this->origY);    
-    $newTarget = $this->target_dir.$prefix.$this->filename;    
-    imagejpeg($img, $newTarget, $quality);
-    imagedestroy($img);     
+
+    $this->spawn($newX, $newY, $prefix, $quality);
   }
   
   
@@ -116,11 +120,22 @@ class File
 	      { 
 	        $this->makeDerived($item[0], $item[1], $item[2]);
 	      }
-	    imageDestroy($this->orig);     	  
+	    $this->destroy($this->orig);     	  
           }
       }
   }
   
+
+  public function spawn($newX, $newY, $prefix, $quality)
+  {   
+    $img = imagecreatetruecolor($newX, $newY);
+    imagecopyresampled($img, $this->orig, 0, 0, 0, 0, $newX, $newY, $this->origX, $this->origY);    
+    $newTarget = $this->target_dir.$prefix.$this->filename;    
+    imagejpeg($img, $newTarget, $quality);
+    $this->destroy($img);        
+  }
+
+
   
   public function remove($files)
   {     
@@ -149,6 +164,15 @@ class File
     return $success;
   }  
 
+
+  // does not require GD
+  public function getMimeType()
+  {
+    $imgInfo = getImageSize($_FILES['file']['tmp_name']);
+    return $imgInfo['mime'];   
+  }
+
+
   public function upload()
   {
     if($_FILES['file']['name'] == '')
@@ -162,9 +186,9 @@ class File
 	$ext = $name_array[$size-1];
 	
 	/* check for jpeg */
-	$imgInfo = getImageSize($_FILES['file']['tmp_name']);
+	$mimeType = $this->getMimeType();
 	
-	if(!preg_match('/jpg|jpeg/', $ext) || $imgInfo['mime'] != 'image/jpeg')
+	if(!preg_match('/jpg|jpeg/', $ext) || $mimeType != 'image/jpeg')
 	  {
 	    $this->error .= "Invalid file format.";
 	  }
