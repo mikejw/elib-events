@@ -4,15 +4,13 @@ namespace ELib\Queue;
 
 class DriverManager
 {  
-  const DEF_D = 'pheanstalk'; 
-
   public static function load($h, $name = null)
   {
     $driver = null;
 
     if($name === null)
       {
-	$name = self::DEF_D;
+	$name = \ELib\Queue::DEFAULT_DRIVER;
       }
 
     switch($name)
@@ -33,4 +31,3 @@ class DriverManager
 
 }
 ?>
-

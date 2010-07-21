@@ -9,7 +9,6 @@ abstract class Driver
   protected $name;
   protected $d;
 
-
   public function __construct($name)
   {
     $this->name = $name;    
@@ -18,7 +17,11 @@ abstract class Driver
   abstract public function load($h);
 
   abstract public function put($job, $tube);
+
+
+  abstract public function getNext($tube);
+  
+  abstract public function clear();
     
 }
 ?>
-

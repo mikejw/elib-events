@@ -8,6 +8,8 @@ use ELib\Queue\Tube;
 
 class Queue
 {  
+  const DEFAULT_DRIVER = 'pheanstalk'; 
+
   private $driver;
   
   public function __construct($host, $driver_name = null)
