@@ -19,7 +19,11 @@ class Queue
 
   public function put($job_data, $tube = null)
   {    
-    $j = new Job($job_data, $tube);
+    $j = new Job(array($job_data, $tube));
+
+    // check id matches output
+    //echo $j->getID();
+
     $this->driver->put($j, $tube);    
   }
 

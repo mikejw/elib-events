@@ -24,14 +24,7 @@ class DriverPheanstalk extends Driver
   public function getNext($tube)
   {
     self::$job = $this->d->watch($tube)->ignore('default')->reserve();
-
-    $j = new Job(array(), $tube);
-    $j->setBody(self::$job->getData());
-    
-    $j->deserialize();
-
-    // remove job?
-   
+    $j = new Job(array(self::$job->getData()));   
     return $j;
   }
 

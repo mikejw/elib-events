@@ -6,25 +6,56 @@ use ELib\YAML;
 
 class Job
 {  
-  private $priority;
-  private $time_to_run;
-  private $delay;
   private $id;
+  private $queued_at;
   private $body;
-  private $body_s;
-  private $tube;
 
-  public function __construct($body_data, $tube)
+  /*
+  private $time_to_run;
+  private $priority;
+  private $delay;
+  */
+
+  private $data;
+  private $data_s;
+
+  private $tube;
+  private $serialized_vars;
+
+
+  public function __construct($args)
   {
-    $this->tube = $tube;
-    $this->body = $body_data;   
-    // set other properties?
-    $this->serialize();
+    switch(sizeof($args))
+      {
+      case 2:
+	$this->init($args[0], $args[1]);
+	break;
+      case 1:	
+	$this->initEmpty($args[0]);
+	break;
+      }
   }
 
-  public function setBody($data)
+  public function init($body, $tube)
   {
-    $this->body_s = $data;
+    $this->serialized_vars = array(
+				   'id', 'queued_at', 'body');
+    $this->tube = $tube;
+    $this->id = uniqid();
+    $this->queued_at = time();
+    $this->body = $body;   
+    $this->serialize();   
+  }
+
+  public function initEmpty($data)
+  {
+    $this->setData($data);
+    $this->deserialize();
+  }
+
+  public function setData($data)
+  {
+    $this->data_s = $data;
   }
 
   public function getBody()
@@ -32,19 +63,34 @@ class Job
     return $this->body;
   }
   
+  public function getID()
+  {
+    return $this->id;
+  }
+
+
   public function serialize()
   {
-    $this->body_s = YAML::dump($this->body);
+    $data = array();
+    foreach($this->serialized_vars as $v)
+      {
+	$data[$v] = $this->$v;
+      }
+    $this->data_s = YAML::dump($data);
   }
 
   public function getSerialized()
   {
-    return $this->body_s;
+    return $this->data_s;
   }
 
   public function deserialize()
   {
-    $this->body = YAML::loadString($this->body_s);   
+    $data = YAML::loadString($this->data_s);   
+    foreach($this->serialized_vars as $v)
+      {
+	$this->$v = $data[$v];
+      }
   }
 
 }

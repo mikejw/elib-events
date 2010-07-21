@@ -13,13 +13,13 @@ class Worker
   private $sleep_interval;
 
   public function __construct($name, $host, $display_log = null,
-			      $driver_name = null,			      
+			      $sleep_interval = null,
 			      $memory_limit = null,
-			      $sleep_interval = null)
+			      $driver_name = null)
   {
     $this->display_log = ($display_log === true)? true: false;
     $this->memory_limit = ($memory_limit === null)? self::DEF_MEM_LIMIT: $memory_limit;
-    $this->sleep_interval = ($sleep_interval === null)? self::DEF_SLEEP_INTERVAL: $memory_limit;
+    $this->sleep_interval = ($sleep_interval === null)? self::DEF_SLEEP_INTERVAL: $sleep_interval;
     $this->name = $name;
     $this->driver = DriverManager::load($host, $driver_name);
   }
@@ -61,7 +61,7 @@ class Worker
   public function checkMemory()
   {
     $memory = memory_get_usage();
-    $this->log('Memory usage:' . $memory);    
+    $this->log('Memory usage: ' . $memory);    
 
     $this->log('Memory limit: '.$this->memory_limit);
     
