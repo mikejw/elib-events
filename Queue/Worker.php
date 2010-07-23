@@ -7,21 +7,28 @@ class Worker
   const DEF_MEM_LIMIT = 10000000;
   const DEF_SLEEP_INTERVAL = 100;
  
-  private $name;
+  private $tube;
   private $driver;
   private $memory_limit;
   private $sleep_interval;
 
-  public function __construct($name, $host, $display_log = null,
+  public function __construct($host, $tube = null, $display_log = null,
 			      $sleep_interval = null,
 			      $memory_limit = null,
 			      $driver_name = null)
   {
+    $this->tube = $tube;
     $this->display_log = ($display_log === true)? true: false;
     $this->memory_limit = ($memory_limit === null)? self::DEF_MEM_LIMIT: $memory_limit;
     $this->sleep_interval = ($sleep_interval === null)? self::DEF_SLEEP_INTERVAL: $sleep_interval;
-    $this->name = $name;
     $this->driver = DriverManager::load($host, $driver_name);
+  }
+
+
+  public function setTube($tube)
+  {
+    $this->tube = $tube;
+    return $this;
   }
 
   public function log($txt)
@@ -32,14 +39,14 @@ class Worker
       }
     else
       {
-	file_put_contents(DOC_ROOT.'/logs/worker_'.$this->name.'.txt', $txt."\n", FILE_APPEND);
+	file_put_contents(DOC_ROOT.'/logs/worker_'.$this->tube.'.txt', $txt."\n", FILE_APPEND);
       }
   }
 
-  public function nextJob($tube = 'default')
+  public function nextJob()
   {
     $this->log("running...");    
-    $job = $this->driver->getNext($tube);
+    $job = $this->driver->getNext($this->tube);
 
     $this->log($job->getSerialized());
 
