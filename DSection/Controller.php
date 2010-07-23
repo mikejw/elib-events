@@ -3,7 +3,7 @@
 namespace ELib\DSection;
 
 use ELib\AdminController;
-use ELib\File\Image as ImageUpload;
+use ELib\File\GImage as ImageUpload;
 use ELib\DSection\SectionsUpdate;
 use ELib\DSection\SectionsDelete;
 use ELib\DSection\SectionsTree;
