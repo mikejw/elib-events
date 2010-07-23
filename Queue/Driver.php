@@ -16,7 +16,7 @@ abstract class Driver
 
   abstract public function load($h);
 
-  abstract public function put($job, $tube);
+  abstract public function put($job);
 
 
   abstract public function getNext($tube);

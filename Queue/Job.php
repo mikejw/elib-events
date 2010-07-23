@@ -26,7 +26,7 @@ class Job
   public function __construct($args)
   {
     $this->serialized_vars = array(
-				   'id', 'queued_at', 'body');
+				   'id', 'queued_at', 'body', 'tube');
     switch(sizeof($args))
       {
       case 2:
@@ -56,6 +56,11 @@ class Job
   public function setData($data)
   {
     $this->data_s = $data;
+  }
+
+  public function getTube()
+  {
+    return $this->tube;
   }
 
   public function getBody()

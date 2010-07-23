@@ -12,8 +12,9 @@ class DriverPheanstalk extends Driver
     $this->d = new \Pheanstalk($h);
   }
 
-  public function put($job, $tube)
+  public function put($job)
   {
+    $tube = $job->getTube();
     if($tube === null)
       {
 	$tube = 'default';
