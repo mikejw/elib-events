@@ -45,11 +45,7 @@ class Worker
 
   public function nextJob()
   {
-    $this->log("running...");    
-    $job = $this->driver->getNext($this->tube);
-
-    $this->log($job->getSerialized());
-
+    $job = $this->driver->getNext($this->tube);   
     return $job;
   }
 
@@ -67,14 +63,9 @@ class Worker
 
   public function checkMemory()
   {
-    $memory = memory_get_usage();
-    $this->log('Memory usage: ' . $memory);    
-
-    $this->log('Memory limit: '.$this->memory_limit);
-    
+    $memory = memory_get_usage();    
     if($memory > $this->memory_limit)
       {
-	$this->log('Exiting run due to memory limit.');
 	exit();
       }
   }
