@@ -34,6 +34,11 @@ class DriverPheanstalk extends Driver
     $this->d->delete(self::$job);
   }
 
+  public function info()
+  {
+    return $this->d->stats();
+  }
+
 
 }
 

@@ -3,6 +3,7 @@
 namespace ELib;
 use ELib\Queue\DriverManager;
 use ELib\Queue\Job;
+use ELib\Queue\Stats;
 
 class Queue
 {  
@@ -28,6 +29,12 @@ class Queue
     $j = new Job(array($job_data, $this->tube));
     $this->driver->put($j);    
   }
+  
+  public static function getStats()
+  {
+    return Stats::retrieve('stats');
+  }
+  
 
  
 

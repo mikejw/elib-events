@@ -5,7 +5,7 @@ namespace ELib\Queue;
 class Worker
 {
   const DEF_MEM_LIMIT = 10000000;
-  const DEF_SLEEP_INTERVAL = 100;
+  const DEF_SLEEP_INTERVAL = 10;
  
   private $tube;
   private $driver;
@@ -46,6 +46,7 @@ class Worker
   public function nextJob()
   {
     $job = $this->driver->getNext($this->tube);   
+    $this->updateStats();
     return $job;
   }
 
@@ -58,7 +59,7 @@ class Worker
 
   public function sleep()
   {    
-    usleep($this->sleep_interval);
+    usleep($this->sleep_interval * 1000000);
   }
 
   public function checkMemory()
@@ -70,6 +71,11 @@ class Worker
       }
   }
 
+  public function updateStats()
+  {
+    $stats = $this->driver->info();
+    Stats::store('stats', $stats);
+  }
 
 }
 ?>

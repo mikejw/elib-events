@@ -22,6 +22,8 @@ abstract class Driver
   abstract public function getNext($tube);
   
   abstract public function clear();
+
+  abstract public function info();
     
 }
 ?>
