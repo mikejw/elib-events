@@ -56,6 +56,13 @@ class AdminController extends EController
     $this->setTemplate('elib:/admin/admin.tpl');
   }
 
+  public function store()
+  {
+    $this->setTemplate('elib:/admin/store.tpl');
+  }
+  
+
+  
   public function password()
   {
     $this->setTemplate('elib:/admin/password.tpl');
@@ -116,6 +123,8 @@ class AdminController extends EController
     echo json_encode(1);
     exit();
   }
+
+
 
 
 
