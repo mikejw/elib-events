@@ -1,7 +1,7 @@
 <?php
 
 namespace ELib\Storage;
-use Model\ELib;
+use ELib\Model;
 use Empathy\Entity as Entity;
 
 
