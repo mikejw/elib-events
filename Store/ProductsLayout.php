@@ -3,13 +3,6 @@
 namespace ELib\Store;
 use ELib\Model;
 
-/*
-use Empathy\Model\CategoryItem as CategoryItem;
-use Empathy\Model\ProductItem as ProductItem;
-use Empathy\Model\BrandItem as BrandItem;
-use Empathy\Model\ProductVariant as ProductVariant;
-*/
-
 define('BUTTONS_PER_PAGE', 12);
 
 class ProductsLayout
@@ -84,7 +77,7 @@ class ProductsLayout
     
     $d = '('.implode(',', $descendants).')';
    
-    //    $products = $this->product->getAllCustom(Model::getTable('ProductItem'), ' WHERE category_id IN'.$d);
+    $products = $this->product->getAllCustom(Model::getTable('ProductItem'), ' WHERE category_id IN'.$d);
     if(sizeof($products) > 0)
       {
 	shuffle($products);
