@@ -33,9 +33,11 @@ form p { clear: both; }
 form label { width: 15%; float: left;
 	     margin: 0.5em; padding: 0 0 0 2.5%; }
 
-form .radios { float: left; width: 50%; margin: 0 0 10px 0; }
+form .radios, form .checkboxes { float: left; width: 50%; margin: 0 0 10px 0; }
 
-form .radios input, form .radios label { float: none; width: auto; }
+form .radios input, form .radios label,
+form .checkboxes input, form .checkboxes label
+ { float: none; width: auto; }
 
 /*
 form .radios, form .checkboxes { float: left; position: relative; margin: 0 0 20px 0; }
@@ -114,6 +116,8 @@ form button {
 .grey fieldset {
     position: relative;
     border: 1px solid #eee;
+    -moz-border-radius: 3px; -webkit-border-radius: 3px;
+
     /*padding: 1em 0 0 0;*/
     background-color: #fafafa; }
 .grey fieldset legend {
@@ -162,7 +166,10 @@ form button {
 #operations .grey #op_right { float: right; width: 20%; }
 
 ul#tree { float: left; width: 30%; margin: 0; padding: 0; background-color: #fafafa;
-	    padding: 1em; border: 1px solid #eee; }
+	    padding: 1em; border: 1px solid #eee;
+	    -moz-border-radius: 3px; -webkit-border-radius: 3px;
+}
+
 ul#tree ul { padding: 0 0 0 22px; margin: 0; clear: both; }
 ul#tree li, ul#tree ul li { list-style: none; clear: both; padding: 0; margin: 0;
 /*height: 22px;*/ /* causing problems in ie */

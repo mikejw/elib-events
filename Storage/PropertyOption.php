@@ -31,7 +31,7 @@ class PropertyOption extends Entity
   public function getColoursIndexed($property_id)
   {
     $colour = array();
-    $sql = 'SELECT * FROM '.getModel('PropertyOption').' WHERE property_id = '.$property_id
+    $sql = 'SELECT * FROM '.Model::getTable('PropertyOption').' WHERE property_id = '.$property_id
       .' ORDER BY option_val';
     $error = 'Could not get colours.';
     $result = $this->query($sql, $error);

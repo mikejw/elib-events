@@ -3,23 +3,6 @@
 namespace ELib\Store;
 use ELib\Model;
 
-/*
-namespace Empathy\Controller;
-use Empathy\Model\ProductItem;
-use Empathy\Model\BrandItem;
-use Empathy\Model\ProductVariant;
-use Empathy\Model\ProductColour;
-use Empathy\Model\Property;
-use Empathy\Model\CategoryItem;
-use Empathy\Model\CategoryProperty;
-use Empathy\Model\ProductVariantPropertyOption;
-use Empathy\Model\PropertyOption;
-*/
-
-//require(DOC_ROOT.'/application/ImageUpload.php');
-//require(DOC_ROOT.'/application/CombGen.php');
-
-
 class ProductController extends AdminController
 { 
   public function assertID()
@@ -32,6 +15,7 @@ class ProductController extends AdminController
 
   public function edit()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     $p = Model::load('ProductItem');
     //$pr = new ProductRange($this);
 
@@ -104,6 +88,7 @@ class ProductController extends AdminController
 
   public function default_event()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     $p = Model::load('ProductItem');
 
     $p->id = $_GET['id'];
@@ -164,6 +149,7 @@ class ProductController extends AdminController
 
   public function upload_image()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     if(isset($_POST['upload']))
     {
       $_GET['id'] = $_POST['id'];
@@ -306,6 +292,7 @@ class ProductController extends AdminController
 
   public function edit_variant()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     if(isset($_POST['save']))
       {
 	$v = Model::load('ProductVariant');
@@ -345,6 +332,7 @@ class ProductController extends AdminController
 
   public function upload_variant_image()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     $this->assertID();
     $v = Model::load('ProductVariant');
     $v->id = $_GET['id'];
@@ -383,6 +371,7 @@ class ProductController extends AdminController
 
   public function variant_properties()
   {    
+    $this->setTemplate('elib://admin/product.tpl');
     $this->assertID();
 
     if(isset($_POST['save']))
@@ -449,6 +438,7 @@ class ProductController extends AdminController
 
   public function edit_colours()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     $p = Model::load('ProductItem');
     $p->id = $_GET['id'];
     $p->load();
@@ -464,6 +454,7 @@ class ProductController extends AdminController
 
   public function add_colour()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     $p = Model::load('ProductItem');
     $p->id = $_GET['id'];
     $p->load();
@@ -523,6 +514,7 @@ class ProductController extends AdminController
 
   public function edit_colour()
   {    
+    $this->setTemplate('elib://admin/product.tpl');
     if(isset($_POST['save_colour']))
       {
 	$c = Model::load('ProductColour');
@@ -583,6 +575,7 @@ class ProductController extends AdminController
 
   public function variants_wizard()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     if(isset($_POST['submit']))
       {	
 	$sets = array();

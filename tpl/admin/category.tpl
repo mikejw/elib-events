@@ -47,13 +47,13 @@
 
 
 {if $event eq 'rename'}
-{include file="products/rename.tpl"}
+{include file="elib://admin/products/rename.tpl"}
 {elseif $event eq 'active_properties'}
-{include file="products/active_properties.tpl"}
+{include file="elib://admin/products/active_properties.tpl"}
 {elseif $class eq 'product'}
-{include file="products/edit_product.tpl"}
+{include file="elib://admin/products/edit_product.tpl"}
 {elseif $category_has_children == 0}
-{include file="products/products.tpl"}
+{include file="elib://admin/products/products.tpl"}
 {/if}
 
 
