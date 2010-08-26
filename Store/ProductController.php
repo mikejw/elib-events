@@ -190,6 +190,7 @@ class ProductController extends AdminController
 
   public function resize_images()
   {
+    $this->setTemplate('elib://admin/product.tpl');
     if(isset($_POST['submit']))
       {	
 	set_time_limit(300);
