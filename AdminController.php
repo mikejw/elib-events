@@ -2,6 +2,7 @@
 
 namespace ELib;
 use ELib\Model;
+use ELib\User\CurrentUser;
 use Empathy\Session;
 
 class AdminController extends EController
@@ -10,27 +11,11 @@ class AdminController extends EController
   {
     parent::__construct($boot);  
 
-    $u = Model::load('UserItem');
-           
-    $user_id = Session::get('user_id');
-
-    if(is_numeric($user_id) && $user_id > 0)
-      {
-	$u->id = $user_id;
-	$u->load();
-	$this->presenter->assign('current_user', $u->username);	
-      }
-           
-    if($this->module == "admin" &&
-       ($user_id < 1 || !$u->getAuth($user_id)))
-      {      
-	$this->redirect("user/login");
-      }
-    else
-      {       
-	$this->detectHelp();
-      }     
+    CurrentUser::authenticate($this);
+   
+    $this->detectHelp();
   }
+
 
   public function detectHelp()
   {

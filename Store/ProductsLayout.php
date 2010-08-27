@@ -286,5 +286,17 @@ class ProductsLayout
   }
 
 
+  public static function getTopCats()
+  {
+    $categories = array();
+    if($_GET['module'] == 'store')
+      {
+	$c = Model::load('CategoryItem');
+	$sql = ' WHERE category_id = 0 AND hidden = 0 ORDER BY name';
+	$categories = $c->getAllCustom(Model::getTable('CategoryItem'), $sql); 
+      }
+    return $categories;
+  }
+
 }
 ?>

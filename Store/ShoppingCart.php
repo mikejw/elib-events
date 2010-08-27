@@ -73,7 +73,7 @@ class ShoppingCart
   }
 
 
-  public function getTotalItems()
+  public static function getTotalItems()
   {
     $total = 0;
     if(isset($_SESSION['cart']) && sizeof($_SESSION['cart']) > 0)
