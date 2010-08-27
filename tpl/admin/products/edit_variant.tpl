@@ -4,7 +4,7 @@
 
 
 <div class="product">
-<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $variant->image eq ''}img/blank.gif{else}uploads/mid_{$variant->image}{/if}" alt="" />
+<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $variant->image eq ''}elib/blank.gif{else}uploads/mid_{$variant->image}{/if}" alt="" />
 </div>
 
 

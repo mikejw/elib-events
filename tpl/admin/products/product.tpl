@@ -4,7 +4,7 @@
 
 
 <div class="product">
-<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $product->image eq ''}img/blank.gif{else}uploads/mid_{$product->image}{/if}" alt="" />
+<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $product->image eq ''}elib/blank.gif{else}uploads/mid_{$product->image}{/if}" alt="" />
 <h3>{$brand} - {$product->name}</h3>
 <div class="desc">
 {$product->description}
@@ -45,7 +45,7 @@
 </table>
 
 <div class="img">
-<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $variants[variant].image eq ''}img/blank.gif{else}uploads/tn_{$variants[variant].image}{/if}" alt="" />
+<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $variants[variant].image eq ''}elib/blank.gif{else}uploads/tn_{$variants[variant].image}{/if}" alt="" />
 </div>
 
 <ul class="operations">

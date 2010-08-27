@@ -11,7 +11,7 @@
 <p><strong>{$colours[colour].option_val}</strong></p>
 
 <div class="img">
-<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $colours[colour].image eq ''}img/blank.gif{else}uploads/mid_{$colours[colour].image}{/if}" alt="" />
+<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $colours[colour].image eq ''}elib/blank.gif{else}uploads/mid_{$colours[colour].image}{/if}" alt="" />
 </div>
 
 <ul class="operations">

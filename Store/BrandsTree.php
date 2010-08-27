@@ -90,7 +90,7 @@ class BrandsTree extends Tree
 	  {
 	    $markup .= "<span class=\"toggle\">&nbsp;</span>";
 	  }
-	$markup .= "<img src=\"http://".WEB_ROOT.PUBLIC_DIR."/img/$folder\" alt=\"\" />\n";
+	$markup .= "<img src=\"http://".WEB_ROOT.PUBLIC_DIR."/elib/$folder\" alt=\"\" />\n";
 
 	if($current_id == $value['id'])
 	  {

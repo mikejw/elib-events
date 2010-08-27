@@ -61,9 +61,9 @@
 
 
 {if $event eq 'rename'}
-{include file="rename_brand.tpl"}
+{include file="elib://admin/rename_brand.tpl"}
 {elseif $event eq 'edit_bio'}
-{include file="edit_brand_bio.tpl"}
+{include file="elib://admin/edit_brand_bio.tpl"}
 {/if}
 
 

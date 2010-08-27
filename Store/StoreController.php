@@ -66,7 +66,7 @@ class StoreController extends EController
     $this->getPromos($_GET['category_id']);
 
     
-    $this->setTemplate('store_category.tpl');
+    $this->setTemplate('elib://store_category.tpl');
 
     // seo
     if($category_id > 0)

@@ -4,7 +4,7 @@
 
 
 <div class="product">
-<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $product->image eq ''}img/blank.gif{else}uploads/tn_{$product->image}{/if}" alt="" />
+<img src="http://{$WEB_ROOT}{$PUBLIC_DIR}/{if $product->image eq ''}elib/blank.gif{else}uploads/tn_{$product->image}{/if}" alt="" />
 </div>
 
 {if sizeof($errors) > 0}
