@@ -53,7 +53,7 @@ class Controller extends EController
   
   public function logout()
   {    
-    if(isset($_POST['logout']))
+    if(1 || isset($_POST['logout']))
       {
 	//$u = new Users($this);
 	//$u->logout($this);      
