@@ -6,7 +6,7 @@ use Empathy\Entity as Entity;
 
 class OrderItem extends Entity
 {
-  const TABLE = 'bbc_order';
+  const TABLE = 'e_order';
 
   public $id;
   public $user_id;

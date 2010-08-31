@@ -66,7 +66,7 @@ image			VARCHAR(128)				NULL,
 hidden			BINARY(1)				NOT NULL DEFAULT 0);
 
 
-CREATE TABLE 		bbc_order(
+CREATE TABLE 		e_order(
 id			INT(11)					AUTO_INCREMENT PRIMARY KEY,
 user_id			INT(11)					NOT NULL,
 status			TINYINT(1)				NOT NULL DEFAULT 1,

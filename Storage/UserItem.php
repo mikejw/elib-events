@@ -10,7 +10,7 @@ define('SALT', 'DRAGONFLY');
 
 class UserItem extends Entity
 {
-  const TABLE = 'ace_user';
+  const TABLE = 'e_user';
 
   public $id;
   public $email;
