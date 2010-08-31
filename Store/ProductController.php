@@ -287,6 +287,11 @@ class ProductController extends AdminController
     $p->name = 'New Product';
     $p->description = 'No description.';
     $p->sold_in_store = 1;
+    if(defined('ELIB_MULTIPLE_VENDORS' &&
+	       ELIB_MULTIPLE_VENDORS == true))
+      {
+	$p->user_id = \ELib\User\CurrentUser::getUserID();
+      }
     $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
     $this->redirect('admin/category/'.$_GET['id']);
   }

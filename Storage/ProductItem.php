@@ -16,7 +16,7 @@ class ProductItem extends Entity
   public $image;
   public $upc;
   public $sold_in_store;
-
+  public $user_id;
     
   public function validates()
   {
