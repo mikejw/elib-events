@@ -21,13 +21,12 @@ class StoreController extends EController
     $category_id = 0;
 
     
-    /*
+    
     if(isset($_GET['id']) && is_numeric($_GET['id']))
       {
 	$category_id = $_GET['id'];
       }
-    */
-   
+       
 
     if(isset($_GET['category_name']))
       {

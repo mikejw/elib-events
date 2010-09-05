@@ -3,6 +3,7 @@
 namespace ELib\User;
 use ELib\EController;
 use ELib\Model;
+use ELib\Country\Country;
 
 use Empathy\Session;
 
@@ -55,91 +56,117 @@ class Controller extends EController
   {    
     if(1 || isset($_POST['logout']))
       {
-	//$u = new Users($this);
-	//$u->logout($this);      
 	$this->sessionDown();
 	$this->redirect('');
       }
   }
-  
+
   public function register()
   {
     if(isset($_POST['submit']))
       {
-	$u = new User($this);
+	$u = Model::load('UserItem');
 	$u->username = $_POST['username'];
 	$u->email = $_POST['email'];
 	$u->validates();
 	
-	if($u->hasValErrors())
+	$s = Model::load('ShippingAddress');
+       
+	$s->first_name = $_POST['first_name'];
+	$s->last_name = $_POST['last_name'];
+	$s->address1 = $_POST['address1'];
+	$s->address2  = $_POST['address2'];
+	$s->city = $_POST['city'];
+	$s->state = $_POST['state'];
+	$s->zip = strtoupper($_POST['zip']);
+	$s->country = $_POST['country'];
+	$s->validates();
+	
+	
+	if($u->hasValErrors() || $s->hasValErrors())
 	  {
 	    $this->presenter->assign('user', $u);
-	    $this->presenter->assign('errors', $u->getValErrors());
+	    $this->presenter->assign('address', $s);
+	    	    
+	    $this->presenter->assign('errors', array_merge($u->getValErrors(), $s->getValErrors()));
 	  }
 	else
 	  {
-	    $password = exec('/usr/bin/makepasswd --chars=8');
-	    $reg_code = exec('/usr/bin/makepasswd --chars=16');
+	    $password = exec(MAKEPASSWD.' --chars=8');
+	    $reg_code = exec(MAKEPASSWD.' --chars=16');
 
 	    $u->password = $password;
 	    $u->reg_code = md5($reg_code);
 	    $u->auth = 0;
 	    $u->active = 0;
 	    
-	    $u->insert(User::$table, 1, array(), 0);
+	    $s->user_id = $u->insert(Model::getTable('UserItem'), 1, array(), 0);
+
+	    $s->insert(Model::getTable('ShippingAddress'), 1, array(), 0);
 	    
 	    $message = "\nHi ___,\n\n"
-	      ."Thanks for registering.  I'll be your electronic go-between. Before I can let you"
-	      ." know your password for using the Proper Bike Co website please confirm your registration"
+	      ."Thanks for registering with Brighton BMX Co.\n\nBefore we can let you"
+	      ." know your password for using the site, please confirm your email address"
 	      ." by clicking the following link:\n\n"
-	      ."http://".WEB_ROOT.PUBLIC_DIR."/misc/confirm_reg/?code=".$reg_code
-	      ."\n\nI'll look forward to bumping into you soon. Cheers.\n\n"
-	      ."- TheProperBot";
+	      ."http://".WEB_ROOT.PUBLIC_DIR."/user/confirm_reg/?code=".$reg_code
+	      ."\n\nCheers\n\n";
        	    
 	    $r[0]['alias'] = $u->username;
 	    $r[0]['address'] = $u->email;
 
-	    $m = new Mailer($r, 'You have been registered', $message);
-	    $this->redirect('misc/thanks/1');
+	    $m = new \Mailer($r, 'You have been registered with Brighton BMX Co', $message, FROM);
+
+	    $this->redirect('user/thanks/1');
 	  }
       }
-    $this->templateFile = "register.tpl";
+
+    $titles = array('Mr', 'Mrs', 'Miss', 'Ms', 'Dr');
+    $this->presenter->assign('titles', $titles);
+    
+    $countries = Country::build();   
+    $this->presenter->assign('countries', $countries); 
+    $this->presenter->assign('sc', 'GB');
+    $this->setTemplate('elib://register.tpl');
   }
   
   public function confirm_reg()
   {
     $reg_code = $_GET['code'];
-    $u = new User($this);
+    $u = Model::load('UserItem');
     $id = $u->findUserForActivation($reg_code);
 
     if($id > 0)
       {
 	$u->id = $id;
-	$u->load(User::$table);
+	$u->load();
 	$password = $u->password;
 	$u->password = md5(SALT.$password.SALT);
 	$u->active = 1;
-	$u->save(User::$table, array(), 0);
+	$u->save(Model::getTable('UserItem'), array(), 0);
+
+	$_SESSION['user_id'] = $u->id;
 
 	$message = "\nHi ___,\n\n"
-	  ."Thanks for confirming your registration.  You can now log in to the Proper Bike Co website using your username "
-	  ." '___' and your password '".$password."'."	 
-	  ."\n\nI'll look forward to bumping into you soon. Cheers.\n\n"
-	  ."- TheProperBot";
+	  ."Thanks for confirming your registration. You can now log in to the Brighton BMX Co website using your username "
+	  ." '___' and the password '".$password."'.\n\nCheers\n\n";	  
 
 	$r[0]['alias'] = $u->username;
 	$r[0]['address'] = $u->email;
 
-	$m = new Mailer($r, 'Welcome to Proper Bike Co', $message);
-	$this->redirect('misc/thanks/2');
+	$m = new \Mailer($r, 'Welcome to Brighton BMX Co', $message, FROM);
+	$this->redirect('user/thanks/2');
       }   
   }
 
   public function thanks()
   {
     $this->presenter->assign('id', $_GET['id']);
-    $this->templateFile = 'thanks.tpl';
+    $this->setTemplate('elib://thanks.tpl');
   }
+
+
+
+  
 
 
 }

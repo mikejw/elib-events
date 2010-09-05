@@ -2,6 +2,8 @@
 
 <div id="content_inner">
 
+<h2>Login</h2>
+
 <p>&nbsp;</p><p>&nbsp;</p>
 
 <div id="user_form">
@@ -16,6 +18,8 @@
 
 
 <form action="" method="post">
+<fieldset>
+<legend>Login</legend>
 <p><label for="username">Username</label>
 <input id="username" type="text" name="username"
 {if isset($username)}
@@ -25,6 +29,7 @@ value="{$username}"{/if} /></p>
 {if isset($password)}
 value="{$password}"{/if} /></p>
 <p><label>&nbsp;</label><button type="submit" name="login">Login</button></p>
+</fieldset>
 </form>
 </div>
 

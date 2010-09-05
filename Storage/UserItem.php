@@ -33,7 +33,7 @@ class UserItem extends Entity
       {
 	$this->addValError('Invalid email address');	
       }
-    if(!$this->val->hasErrors())
+    if(!$this->hasValErrors())
       {
 	$sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE username = \''.$this->username.'\'';
 	$error = 'Could not check for existing username.';
