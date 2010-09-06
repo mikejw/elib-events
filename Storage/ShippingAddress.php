@@ -3,6 +3,7 @@
 namespace ELib\Storage;
 use ELib\Model;
 use Empathy\Entity as Entity;
+use Empathy\Validate;
 
 
 class ShippingAddress extends Entity
@@ -19,77 +20,17 @@ class ShippingAddress extends Entity
   public $state;
   public $zip;
   public $country;
-
-  /*
-  public function loadFromOrder($order_id)
-  {
-    $sql = 'SELECT * FROM '.ShippingAddress::$table.' t1,'
-      .' '.OrderItem::$table
-  }
-  */
   
-  
-  public function valString($text, $alnum)
-  {
-    $val = true;
-    $text = str_replace('\'', '', $text);
-    $text = str_replace('-', '', $text);
-    $text = str_replace(' ', '', $text);
-    
-    if($alnum)
-      {
-	if($text == '' || !ctype_alnum($text))
-	  {
-	    $val = false;
-	  }
-      }
-    else
-      {
-	if($text == '' || !ctype_alpha($text))
-	  {
-	    $val = false;
-	  }
-      }
-    return $val;
-  }
-  
-
   public function validates()
   {
-    
-    if(!$this->valString($this->first_name, 0))
-      {
-	$this->addValError('Invalid firstname.');
-      }
-    if(!$this->valString($this->last_name, 0))
-      {
-	$this->addValError('Invalid lastname.');
-      }
-    if(!$this->valString($this->address1, 1))
-      {
-	$this->addValError('Invalid first line of address.');
-      }
-    if($this->address2 != '' && !$this->valString($this->address2, 1))
-      {
-	$this->addValError('Invalid second line of address.');
-      }
-    if(!$this->valString($this->city, 0))
-      {
-	$this->addValError('Invalid city name.');
-      }
-    if(!$this->valString($this->state, 0))
-      {
-	$this->addValError('Invalid county / state name.');
-      } 
-    if(!$this->valString($this->zip, 1))
-      {
-	$this->addValError('Invalid post code / zip.');
-      }
-    if(!$this->valString($this->country, 0))
-      {
-	$this->addValError('Invalid value for country.');
-      }
-    
+    $this->doValType(Validate::TEXT, 'first_name', $this->first_name, false);
+    $this->doValType(Validate::TEXT, 'last_name', $this->last_name, false);
+    $this->doValType(Validate::TEXT, 'address1', $this->address1, false);
+    $this->doValType(Validate::TEXT, 'address2', $this->address2, true);
+    $this->doValType(Validate::TEXT, 'city', $this->city, false);
+    $this->doValType(Validate::TEXT, 'state', $this->state, false);
+    $this->doValType(Validate::TEXT, 'zip', $this->zip, false);
+    $this->doValType(Validate::TEXT, 'country', $this->country, false);   
   }
 }
 ?>

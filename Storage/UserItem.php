@@ -4,7 +4,7 @@ namespace ELib\Storage;
 
 use ELib\Model;
 use Empathy\Entity;
-
+use Empathy\Validate;
 
 define('SALT', 'DRAGONFLY');
 
@@ -23,33 +23,19 @@ class UserItem extends Entity
 
   public function validates()
   {
-    $email_pattern = '/^[^@\s<&>]+@([-a-z0-9]+\.)+[a-z]{2,}$/i';
-    $username_pattern = '/^[a-z][_a-zA-Z0-9-]{3,7}$/';
-    if($this->username == '' || !ctype_alnum(str_replace(' ', '', $this->username)) || !preg_match($username_pattern, $this->username))
+    if($this->doValType(Validate::USERNAME, 'username', $this->username, false))
       {
-	$this->addValError('Invalid username');	
-      }       
-    if(!preg_match($email_pattern, $this->email))
-      {
-	$this->addValError('Invalid email address');	
-      }
-    if(!$this->hasValErrors())
-      {
-	$sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE username = \''.$this->username.'\'';
-	$error = 'Could not check for existing username.';
-	$result = $this->query($sql, $error);
-	if($result->rowCount() > 0)
+	if($this->usernameExists())
 	  {
-	    $this->addValError('Username is already taken');
+	    $this->addValError('Username is already taken', 'username');
 	  }
-
-	$sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE email = \''.$this->email.'\'';
-	$error = 'Could not check for existing email address.';
-	$result = $this->query($sql, $error);
-	if($result->rowCount() > 0)
-	  {
-	    $this->addValError('The system is already aware of that email address');
-	  }      
+      }
+    if($this->doValType(Validate::EMAIL, 'email', $this->email, false))
+      {
+        if($this->activeUser())
+          {
+            $this->addValError('That email address can\'t be used', 'email');
+          }
       }
   }
 
@@ -62,12 +48,6 @@ class UserItem extends Entity
     return $row['username'];
   }
 
-  /*  
-  public function __construct()
-  {
-
-  }
-  */
 
   public function buildInvalid($username, $password)
   {
@@ -145,6 +125,39 @@ class UserItem extends Entity
     
     return $user_id;
   }
+
+
+  private function activeUser()
+  {
+    $active = 0;
+    $sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE email = \''.$this->email.'\''
+      .' AND active = 1';
+    $error = 'Could not check for existing email address.';
+    $result = $this->query($sql, $error);
+    if($result->rowCount() > 0)
+      {
+        $active = 1;
+      }
+    return $active;
+  }
+
+
+  private function usernameExists()
+  {
+    $exists = 0;
+    $sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE username = \''.$this->username.'\'';
+    $error = 'Could not check for existing username.';
+    $result = $this->query($sql, $error);
+    if($result->rowCount() > 0)
+      {
+	$exists = 1;
+      }
+    return $exists;
+  }
+
+
+
+
 
 }
 ?>
