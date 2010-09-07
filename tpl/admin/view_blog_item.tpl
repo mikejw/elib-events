@@ -19,18 +19,18 @@
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/edit_blog/{$blog->id}" method="get">
 <p><button type="submit" name="edit">Edit</button></p>
 </form>
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/publish/{$blog->id}" method="get">
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/publish/{$blog->id}" method="get">
 <p><label>Update Timestamp?</label><span><input type="checkbox" name="stamp" value="1" /></span></p>
 <p><button type="submit" name="edit">Publish</button></p>
 </form>
 {else}
 {if $blog->status eq 2 || $blog->status eq 3}
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/redraft/{$blog->id}" method="get">
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/redraft/{$blog->id}" method="get">
 <p><button type="submit" name="edit">Redraft</button></p>
 </form>
 {/if}
 {if $blog->status eq 2}
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/delete/{$blog->id}" method="get">
+<form class="confirm" action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/blog/delete/{$blog->id}" method="get">
 <p><button name="delete[]" type="submit">Delete</button></p>
 </form>
 {/if}

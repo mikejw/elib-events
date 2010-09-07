@@ -24,31 +24,41 @@ class Controller extends EController
       $n = Model::load('UserItem');
       $n->username = $_POST['username'];
       $n->password = $_POST['password'];
-      $n->sanitize();
-      
-      $user_id = $n->login();
-      if($user_id > 0)
-      {
-	session_regenerate_id();
-	Session::set('user_id', $user_id);
-	$n->id = $user_id;
-	$n->load();
 
-	if($n->auth)
-	  {
-	    $this->redirect('admin');
-	  }
-	else
-	  {
-	    $this->redirect('');
-	  }
-      }                  
-      else
-      {
-	$this->presenter->assign('errors', array('Invalid login.'));
-	$this->presenter->assign("username", $_POST['username']);
-	$this->presenter->assign("password", $_POST['password']);	
-      }
+      //      $n->sanitize();      
+      $n->validateLogin();
+
+      if(!$n->hasValErrors())
+	{
+	  $user_id = $n->login();
+	  if($user_id > 0)
+	    {
+	      session_regenerate_id();
+	      Session::set('user_id', $user_id);
+	      $n->id = $user_id;
+	      $n->load();
+	      
+	      if($n->auth)
+		{
+		  $this->redirect('admin');
+		}
+	      else
+		{
+		  $this->redirect('');
+		}
+	    } 
+	  else
+	    {
+	      $n->addValError('Wrong username/password combination.', 'success');
+	    }
+	}
+
+      if($n->hasValErrors() || $user_id < 1)
+	{       
+	  $this->presenter->assign('errors', $n->getValErrors());
+	  $this->presenter->assign("username", $_POST['username']);
+	  $this->presenter->assign("password", $_POST['password']);	
+	}
     }
   }
   

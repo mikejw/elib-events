@@ -290,7 +290,11 @@ class Controller extends AdminController
       }
     $this->presenter->assign('cats', $cats_arr);
 
-    if(isset($_POST['save']))
+    if(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/blog/view/'.$_POST['id']);
+      }
+    elseif(isset($_POST['save']))
       {
 	$b = Model::load('BlogItem');
 	$b->id = $_POST['id'];

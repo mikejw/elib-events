@@ -2,6 +2,7 @@
 
 <div id="admin_nav_outer">
 <ul id="admin_nav">
+<li><a id="top" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/artist">Artists</a></li>
 <li><a id="top" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/brand">Brands</a></li>
 <li><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/orders">Orders</a></li>
 <li><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/category">Products</a></li>

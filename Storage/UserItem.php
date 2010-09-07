@@ -39,6 +39,12 @@ class UserItem extends Entity
       }
   }
 
+  public function validateLogin()
+  {
+    $this->doValType(Validate::USERNAME, 'username', $this->username, false);
+    $this->doValType(Validate::TEXT, 'password', $this->password, false);    
+  }
+
   public function getUsername($id)
   {
     $sql = "SELECT username FROM ".Model::getTable('UserItem')." WHERE id = $id";

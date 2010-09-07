@@ -278,6 +278,13 @@ a#help_tab { padding-top: 0.2em; }
 
 
 
+#notice { padding: 1em;
+	border: 1px solid #dd0;
+	background-color: #fefeee; margin: 0 0 1em 0; }
+
+
+
+
 
 
 /* typography */

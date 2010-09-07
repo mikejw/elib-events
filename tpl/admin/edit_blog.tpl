@@ -47,6 +47,7 @@
 <input type="hidden" name="id" value="{$blog->id}" />
 <!--<input type="submit" name="save" value="Save" />-->
 <button type="submit" name="save">Save</button>
+<button type="submit" name="cancel">Cancel</button>
 </p>
 </fieldset>
 </form>

@@ -23,7 +23,7 @@
 <div><button type="submit" name="add_section" value="1"{if $class eq 'data_item'} disabled="disabled"{/if}>Add Section</button></div>
 </form>
 
-{if $class eq 'section'}
+{if $class eq 'dsection' && $event neq 'data_item'}
 
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_data/{$section_id}" method="get">
 <div><button type="submit" name="add_data_item" value="1"{if $event eq 'add_data'} disabled="disabled"{/if}>Add Data</button></div>
@@ -35,7 +35,7 @@
 <div><button type="submit" name="rename" value="1"{if $section->id eq 0 || $event eq 'rename'} disabled="disabled"{/if}>Rename</button></div>
 </form>
 
-{elseif $class eq 'data_item'}
+{else}
 
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/data_add_data/{$data_item_id}" method="get">
 <div><button type="submit" name="add_data_item" value="1"{if $event eq 'add_data' || !$is_container} disabled="disabled"{/if}>Add Data</button></div>
@@ -49,11 +49,12 @@
 
 {/if}
 
+
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/change_template/{$section_id}" method="get">
 <div><button type="submit" name="change_template" value="1"{if $class eq 'data_item' || $event eq 'change_template' || $section_id eq 0} disabled="disabled"{/if}>Change Template</button></div>
 </form>
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/edit_data_item_meta/{$data_item_id}" method="get">
-<div><button type="submit" name="edit_meta" value="1"{if $event eq 'edit_meta' || $class eq 'section'} disabled="disabled"{/if}>Edit Meta</button></div>
+<div><button type="submit" name="edit_meta" value="1"{if $event eq 'edit_meta' || $class eq 'dsection'} disabled="disabled"{/if}>Edit Meta</button></div>
 </form>
 
 
@@ -61,7 +62,7 @@
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/data_item_toggle_hidden/{$data_item_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $data_item->hidden}Show{else}Hide{/if}</button></div>
 </form>
-{elseif $class eq 'section'}
+{elseif $class eq 'dsection' && $section_id > 0}
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/toggle_hidden/{$section_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $section->hidden}Show{else}Hide{/if}</button></div>
 </form>
@@ -116,7 +117,7 @@
 
 
 {if $event eq 'rename'}
-{if $class eq 'section'}
+{if $class eq 'dsection'}
 {include file="elib:/admin/sections/rename_section.tpl"}
 {elseif $class eq 'data_item'}
 {include file="elib:/admin/sections/rename_data_item.tpl"}

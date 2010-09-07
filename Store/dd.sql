@@ -112,3 +112,22 @@ product_id		INT(11)					NOT NULL,
 property_option_id	INT(11)					NOT NULL,
 image			VARCHAR(128)				NULL);	
 
+
+CREATE TABLE 		artist_item(
+id			INT(11)					AUTO_INCREMENT PRIMARY KEY,
+artist_alias		VARCHAR(128)				NULL,
+forename		VARCHAR(128)				NULL,
+surname			VARCHAR(128)				NULL,
+bio			TEXT					NULL,
+image			VARCHAR(128)				NULL,
+active			TINYINT(1)				NOT NULL DEFAULT 1);
+
+
+CREATE TABLE	product_artist(
+id     		INT(11)					NOT NULL AUTO_INCREMENT PRIMARY KEY,
+product_id	INT(11)					NOT NULL,
+artist_id	INT(11)					NOT NULL);
+
+
+
+
