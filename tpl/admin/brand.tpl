@@ -20,11 +20,6 @@
 <div><button type="submit" name="delete" value="1">Delete</button></div>
 </form>
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/category/0" method="get">
-<div><button type="submit" name="view_products" value="1"{if $artist->id eq 0}disabled="disabled"{/if}>View Products</button>
-<input type="hidden" name="artist_id" value="{$artist->id}" /></div>
-</form>
-
 </div>
 </div>
 

@@ -246,9 +246,6 @@ class Controller extends AdminController
     $st = new SectionsTree($s, $d, 1, $collapsed);
     $this->presenter->assign('sections', $st->getMarkup());
     $this->presenter->assign('section', $s);
-
-    // fake controller
-    $this->assign('class', 'section');
   }
 
   public function add_section()
@@ -393,9 +390,6 @@ class Controller extends AdminController
     $this->presenter->assign('sections', $st->getMarkup());
     $this->presenter->assign('data_item', $d);
     $this->presenter->assign('is_container', $d->isContainer());
-
-    // fake controller (for template logic)
-    $this->assign('class', 'data_item');
   }
 
 
@@ -411,9 +405,6 @@ class Controller extends AdminController
     $this->buildNavData();
     $this->presenter->assign('data_item_id', $_GET['id']);
     $this->setTemplate('elib:/admin/section.tpl');
-    
-    // fake event
-    $this->assign('event', 'default_event');
   }
 
  
@@ -549,9 +540,6 @@ class Controller extends AdminController
   {
     $this->buildNavData();
     $this->setTemplate('elib:/admin/section.tpl');
-    // fakery
-    $this->assign('class', 'data_item');
-    $this->assign('event', 'add_data');
 
     if(isset($_GET['data_type']) && is_numeric($_GET['data_type']))
       {
@@ -625,9 +613,6 @@ class Controller extends AdminController
       }
     $this->buildNavData();
     $this->setTemplate('elib:/admin/section.tpl');
-    // fakery
-    $this->assign('class', 'data_item');
-    $this->assign('event', 'add_data_body');
   }
 
 
@@ -656,9 +641,6 @@ class Controller extends AdminController
       }
     $this->buildNavData();
     $this->setTemplate('elib:/admin/section.tpl');
-    // fakery
-    $this->assign('class', 'data_item');
-    $this->assign('event', 'add_data_heading');
   }
 
   public function data_add_data_image()
