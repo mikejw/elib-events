@@ -9,7 +9,7 @@
 
 <div class="grey" style="padding:0.5em;">
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/image_sizes/add" method="get">
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_image_size" method="get">
 <div><button type="submit" name="add" value="1">Add</button></div>
 </form>
 
@@ -62,8 +62,8 @@
 <td><span id="width_{$i.id}" class="edit_box">{$i.width}</span></td>
 <td><span id="height_{$i.id}" class="edit_box">{$i.height}</span></td>
 <td>
-<a class="confirm" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/image_sizes/remove/{$i.id}">Remove</a> | 
-<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/image_sizes/update/{$i.id}">Update</a>
+<a class="confirm" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/remove_image_size/{$i.id}">Remove</a> | 
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/update_image_sizes/{$i.id}">Update</a>
 </td>
 </tr>
 {/foreach}

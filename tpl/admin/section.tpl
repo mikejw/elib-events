@@ -54,14 +54,16 @@
 <div><button type="submit" name="change_template" value="1"{if $class eq 'data_item' || $event eq 'change_template' || $section_id eq 0} disabled="disabled"{/if}>Change Template</button></div>
 </form>
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/edit_data_item_meta/{$data_item_id}" method="get">
-<div><button type="submit" name="edit_meta" value="1"{if $event eq 'edit_meta' || $class eq 'dsection'} disabled="disabled"{/if}>Edit Meta</button></div>
+<div><button type="submit" name="edit_meta" value="1"{if $event neq 'data_item'} disabled="disabled"{/if}>Edit Meta</button></div>
 </form>
 
 
-{if $class eq 'data_item'}
+{if $event eq 'data_item'}
+
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/data_item_toggle_hidden/{$data_item_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $data_item->hidden}Show{else}Hide{/if}</button></div>
 </form>
+
 {elseif $class eq 'dsection' && $section_id > 0}
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/toggle_hidden/{$section_id}" method="get">
 <div><button type="submit" name="hide" value="1">{if $section->hidden}Show{else}Hide{/if}</button></div>
@@ -117,29 +119,27 @@
 
 
 {if $event eq 'rename'}
-{if $class eq 'dsection'}
 {include file="elib:/admin/sections/rename_section.tpl"}
-{elseif $class eq 'data_item'}
+{elseif $event eq 'rename_data_item'}
 {include file="elib:/admin/sections/rename_data_item.tpl"}
-{/if}
 
-{elseif $event eq 'add_data'}
+{elseif $event eq 'add_data' || $event eq 'data_add_data'}
 
 {include file="elib:/admin/sections/add_data.tpl"}
 
-{elseif $event eq 'add_data_heading'}
+{elseif $event eq 'add_data_heading' || $event eq 'data_add_data_heading'}
 {include file="elib:/admin/sections/add_data_heading.tpl"}
-{elseif $event eq 'add_data_body'}
+{elseif $event eq 'add_data_body' || $event eq 'data_add_data_body'}
 {include file="elib:/admin/sections/add_data_body.tpl"}
 {elseif $event eq 'add_data_image'}
 {include file="elib:/admin/sections/add_data_image.tpl"}
 {elseif $event eq 'add_data_video'}
 {include file="elib:/admin/sections/add_data_video.tpl"}
-{elseif $class eq 'data_item' && $event eq 'default_event'}
+{elseif $event eq 'data_item'}
 {include file="elib:/admin/sections/data_item.tpl"}
-{elseif $class eq 'data_item' && $event eq 'edit_heading'}
+{elseif $event eq 'edit_heading'}
 {include file="elib:/admin/sections/edit_heading.tpl"}
-{elseif $class eq 'data_item' && $event eq 'edit_body'}
+{elseif $event eq 'edit_body'}
 {include file="elib:/admin/sections/edit_body.tpl"}
 {elseif $event eq 'change_template'}
 {include file="elib:/admin/sections/change_template.tpl"}

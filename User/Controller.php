@@ -38,7 +38,7 @@ class Controller extends EController
 	      $n->id = $user_id;
 	      $n->load();
 	      
-	      if($n->auth)
+	      if(0 && $n->auth)
 		{
 		  $this->redirect('admin');
 		}

@@ -2,6 +2,7 @@
 
 namespace ELib\Storage;
 use Empathy\Entity;
+use ELib\Model;
 
 class ImageSize extends Entity
 {

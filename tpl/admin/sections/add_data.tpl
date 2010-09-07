@@ -19,7 +19,7 @@
 </p>
 <p>
 <label>&nbsp;</label>
-<input type="hidden" name="id" value="{if $class eq 'data_item'}{$data_item->id}{else}{$section_item->id}{/if}" />
+<input type="hidden" name="id" value="{if $event eq 'data_add_data'}{$data_item->id}{else}{$section_item->id}{/if}" />
 <button type="submit" name="add">Add</button> 
 <button type="submit" name="cancel">Cancel</button>
 </p>

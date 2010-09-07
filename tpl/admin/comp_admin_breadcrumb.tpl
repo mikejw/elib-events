@@ -57,16 +57,17 @@
   {if $event eq 'default_event' || $event eq 'data_item'}
   &raquo; Generic Sections  
   {else}
-  &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section">Generic Sections</a>
+  &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection">Generic Sections</a>
+  {/if}
+
+  {if $event eq 'containers'} &raquo; Edit Containers
+  {elseif $event eq 'rename_container'} &raquo; Rename Container
+  {elseif $event eq 'image_sizes'} &raquo; Edit Image Sizes
   {/if}
 {/if}
 
-{*
-&raquo;
-{if $event eq 'default_event'} Edit Containers{elseif $event eq 'rename'}Rename Container{/if}
-{elseif $class eq 'image_sizes'} &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/section">Generic Sections</a> &raquo; Edit Image Sizes
-{/if}
-*}
+
+
 
 {* password *}
 {if $class eq 'admin' && $event eq 'password'}
