@@ -2,7 +2,8 @@
 
 namespace ELib\Storage;
 use ELib\Model;
-use Empathy\Entity as Entity;
+use Empathy\Entity;
+use Empathy\Validate;
 
 class property extends Entity
 {
@@ -68,10 +69,7 @@ class property extends Entity
 
   public function validates()
   {
-    if($this->name == '' || !ctype_alnum(str_replace(' ', '', $this->name)))
-      {
-	$this->addValError('Invalid property name');	
-      } 
+    $this->doValType(Validate::TEXT, 'name', $this->name, false);
   }
 
 

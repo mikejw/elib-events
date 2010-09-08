@@ -2,7 +2,8 @@
 
 namespace ELib\Storage;
 use ELib\Model;
-use Empathy\Entity as Entity;
+use Empathy\Entity;
+use Empathy\Validate;
 
 class PropertyOption extends Entity
 {
@@ -19,12 +20,7 @@ class PropertyOption extends Entity
 	$this->addValError('Invalid property id');
       }
 
-    $option_val = str_replace(' ', '', $this->option_val);
-    $option_val = str_replace('.', '', $option_val);
-    if($this->option_val == '' || !ctype_alnum($option_val))
-      {
-	$this->addValError('Invalid option value');	
-      }       
+    $this->doValType(Validate::TEXT, 'option_val', $this->option_val, false);
   }
 
 

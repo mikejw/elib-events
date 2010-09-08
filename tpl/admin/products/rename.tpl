@@ -20,6 +20,7 @@
 <label>&nbsp;</label>
 <input type="hidden" name="id" value="{$category->id}" />
 <button type="submit" name="save">Save</button>
+<button type="submit" name="cancel">Cancel</button>
 </p>
 </fieldset>
 </form>

@@ -151,6 +151,10 @@ class CategoryController extends AdminController
 	    $this->redirect('admin/category/'.$c->id);
 	  }
       }
+    elseif(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/category/'.$_POST['id']);
+      }
     else      
       {	
 	$c = Model::load('CategoryItem');
