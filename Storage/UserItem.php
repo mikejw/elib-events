@@ -19,7 +19,9 @@ class UserItem extends Entity
   public $password;
   public $reg_code;
   public $active;
-
+  public $registered;
+  public $activated;
+  
 
   public function validates()
   {

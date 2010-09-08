@@ -6,7 +6,9 @@
 <li><a id="top" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/brand">Brands</a></li>
 <li><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/orders">Orders</a></li>
 <li><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/category">Products</a></li>
+<li><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/vendors">Vendors</a></li>
 <li><a id="bottom" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/promo_category">Promos</a></li>
+
 </ul>
 </div>
 

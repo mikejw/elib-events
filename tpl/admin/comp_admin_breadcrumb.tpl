@@ -10,7 +10,7 @@
 
 {* store *}
 {if $class eq 'admin' && $event eq 'store'} &raquo; Store
-{elseif $class eq 'brand' || $class eq 'artist' || $class eq 'orders' || $class eq 'category' || $class eq 'properties' || $class eq 'product' || $class eq 'promo_category'}
+{elseif $class eq 'vendors' || $class eq 'brand' || $class eq 'artist' || $class eq 'orders' || $class eq 'category' || $class eq 'properties' || $class eq 'product' || $class eq 'promo_category'}
 &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/store">Store</a>{/if}
 
 
@@ -39,6 +39,7 @@
   {else}
  &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/category">Products</a> &raquo; Properties
   {/if}
+{elseif $class eq 'vendors'} &raquo; Vendors
 {elseif $class eq 'brand'} &raquo; Brands
 {/if}
 

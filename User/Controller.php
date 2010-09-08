@@ -109,13 +109,14 @@ class Controller extends EController
 	    $u->reg_code = md5($reg_code);
 	    $u->auth = 0;
 	    $u->active = 0;
-	    
+	    $u->registered = 'DEFAULT';
+
 	    $s->user_id = $u->insert(Model::getTable('UserItem'), 1, array(), 0);
 
 	    $s->insert(Model::getTable('ShippingAddress'), 1, array(), 0);
 	    
 	    $message = "\nHi ___,\n\n"
-	      ."Thanks for registering with Brighton BMX Co.\n\nBefore we can let you"
+	      ."Thanks for registering with ".ELIB_EMAIL_ORGANISATION."\n\nBefore we can let you"
 	      ." know your password for using the site, please confirm your email address"
 	      ." by clicking the following link:\n\n"
 	      ."http://".WEB_ROOT.PUBLIC_DIR."/user/confirm_reg/?code=".$reg_code
@@ -124,7 +125,9 @@ class Controller extends EController
 	    $r[0]['alias'] = $u->username;
 	    $r[0]['address'] = $u->email;
 
-	    $m = new Mailer($r, 'You have been registered with Brighton BMX Co', $message, FROM);
+	    $m = new Mailer($r, 'You have been registered with '.ELIB_EMAIL_ORGANISATION, $message, ELIB_EMAIL_FROM);
+
+	    $this->postRegister($s->user_id);
 
 	    $this->redirect('user/thanks/1');
 	  }
@@ -139,6 +142,13 @@ class Controller extends EController
     $this->setTemplate('elib://register.tpl');
   }
   
+
+  protected function postRegister($registration_id)
+  {
+    //
+  }
+
+
   public function confirm_reg()
   {
     $reg_code = $_GET['code'];
@@ -157,13 +167,13 @@ class Controller extends EController
 	$_SESSION['user_id'] = $u->id;
 
 	$message = "\nHi ___,\n\n"
-	  ."Thanks for confirming your registration. You can now log in to the Brighton BMX Co website using your username "
+	  ."Thanks for confirming your registration. You can now log in to the ".ELIB_EMAIL_ORGANISATION." website using your username "
 	  ." '___' and the password '".$password."'.\n\nCheers\n\n";	  
 
 	$r[0]['alias'] = $u->username;
 	$r[0]['address'] = $u->email;
 
-	$m = new Mailer($r, 'Welcome to Brighton BMX Co', $message, FROM);
+	$m = new Mailer($r, 'Welcome to '.ELIB_EMAIL_ORGANISATION, $message, ELIB_EMAIL_FROM);
 	$this->redirect('user/thanks/2');
       }   
     else
