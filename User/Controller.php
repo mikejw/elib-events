@@ -4,7 +4,7 @@ namespace ELib\User;
 use ELib\EController;
 use ELib\Model;
 use ELib\Country\Country;
-
+use ELib\Mailer;
 use Empathy\Session;
 
 
@@ -124,7 +124,7 @@ class Controller extends EController
 	    $r[0]['alias'] = $u->username;
 	    $r[0]['address'] = $u->email;
 
-	    $m = new \Mailer($r, 'You have been registered with Brighton BMX Co', $message, FROM);
+	    $m = new Mailer($r, 'You have been registered with Brighton BMX Co', $message, FROM);
 
 	    $this->redirect('user/thanks/1');
 	  }
