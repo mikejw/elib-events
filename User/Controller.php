@@ -163,9 +163,13 @@ class Controller extends EController
 	$r[0]['alias'] = $u->username;
 	$r[0]['address'] = $u->email;
 
-	$m = new \Mailer($r, 'Welcome to Brighton BMX Co', $message, FROM);
+	$m = new Mailer($r, 'Welcome to Brighton BMX Co', $message, FROM);
 	$this->redirect('user/thanks/2');
       }   
+    else
+      {
+	throw new \Exception('Unable to activate user.');
+      }
   }
 
   public function thanks()
