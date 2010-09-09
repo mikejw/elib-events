@@ -44,7 +44,7 @@ class Controller extends EController
 		}
 	      else
 		{
-		  $this->redirect('');
+		  $this->redirect('store');
 		}
 	    } 
 	  else
@@ -165,7 +165,7 @@ class Controller extends EController
 	$u->activated = 'MYSQLTIME';
 	$u->save(Model::getTable('UserItem'), array(), 0);
 
-	$_SESSION['user_id'] = $u->id;
+	Session::set('user_id',$u->id);
 
 	$message = "\nHi ___,\n\n"
 	  ."Thanks for confirming your registration. You can now log in to the ".ELIB_EMAIL_ORGANISATION." website using your username "

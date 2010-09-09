@@ -37,5 +37,10 @@ class CurrentUser
     return self::$u->id;
   }
 
+  public static function loggedIn()
+  {
+    return (self::getUserID() > 0);
+  }
+
 }
 ?>
