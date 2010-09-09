@@ -17,7 +17,7 @@ class Checkout
     $o = Model::load('OrderItem');
     $o->user_id = CurrentUser::getUserID();
     $o->status = 'DEFAULT';
-    $o->stamp = 'DEFAULT';
+    $o->stamp = 'MYSQLTIME';
     $o->first_name = $s->first_name;
     $o->last_name = $s->last_name;
     $o->address1 = $s->address1;

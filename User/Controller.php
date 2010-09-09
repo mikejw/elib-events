@@ -109,7 +109,7 @@ class Controller extends EController
 	    $u->reg_code = md5($reg_code);
 	    $u->auth = 0;
 	    $u->active = 0;
-	    $u->registered = 'DEFAULT';
+	    $u->registered = 'MYSQLTIME';
 
 	    $s->user_id = $u->insert(Model::getTable('UserItem'), 1, array(), 0);
 
@@ -162,6 +162,7 @@ class Controller extends EController
 	$password = $u->password;
 	$u->password = md5(SALT.$password.SALT);
 	$u->active = 1;
+	$u->activated = 'MYSQLTIME';
 	$u->save(Model::getTable('UserItem'), array(), 0);
 
 	$_SESSION['user_id'] = $u->id;

@@ -33,11 +33,12 @@ class UserItem extends Entity
 	  }
       }
     if($this->doValType(Validate::EMAIL, 'email', $this->email, false))
-      {
+      {	
         if($this->activeUser())
           {
-            $this->addValError('That email address can\'t be used', 'email');
+            //$this->addValError('That email address can\'t be used', 'email');
           }
+	
       }
   }
 
@@ -88,7 +89,9 @@ class UserItem extends Entity
   {
     $user_id = 0;
     $sql = 'SELECT * FROM '.Model::getTable('UserItem')
-      .' WHERE username = BINARY \''.$this->username.'\''
+      //.' WHERE username = BINARY \''.$this->username.'\''
+      // user should not need to know exact casing of username (like twitter)
+      .' WHERE username = \''.$this->username.'\''
       .' AND password = \''.md5(SALT.$this->password.SALT).'\''
       .' AND active = 1';
     $error = "Could not login.";
