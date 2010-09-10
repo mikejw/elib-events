@@ -80,10 +80,24 @@ class Controller extends EController
 	$u->email = $_POST['email'];
 	$u->validates();
 	
+	$p = Model::load('UserProfile');
+	$p->fullname = $_POST['fullname'];
+	$p->validates();
+
+
 	$s = Model::load('ShippingAddress');
-       
-	$s->first_name = $_POST['first_name'];
-	$s->last_name = $_POST['last_name'];
+
+	if($p->fullname != '')
+	  {
+	    $fullname_arr = explode(' ', $p->fullname);
+	    if(sizeof($fullname_arr) > 1)
+	      {		
+		$s->last_name = $fullname_arr[sizeof($fullname_arr) - 1];
+		array_pop($fullname_arr);
+		$s->first_name = implode(' ', $fullname_arr);
+	      }
+	  }
+
 	$s->address1 = $_POST['address1'];
 	$s->address2  = $_POST['address2'];
 	$s->city = $_POST['city'];
@@ -91,14 +105,15 @@ class Controller extends EController
 	$s->zip = strtoupper($_POST['zip']);
 	$s->country = $_POST['country'];
 	$s->validates();
+		
 	
-	
-	if($u->hasValErrors() || $s->hasValErrors())
+	if($u->hasValErrors() || $s->hasValErrors() || $p->hasValErrors())
 	  {
 	    $this->presenter->assign('user', $u);
 	    $this->presenter->assign('address', $s);
+	    $this->presenter->assign('profile', $p);
 	    	    
-	    $this->presenter->assign('errors', array_merge($u->getValErrors(), $s->getValErrors()));
+	    $this->presenter->assign('errors', array_merge($u->getValErrors(), $s->getValErrors(), $p->getValErrors()));
 	  }
 	else
 	  {
@@ -110,6 +125,8 @@ class Controller extends EController
 	    $u->auth = 0;
 	    $u->active = 0;
 	    $u->registered = 'MYSQLTIME';
+
+	    $u->user_profile_id = $p->insert(Model::getTable('UserProfile'), 1, array(), 0);
 
 	    $s->user_id = $u->insert(Model::getTable('UserItem'), 1, array(), 0);
 

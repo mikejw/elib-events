@@ -13,6 +13,7 @@ class UserItem extends Entity
   const TABLE = 'e_user';
 
   public $id;
+  public $user_profile_id;
   public $email;
   public $auth;
   public $username;

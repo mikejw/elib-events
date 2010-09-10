@@ -2,7 +2,7 @@
 
 <div id="content_inner">
 
-<h2>Login</h2>
+<h2>Sign In</h2>
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -20,7 +20,7 @@ value="{$username}"{/if} /></p>
 {if isset($password)}
 value="{$password}"{/if} /></p>
 </fieldset>
-<p><label>&nbsp;</label><button type="submit" name="login">Log in</button>
+<p><label>&nbsp;</label><button type="submit" name="login">Sign in</button>
 </p>
 </form>
 
