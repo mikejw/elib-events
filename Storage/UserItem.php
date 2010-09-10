@@ -37,11 +37,12 @@ class UserItem extends Entity
       {	
         if($this->activeUser())
           {
-            //$this->addValError('That email address can\'t be used', 'email');
+            $this->addValError('That email address can\'t be used', 'email');
           }
 	
       }
   }
+
 
   public function validateLogin()
   {
@@ -144,6 +145,10 @@ class UserItem extends Entity
     $active = 0;
     $sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE email = \''.$this->email.'\''
       .' AND active = 1';
+    if(isset($this->id))
+      {
+	$sql .= ' AND id != '.$this->id;
+      }
     $error = 'Could not check for existing email address.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)
@@ -158,6 +163,10 @@ class UserItem extends Entity
   {
     $exists = 0;
     $sql = 'SELECT id FROM '.Model::getTable('UserItem').' WHERE username = \''.$this->username.'\'';
+    if(isset($this->id))
+      {
+	$sql .= ' AND id != '.$this->id;
+      }
     $error = 'Could not check for existing username.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)

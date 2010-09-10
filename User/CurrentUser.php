@@ -42,5 +42,15 @@ class CurrentUser
     return (self::getUserID() > 0);
   }
 
+  public static function getProfileID()
+  {
+    return self::$u->user_profile_id;
+  }
+
+  public static function getUser()
+  {
+    return self::$u;
+  }
+
 }
 ?>
