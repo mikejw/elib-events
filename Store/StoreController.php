@@ -2,11 +2,14 @@
 
 namespace ELib\Store;
 use ELib\Model;
+
 use ELib\AuthedController;
+use ELib\EController;
+
 use ELib\User\CurrentUser;
 use ELib\Country\Country;
 
-class StoreController extends AuthedController
+class StoreController extends EController
 {  
 
   public function default_event()
