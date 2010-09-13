@@ -104,7 +104,8 @@ address2		VARCHAR(128)				NULL,
 city			VARCHAR(128)				NULL,
 state			VARCHAR(128)				NULL,
 zip			VARCHAR(128)				NULL,
-country			VARCHAR(128)				NULL);
+country			VARCHAR(128)				NULL,
+default_address		TINYINT(1)				NOT NULL DEFAULT 0);
 
 CREATE TABLE 		product_colour(
 id			INT(11)					AUTO_INCREMENT PRIMARY KEY,

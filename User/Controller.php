@@ -104,6 +104,7 @@ class Controller extends EController
 	$s->state = $_POST['state'];
 	$s->zip = strtoupper($_POST['zip']);
 	$s->country = $_POST['country'];
+	$s->default_address = 1;
 	$s->validates();
 		
 	

@@ -20,6 +20,7 @@ class ShippingAddress extends Entity
   public $state;
   public $zip;
   public $country;
+  public $default_address;
   
   public function validates()
   {
@@ -32,5 +33,31 @@ class ShippingAddress extends Entity
     $this->doValType(Validate::TEXT, 'zip', $this->zip, false);
     $this->doValType(Validate::TEXT, 'country', $this->country, false);   
   }
+
+  public function setDefault($user_id, $address_id)
+  {
+    $sql = 'SELECT id FROM '.Model::getTable('ShippingAddress').' WHERE user_id = '.$user_id;
+    $error = 'Could not get all shipping addresses for user.';
+    $result = $this->query($sql, $error);
+    
+    $addresses = array();
+    foreach($result as $row)
+      {
+	array_push($addresses, $row['id']);
+      }
+
+    if(in_array($address_id, $addresses))
+      {
+	$sql = 'UPDATE '.Model::getTable('ShippingAddress').' SET default_address = 0 WHERE user_id = '.$user_id;
+	$error = 'Could not wipe defaults.';
+	$this->query($sql, $error);
+	$sql = 'UPDATE '.Model::getTable('ShippingAddress').' SET default_address = 1 WHERE id = '.$address_id;
+	$error = 'Could not set new default';
+	$this->query($sql, $error);
+      }
+
+  }
+
+
 }
 ?>
