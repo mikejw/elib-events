@@ -20,7 +20,10 @@ class VendorsController extends AdminController
 	
 	if($u->active && $v->name != '')
 	  {
-	    $v->verified = 'DEFAULT';
+	    $u->auth = Access::VENDOR;
+	    $u->save(Model::getTable('UserItem'), array(), 2);
+
+	    $v->verified = 'MYSQLTIME';
 	    $v->save(Model::getTable('Vendor'), array(), 2);	   
 	  }
 	$this->redirect('admin/vendors');
@@ -32,7 +35,7 @@ class VendorsController extends AdminController
 	$t1 = Model::getTable('UserItem');
 	$t2 = Model::getTable('Vendor');
 	$t3 = Model::getTable('ShippingAddress');
-	$sql = ' WHERE t1.id = t2.user_id AND t1.id = t3.user_id';
+	$sql = ' WHERE t1.id = t2.user_id AND t1.id = t3.user_id AND t3.default_address = 1';
 	$page = 1;
 	$per_page = 10;
 	
