@@ -73,6 +73,9 @@ class Controller extends EController
 
   public function register()
   {
+    $supply_address = 0;
+    $saving_address = false;
+
     if(isset($_POST['submit']))
       {
 	$u = Model::load('UserItem');
@@ -86,27 +89,32 @@ class Controller extends EController
 
 
 	$s = Model::load('ShippingAddress');
+	
+	$supply_address = (isset($_POST['supply_address']) && $_POST['supply_address'] == 1)? 1: 0;
+	if($supply_address == 1)
+	  {	   
+	    $saving_address = true;
 
-	if($p->fullname != '')
-	  {
-	    $fullname_arr = explode(' ', $p->fullname);
-	    if(sizeof($fullname_arr) > 1)
-	      {		
-		$s->last_name = $fullname_arr[sizeof($fullname_arr) - 1];
-		array_pop($fullname_arr);
-		$s->first_name = implode(' ', $fullname_arr);
+	    if($p->fullname != '')
+	      {
+		$fullname_arr = explode(' ', $p->fullname);
+		if(sizeof($fullname_arr) > 1)
+		  {		
+		    $s->last_name = $fullname_arr[sizeof($fullname_arr) - 1];
+		    array_pop($fullname_arr);
+		    $s->first_name = implode(' ', $fullname_arr);
+		  }
 	      }
+	    
+	    $s->address1 = $_POST['address1'];
+	    $s->address2  = $_POST['address2'];
+	    $s->city = $_POST['city'];
+	    $s->state = $_POST['state'];
+	    $s->zip = strtoupper($_POST['zip']);
+	    $s->country = $_POST['country'];
+	    $s->default_address = 1;
+	    $s->validates();
 	  }
-
-	$s->address1 = $_POST['address1'];
-	$s->address2  = $_POST['address2'];
-	$s->city = $_POST['city'];
-	$s->state = $_POST['state'];
-	$s->zip = strtoupper($_POST['zip']);
-	$s->country = $_POST['country'];
-	$s->default_address = 1;
-	$s->validates();
-		
 	
 	if($u->hasValErrors() || $s->hasValErrors() || $p->hasValErrors())
 	  {
@@ -131,7 +139,13 @@ class Controller extends EController
 
 	    $s->user_id = $u->insert(Model::getTable('UserItem'), 1, array(), 0);
 
-	    $s->insert(Model::getTable('ShippingAddress'), 1, array(), 0);
+	    if($saving_address)
+	      {
+		$s->insert(Model::getTable('ShippingAddress'), 1, array(), 0);
+		$v = Model::load('Vendor');
+		$v->user_id = $s->user_id;
+		$v->insert(Model::getTable('Vendor'), 1, array(), 0);
+	      }
 	    
 	    $message = "\nHi ___,\n\n"
 	      ."Thanks for registering with ".ELIB_EMAIL_ORGANISATION."\n\nBefore we can let you"
@@ -145,7 +159,7 @@ class Controller extends EController
 
 	    $m = new Mailer($r, 'You have been registered with '.ELIB_EMAIL_ORGANISATION, $message, ELIB_EMAIL_FROM);
 
-	    $this->postRegister($s->user_id);
+	    //$this->postRegister($s->user_id);
 
 	    $this->redirect('user/thanks/1');
 	  }
@@ -157,7 +171,10 @@ class Controller extends EController
     $countries = Country::build();   
     $this->presenter->assign('countries', $countries); 
     $this->presenter->assign('sc', 'GB');
-    $this->setTemplate('elib://register.tpl');
+
+    $this->assign('supply_address', $supply_address);    
+
+    $this->setTemplate('elib://register.tpl');   
   }
   
 
