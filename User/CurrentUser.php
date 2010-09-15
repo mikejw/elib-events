@@ -2,6 +2,7 @@
 
 namespace ELib\User;
 use ELib\Model;
+use ELib\Store\Access;
 use Empathy\Session;
 
 
@@ -21,6 +22,7 @@ class CurrentUser
 	self::$u->load();
 	$c->assign('current_user', self::$u->username);	
 	$c->assign('user_id', self::$u->id);	
+	$c->assign('user_is_vendor', (self::$u->auth == Access::VENDOR));
       }
   }
 
@@ -50,6 +52,11 @@ class CurrentUser
   public static function getUser()
   {
     return self::$u;
+  }
+
+  public static function isAuthLevel($level)
+  {
+    return (self::$u->auth == $level);
   }
 
 }
