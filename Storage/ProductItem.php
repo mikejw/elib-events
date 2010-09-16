@@ -4,6 +4,7 @@ namespace ELib\Storage;
 use ELib\Model;
 use Empathy\Entity as Entity;
 
+
 class ProductItem extends Entity
 {
   const TABLE = 'product';
@@ -15,8 +16,8 @@ class ProductItem extends Entity
   public $description;
   public $image;
   public $upc;
-  public $sold_in_store;
-  public $user_id;
+  public $status;
+  public $vendor_id;
     
   public function validates()
   {

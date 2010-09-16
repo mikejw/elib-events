@@ -30,6 +30,7 @@ class CurrentUser
   {
     if(self::$u->id < 1 || !self::$u->getAuth(self::$u->id))
       {      
+	Session::down();
 	$c->redirect("user/login");
       }
   }

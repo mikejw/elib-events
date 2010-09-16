@@ -36,7 +36,16 @@ class ProductController extends AdminController
       $old_product_name = $p->name;
       $p->name = $_POST['name'];
       $p->description = $_POST['description'];
-      $p->sold_in_store = $_POST['sold_in_store'];
+      
+      if($_POST['sold_in_store'] == 1)
+	{
+	  $p->status = 1;
+	}
+      else
+	{
+	  $p->status = 0;
+	}
+
       $p->brand_id = $_POST['brand_id'];
       
       $p->validates();
@@ -59,6 +68,13 @@ class ProductController extends AdminController
       {
 	$p->id = $_GET['id'];
 	$p->load();
+
+	$p->sold_in_store = 0;
+	if($p->status > 0)
+	  {
+	    $p->sold_in_store = 1;
+	  }
+
 	//$product_ranges = $pr->loadForProduct($p->id);
 
 	//$r = new RangeItem($this);
@@ -286,12 +302,7 @@ class ProductController extends AdminController
     $p->brand_id = 0;
     $p->name = 'New Product';
     $p->description = 'No description.';
-    $p->sold_in_store = 1;
-    if(defined('ELIB_MULTIPLE_VENDORS' &&
-	       ELIB_MULTIPLE_VENDORS == true))
-      {
-	$p->user_id = \ELib\User\CurrentUser::getUserID();
-      }
+    $p->status = 'DEFAULT';
     $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
     $this->redirect('admin/category/'.$_GET['id']);
   }

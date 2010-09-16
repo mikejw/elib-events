@@ -9,8 +9,9 @@ class CategoriesTree extends Tree
   private $data;
   private $category_ancestors;
 
-  public function __construct($category, $collapsed)
+  public function __construct($category, $collapsed, $url = null)
   {
+    $this->url = $url;
     $this->category = $category;
     $current_id = $this->category->id;
     $this->category_ancestors = array(0);
@@ -64,7 +65,14 @@ class CategoriesTree extends Tree
       { 	
 	$toggle = '+';
 	$folder = 't_folder_closed.gif';
-	$url = 'category';
+	if($this->url == null)
+	  {
+	    $url = 'admin/category';
+	  }
+	else
+	  {
+	    $url = $this->url;
+	  }
 	
 	if(in_array($value['id'], $ancestors))
 	  {
@@ -83,7 +91,7 @@ class CategoriesTree extends Tree
 	$markup .= ">\n";
 	if($children > 0)
 	  {		
-	    $markup .= "<a class=\"toggle\" href=\"http://".WEB_ROOT.PUBLIC_DIR."/admin/$url/".$value['id'].'/?page=1';
+	    $markup .= "<a class=\"toggle\" href=\"http://".WEB_ROOT.PUBLIC_DIR."/$url/".$value['id'].'/?page=1';
 	    if($toggle == '-')
 	      {
 		$markup .= '&amp;collapsed=1';
@@ -101,7 +109,7 @@ class CategoriesTree extends Tree
 	  }
 	else
 	  {
-	    $markup .= "<span class=\"label\"><a href=\"http://".WEB_ROOT.PUBLIC_DIR."/admin/$url/".$value['id']."/?page=1\">".$value['label']."</a></span>";	
+	    $markup .= "<span class=\"label\"><a href=\"http://".WEB_ROOT.PUBLIC_DIR."/$url/".$value['id']."/?page=1\">".$value['label']."</a></span>";	
 	  }
 	if($children > 0)
 	  {

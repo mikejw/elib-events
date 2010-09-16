@@ -5,7 +5,7 @@ namespace ELib;
 class Tree
 {
   protected $markup;
-  
+  protected $url;
   
   public function getMarkup()
   {

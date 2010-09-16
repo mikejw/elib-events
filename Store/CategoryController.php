@@ -61,10 +61,22 @@ class CategoryController extends AdminController
     $product = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $_GET['page'], REQUESTS_PER_PAGE);    
 
 
+    foreach($product as &$product_item)
+      {
+	if($product_item['status'] > 0)
+	  {
+	    $product_item['sold_in_store'] = 1;
+	  }	
+	else
+	  {
+	    $product_item['sold_in_store'] = 0;
+	  }
+      }
+
     $c = Model::load('CategoryItem');
     $c->id = $_GET['id'];
-    $category = $c->loadIndexed($c->category_id);
-    
+    $category = $c->loadIndexed($c->category_id);      
+
 
     /*
     foreach($product as $index => $item)
