@@ -45,9 +45,9 @@ id		INT(11)					NOT NULL AUTO_INCREMENT PRIMARY KEY,
 product_id	INT(11)					NOT NULL,
 image		VARCHAR(64)				NULL,
 sku		VARCHAR(32)				NULL,
-weight_g	INT					NOT NULL DEFAULT 0,
-weight_lb	DECIMAL(6,2)				NOT NULL DEFAULT '0.00',
-weight_oz	DECIMAL(6,2)				NOT NULL DEFAULT '0.00',
+weight_g	INT					NULL,
+weight_lb	DECIMAL(6,2)				NULL,
+weight_oz	DECIMAL(6,2)				NULL,
 price		DECIMAL(6,2)				NOT NULL DEFAULT '0.00',
 status		TINYINT(1)				NOT NULL DEFAULT 0);
 

@@ -126,9 +126,6 @@ class Store
   {
     $v = Model::load('ProductVariant');
     $v->product_id = $product_id;
-    $v->weight_g = 'DEFAULT';
-    $v->weight_lb = 'DEFAULT';
-    $v->weight_oz = 'DEFAULT';
     $v->price = 'DEFAULT';
     $v->status = 'DEFAULT';
     $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
@@ -180,12 +177,7 @@ class Store
     $p->id = $_GET['id'];
     $p->load();
 
-    $b = Model::load('BrandItem');
-    $b->id = $p->brand_id;
-    $b->load();
-
     $this->c->assign("product", $p);
-    $this->c->assign('brand', $b->name);
 
     $v = Model::load('ProductVariant');
     $c = Model::load('ProductColour');

@@ -110,12 +110,16 @@ class ProductController extends AdminController
     $p->id = $_GET['id'];
     $p->load();
 
-    $b = Model::load('BrandItem');
-    $b->id = $p->brand_id;
-    $b->load();
-
     $this->presenter->assign("product", $p);
-    $this->presenter->assign('brand', $b->name);
+
+
+    if(is_numeric($p->brand_id))
+      {
+	$b = Model::load('BrandItem');
+	$b->id = $p->brand_id;
+	$b->load();
+	$this->presenter->assign('brand', $b->name);
+      }
 
     $v = Model::load('ProductVariant');
     $c = Model::load('ProductColour');
@@ -287,9 +291,9 @@ class ProductController extends AdminController
     $this->assertID();
     $v = Model::load('ProductVariant');
     $v->product_id = $_GET['id'];
-    $v->weight_g = 'DEFAULT';
-    $v->weight_lb = 'DEFAULT';
-    $v->weight_oz = 'DEFAULT';
+    $v->weight_g = 0;
+    $v->weight_lb = 0;
+    $v->weight_oz = 0;
     $v->price = 'DEFAULT';
     $v->status = 'DEFAULT';
     $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
