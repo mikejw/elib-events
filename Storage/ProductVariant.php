@@ -17,6 +17,8 @@ class ProductVariant extends Entity
   public $weight_lb;
   public $weight_oz;
   public $price;
+  public $status;
+
  
   public function validates()
   {

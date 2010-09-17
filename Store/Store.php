@@ -2,6 +2,7 @@
 
 namespace ELib\Store;
 use ELib\Model;
+use ELib\User\CurrentUser;
 use Empathy\Session;
 
 define('REQUESTS_PER_PAGE', 12);
@@ -67,6 +68,11 @@ class Store
     $sql .= ' AND status != '.StoreStatus::DELETED;
     
 
+    // vendor
+    $v = Model::load('Vendor');
+    $vendor_id = $v->getIDByUserID(CurrentUser::getUserID());
+    $sql .= ' AND vendor_id = '.$vendor_id;
+
     $sql .= ' ORDER BY '.$_GET['order_by'];
 
     $p_nav = $p->getPaginatePages(Model::getTable('ProductItem'), $sql, $_GET['page'], REQUESTS_PER_PAGE);
@@ -127,7 +133,7 @@ class Store
 	       ELIB_MULTIPLE_VENDORS == true)
 	      
 	      {
-		$user_id = \ELib\User\CurrentUser::getUserID();
+		$user_id = CurrentUser::getUserID();
 	    $v = Model::load('Vendor');
 	    $vendor_id = $v->getIDByUserID($user_id);
 	    if($vendor_id > 0)
@@ -186,6 +192,7 @@ class Store
     else
       {
 	$sql = ' WHERE product_id = '.$p->id;
+	$sql .= ' AND status != '.StoreStatus::DELETED;
 	$variants = $v->getAllCustom(Model::getTable('ProductVariant'), $sql);
       }
 
@@ -342,6 +349,20 @@ class Store
     $this->c->redirect('storeadmin/products');
   }
 
+  // new function
+  public function deleteVariant()
+  {  
+    $v = Model::load('ProductVariant');
+    $v->id = $_GET['id'];
+    $v->load();
+    $v->status = StoreStatus::DELETED;
+    $v->save(Model::getTable('ProductVariant'), array(), 2);
+    $this->c->redirect('storeadmin/product/'.$v->product_id);
+  }
+
+    
+
+
 
   public function addProductVariant()
   {
@@ -352,6 +373,7 @@ class Store
     $v->weight_lb = 'DEFAULT';
     $v->weight_oz = 'DEFAULT';
     $v->price = 'DEFAULT';
+    $v->status = 'DEFAULT';
     $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
     $this->c->redirect('storeadmin/product/'.$_GET['id']);
   }
@@ -438,9 +460,72 @@ class Store
   }         
 
 
+  
+  public function variantProperties()
+  {    
+    //$this->setTemplate('elib://admin/product.tpl');
+    //$this->assertID();
 
-  
-  
+    if(isset($_POST['save']))
+      {
+	$p = Model::load('ProductVariantPropertyOption');
+	$p->emptyByVariant($_GET['id']);
+	$p->product_variant_id = $_GET['id'];
+	//if(isset($_POST['property']))
+	// {
+	foreach($_POST['property'] as $index => $item)
+	      {
+		if($item > 0 && is_numeric($item))
+		  {
+		    $p->property_option_id = $item;
+		    $p->insert(Model::getTable('ProductVariantPropertyOption'), 1, array(), 0);
+		  }
+	      }   
+	    // }
+	$v = Model::load('ProductVariant');
+	$v->id = $_GET['id'];
+	$v->load();
+	$this->c->redirect('storeadmin/product/'.$v->product_id);
+      }
+
+    $v = Model::load('ProductVariant');
+    $v->id = $_GET['id'];
+    $v->load();
+   
+    $p = Model::load('ProductItem');
+    $p->id = $v->product_id;
+    $p->load();
+
+    $c = Model::load('CategoryItem');
+    $cats = $c->getAncestorIds($p->category_id, array());
+
+    $cp = Model::load('CategoryProperty');
+
+    array_push($cats, $p->category_id);
+    $props = $cp->getPropertiesByCategory($cats);
+
+    array_push($props, 2); // always allow colour property    
+
+    $this->c->assign('product', $p);
+    $this->c->assign('variant', $v);
+
+    if(sizeof($props) > 0)
+      {
+	$property = Model::load('Property');
+	$properties = $property->getAllWithOptions($props);
+	$this->c->assign('properties', $properties);
+	
+	$pv = Model::load('ProductVariantPropertyOption');
+	$sql = ' WHERE product_variant_id = '.$_GET['id'];
+	$options = $pv->getAllCustom(Model::getTable('ProductVariantPropertyOption'), $sql);
+	$o = array();
+	foreach($options as $index => $value)
+	  {
+	    array_push($o, $value['property_option_id']);
+	  }
+	$this->c->assign('options', $o);    
+      }
+  }
 
 
 

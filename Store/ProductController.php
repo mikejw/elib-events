@@ -291,6 +291,7 @@ class ProductController extends AdminController
     $v->weight_lb = 'DEFAULT';
     $v->weight_oz = 'DEFAULT';
     $v->price = 'DEFAULT';
+    $v->status = 'DEFAULT';
     $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
     $this->redirect('admin/product/'.$_GET['id']);
   }
