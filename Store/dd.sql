@@ -10,7 +10,7 @@ about			TEXT					NULL);
 CREATE TABLE 	product(
 id		INT(11)					NOT NULL AUTO_INCREMENT PRIMARY KEY,
 category_id	INT(11)					NOT NULL DEFAULT 1,
-brand_id	INT(11)					NOT NULL,
+brand_id	INT(11)					NULL,
 name		VARCHAR(128)				NOT NULL,
 description	TEXT					NULL,
 image		VARCHAR(64)				NULL,

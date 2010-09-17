@@ -113,6 +113,28 @@ class Store
 
 
   // from product controller
+
+  public function addProductVariant()
+  {
+    //$this->assertID();
+    $this->addProductVariantInternal($_GET['id']);
+    $this->c->redirect('storeadmin/product/'.$_GET['id']);
+  }
+
+  // (new function)
+  public function addProductVariantInternal($product_id)
+  {
+    $v = Model::load('ProductVariant');
+    $v->product_id = $product_id;
+    $v->weight_g = 'DEFAULT';
+    $v->weight_lb = 'DEFAULT';
+    $v->weight_oz = 'DEFAULT';
+    $v->price = 'DEFAULT';
+    $v->status = 'DEFAULT';
+    $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
+  }
+
+
   public function addProduct()
   {
     $_GET['id'] = (int)$_GET['id'];
@@ -124,7 +146,6 @@ class Store
 	  {
 	    $p = Model::load('ProductItem');
 	    $p->category_id = $_GET['id'];
-	    $p->brand_id = 0;
 	    $p->name = 'New Product';
 	    $p->description = 'No description.';
 	    $p->status = 'DEFAULT';
@@ -141,7 +162,9 @@ class Store
 		$p->vendor_id = $vendor_id;
 	      }
 	      }
-	    $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
+	    $p->id = $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
+	    $this->addProductVariantInternal($p->id); // create first variant 
+	    $this->c->redirect('storeadmin/edit_product/'.$p->id);
 	  }
       }
     $this->c->redirect('storeadmin/products/'.$_GET['id']);
@@ -361,22 +384,6 @@ class Store
   }
 
     
-
-
-
-  public function addProductVariant()
-  {
-    //$this->assertID();
-    $v = Model::load('ProductVariant');
-    $v->product_id = $_GET['id'];
-    $v->weight_g = 'DEFAULT';
-    $v->weight_lb = 'DEFAULT';
-    $v->weight_oz = 'DEFAULT';
-    $v->price = 'DEFAULT';
-    $v->status = 'DEFAULT';
-    $v->insert(Model::getTable('ProductVariant'), 1, array(), 0);   
-    $this->c->redirect('storeadmin/product/'.$_GET['id']);
-  }
 
 
   
