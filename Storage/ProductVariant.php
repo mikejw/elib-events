@@ -2,8 +2,8 @@
 
 namespace ELib\Storage;
 use ELib\Model;
-use Empathy\Entity as Entity;
-
+use Empathy\Entity;
+use Empathy\Validate;
 
 class ProductVariant extends Entity
 {
@@ -22,22 +22,10 @@ class ProductVariant extends Entity
  
   public function validates()
   {
-    if(!is_numeric($this->weight_g))
-      {
-	$this->addValError('Invalid weight amount (g)');	
-      }       
-    if(!is_numeric($this->weight_lb))
-      {
-	$this->addValError('Invalid weight amount (lb)');	
-      }
-    if(!is_numeric($this->weight_oz))
-      {
-	$this->addValError('Invalid weight amount (oz)');	
-      }
-    if(!is_numeric($this->price))
-      {
-	$this->addValError('Invalid price');	
-      }
+    $this->doValType(Validate::NUM, 'weight_g', $this->weight_g, true);
+    $this->doValType(Validate::NUM, 'weight_lb', $this->weight_lb, true);
+    $this->doValType(Validate::NUM, 'weight_oz', $this->weight_oz, true);
+    $this->doValType(Validate::NUM, 'price', $this->price, false);
   }
   
   public function getVariantName($id)
