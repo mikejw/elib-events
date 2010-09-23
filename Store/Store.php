@@ -213,15 +213,144 @@ class Store
 
     $property = Model::load('Property');
 
-    foreach($variants as $index => $item)
+
+    $available_variant = false;
+
+    foreach($variants as &$v)
       {
-	$props = $property->loadForVariant($item['id']);
-	$variants[$index]['properties'] = $props;
+	$props = $property->loadForVariant($v['id']);
+	if(sizeof($props) > 0)
+	  {
+	    $v['properties'] = $props;	
+	  }
+	if($this->setStatusFlags($v) == true
+	   && $available_variant != true)
+	  {
+	    $available_variant = true; 
+	  }
       }
+
+    if($available_variant == true
+       && $p->name != 'New Product'
+       && $p->description != 'No description.'
+       && $p->image != '')
+      {
+	if($p->status != StoreStatus::AVAILABLE)
+	  {           
+	    $this->c->assign('product_available_link', true);
+	  }
+	if($p->status != StoreStatus::SOLD_OUT)
+	  {
+	    $this->c->assign('product_sold_out_link', true);
+	  }
+	if($p->status != StoreStatus::CREATED)
+	  {
+	    $this->c->assign('product_unavailable_link', true);
+	  }
+      }
+
+
     
     $this->c->assign('has_colours', $has_colours);
     $this->c->assign('variants', $variants);    
   }
+
+
+
+  // new stuff
+  public function setStatusFlags(&$v)
+  {
+    $available = false;
+    if(isset($v['properties']) && $v['price'] > 0)           
+      {
+	if($v['status'] != StoreStatus::AVAILABLE)
+	  {
+	    $v['available_link'] = true;
+	  }
+	else
+	  {
+	    $available = true;
+	    $v['unavailable_link'] = true;
+	  }
+      }
+    return $available;
+  }
+  
+  public function setVariantAvailable()
+  {
+    $v = Model::load('ProductVariant');
+    $v->id = $_GET['id'];
+    $v->load();
+    $v->status = StoreStatus::AVAILABLE;
+    $v->save(Model::getTable('ProductVariant'), array(), 2);
+    $this->c->redirect('storeadmin/product/'.$v->product_id);
+  }
+  
+  public function setVariantUnavailable()
+  {
+    $v = Model::load('ProductVariant');
+    $v->id = $_GET['id'];
+    $v->load();    
+    $v->status = StoreStatus::CREATED;
+    $v->save(Model::getTable('ProductVariant'), array(), 2);
+       
+    /*
+    $property = Model::load('Property');
+    $props = $property->loadForVariant($p->id);
+    if(sizeof($props) > 0 && $v->price > 0)           
+      {
+    */
+	
+    $sql = ' WHERE status = '.StoreStatus::AVAILABLE
+      .' AND product_id = '.$v->product_id;
+    $variants = $v->getAllCustom(Model::getTable('ProductVariant'), $sql);
+
+    if(sizeof($variants) < 1)
+      {	
+	$p = Model::load('ProductItem');
+	$p->id = $v->product_id;
+	$p->load();
+	$p->status = StoreStatus::CREATED;
+	$p->save(Model::getTable('ProductItem'), array(), 2);	
+      }
+
+    $this->c->redirect('storeadmin/product/'.$v->product_id);
+  }
+
+  public function setProductAvailable()
+  {
+    $p = Model::load('ProductItem');
+    $p->id = $_GET['id'];
+    $p->load();
+    $p->status = StoreStatus::AVAILABLE;
+    $p->save(Model::getTable('ProductItem'), array(), 2);
+    $this->c->redirect('storeadmin/product/'.$p->id);
+  }
+   
+  public function setProductUnAvailable()
+  {
+    $p = Model::load('ProductItem');
+    $p->id = $_GET['id'];
+    $p->load();
+    $p->status = StoreStatus::CREATED;
+    $p->save(Model::getTable('ProductItem'), array(), 2);
+    $this->c->redirect('storeadmin/product/'.$p->id);
+  }
+
+  public function setProductSoldOut()
+  {
+    $p = Model::load('ProductItem');
+    $p->id = $_GET['id'];
+    $p->load();
+    $p->status = StoreStatus::SOLD_OUT;
+    $p->save(Model::getTable('ProductItem'), array(), 2);
+    $this->c->redirect('storeadmin/product/'.$p->id);
+  }
+
+ 
+
+
+
 
   public function editProduct()
   {

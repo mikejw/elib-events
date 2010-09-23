@@ -107,7 +107,7 @@ class ProductsLayout
     if(!$this->category->getChildren($this->category->id))
       {
 	$sql = ' WHERE category_id = '.$this->category->id
-	  .' AND t1.status = '.StoreStatus::DISPLAYED
+	  .' AND t1.status = '.StoreStatus::AVAILABLE
 	  .' AND t1.brand_id = t2.id'
 	  .' AND t3.product_id = t1.id';
 
