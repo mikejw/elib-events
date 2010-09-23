@@ -80,7 +80,10 @@ class Store
     $this->c->assign('p_nav', $p_nav);
 
     $product = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $_GET['page'], REQUESTS_PER_PAGE);    
-
+    foreach($product as &$p)
+      {
+	$p['status_text'] = StoreStatus::getStatus($p['status']);
+      }
 
     $c = Model::load('CategoryItem');
     $c->id = $_GET['id'];
@@ -148,16 +151,15 @@ class Store
 	    $p->status = 'DEFAULT';
 	    
 	    if(defined('ELIB_MULTIPLE_VENDORS') &&
-	       ELIB_MULTIPLE_VENDORS == true)
-	      
+	       ELIB_MULTIPLE_VENDORS == true)	      
 	      {
 		$user_id = CurrentUser::getUserID();
-	    $v = Model::load('Vendor');
-	    $vendor_id = $v->getIDByUserID($user_id);
-	    if($vendor_id > 0)
-	      {
-		$p->vendor_id = $vendor_id;
-	      }
+		$v = Model::load('Vendor');
+		$vendor_id = $v->getIDByUserID($user_id);
+		if($vendor_id > 0)
+		  {
+		    $p->vendor_id = $vendor_id;
+		  }
 	      }
 	    $p->id = $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
 	    $this->addProductVariantInternal($p->id); // create first variant 
