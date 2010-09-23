@@ -176,6 +176,7 @@ class Store
 
     $p->id = $_GET['id'];
     $p->load();
+    $this->c->assign('product_status', StoreStatus::getStatus($p->status));
 
     $this->c->assign("product", $p);
 
@@ -228,6 +229,7 @@ class Store
 	  {
 	    $available_variant = true; 
 	  }
+	$v['status_text'] = StoreStatus::getStatus($v['status']);
       }
 
     if($available_variant == true
