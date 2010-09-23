@@ -121,7 +121,7 @@ class ProductItem extends Entity
     $sql = 'SELECT MIN(price) AS price FROM '.Model::getTable('ProductVariant')
       .' WHERE product_id = '.$this->id
       .' AND product_id > 0';
-    $error = 'Could get price.';
+    $error = 'Could not get price.';
     $result = $this->query($sql, $error);
     if($result->rowCount() == 1)
       {
@@ -130,6 +130,24 @@ class ProductItem extends Entity
       }
     return $price;
   }
+
+  // new get price function  
+  public function getMinPrice($id)
+  {
+    $price = 0;
+    $sql = 'SELECT MIN(price) AS price FROM '.Model::getTable('ProductVariant')
+      .' WHERE product_id = '.$id
+      .' AND status = '.\ELib\Store\StoreStatus::AVAILABLE;
+    $error = 'Could not get price.';
+    $result = $this->query($sql, $error);
+    if($result->rowCount() == 1)
+      {
+	$row = $result->fetch();
+	$price = $row['price'];
+      }
+    return $price;
+  }
+
 
 
   public function loadIDByName($name)
