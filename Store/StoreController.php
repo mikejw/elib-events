@@ -71,6 +71,189 @@ class StoreController extends StoreControllerLite
 	$this->presenter->assign('category_name', $c->name);
       }    
   }
+
+
+
+
+
+  public function product()
+  {
+    $this->setTemplate('store_product.tpl');
+    $product_id = 0; 
+    
+    if(isset($_GET['id']) && is_numeric($_GET['id']))
+      {
+	$product_id = $_GET['id'];
+      }
+    
+
+    if(isset($_GET['product_name']))
+      {
+	$name_arr = explode('-', $_GET['product_name']);
+	$product_id = $name_arr[sizeof($name_arr)-1];
+      }
+
+    $_GET['product_id'] = $product_id;   
+
+    if($this->isXMLHttpRequest())
+      {
+	header('Content-type: application/json');
+	$c = Model::load('ProductColour');
+	$c->id = $_GET['colour_id'];
+	$c->load();
+	$item = array();
+	$item['image'] = $c->image;
+	$item['option_id'] = $c->property_option_id;
+       	echo json_encode($item);	
+	exit();
+      }
+    else
+      {
+	// default event from store.php
+
+	$p = Model::load('ProductItem');
+	$c = Model::load('CategoryItem');
+	$v = Model::load('ProductVariant');
+	$o = Model::load('ProductVariantPropertyOption');
+	
+	$c->id = 0;
+	$p->id = $_GET['product_id'];
+	$v->id = 0;
+	$o->id = 0;
+
+	if(isset($_POST['add']))
+	  {       
+	    $options = array();
+	    if(isset($_POST['property']))
+	      {
+		foreach($_POST['property'] as $option)
+		  {
+		    array_push($options, $option);
+		  }	    
+	      }
+
+	    if(sizeof($options) > 0)
+	      {
+		$variant_id = $v->findVariant($options, $p->id);
+	      }
+	    else
+	      {	   
+		$sql = ' WHERE product_id = '.$p->id.' LIMIT 0, 1';
+		$variant = $v->getAllCustom(Model::getTable('ProductVariant'), $sql);
+		if(sizeof($variant) > 0)
+		  {
+		    $variant_id = $variant[0]['id'];
+		  }
+	      }
+
+	    if(is_numeric($variant_id) && $variant_id > 0)
+	      {	    
+		$sc = new ShoppingCart();
+		$sc->add($variant_id, 1);		      		  
+		$this->redirect('store/cart');	    
+	      }	    
+	  }
+
+	$l = new ProductsLayout($c, $p, $v, $o, $this);
+        
+	$this->assign('breadcrumb', $l->getBreadCrumb());
+	$this->assign('buttons', $l->getButtons());
+
+	$this->assign('p_nav', $l->getPNav());
+
+	if($_GET['product_id'] != 0)
+	  {
+	    $c = Model::load('ProductColour');
+	    $colours = $c->getColoursIndexed($_GET['product_id']);
+	    if(sizeof($colours) > 0)
+	      {
+		$this->assign('colours', $colours);
+	      }
+
+	    if(defined('ELIB_USE_PRODUCT_BRANDS') &&
+	       ELIB_USE_PRODUCT_BRANDS == true)
+	      {
+		$b = Model::load('BrandItem');
+		$b->id = $p->brand_id;
+		$b->load();
+		$this->assign('brand', $b->name);
+	      }
+	    $this->assign('product_view', 1);
+	    //$variant_count = $this->assignVariantsTableData($p, $v);
+	    $this->getPropertiesAndOptions($p->id, (sizeof($colours) > 0));
+
+	  }   
+        
+
+	$_GET['category_id'] = -1;
+	
+    
+	$this->assign('category_id', $_GET['category_id']);
+	$this->assign('product_id', $_GET['product_id']);
+	$this->assign('option_id', 0);
+
+	if($_GET['product_id'] != 0)
+	  {
+	    $p = $l->getProduct();
+	    if(sizeof($colours) > 0)
+	      {
+		$p->image = $c->getFirstColourImage($_GET['product_id']);
+	      }
+	    
+	    $this->assign('product', $p);
+
+	    $qty = array();
+	    $i = 0;
+	    for($i; $i < 31; $i++)
+	      {
+		$qty[$i] = $i;
+	      }
+	    
+	    $this->assign('qty', $qty);
+	  }
+      }
+
+    // seo    
+    $c = Model::load('CategoryItem');
+    $c->id = $p->category_id;
+    $c->load();
+    $this->assign('price', $p->getPrice());
+
+    $custom_title = '';
+    $custom_keywords = '';
+    $custom_description = '';
+    if(isset($b))
+      {
+	$custom_title = $b->name.' ';
+	$custom_keywords = $b->name.' ';
+	$custom_description = $b->name.' ';
+      }
+    $custom_title .= $p->name.' - '.$c->name.' at Brighton BMX Co';
+    $custom_keywords .= $p->name.' '.$c->name;
+    $custom_description .= $p->name.' in '.$c->name;
+
+    $this->assign('custom_title', $custom_title);
+    $this->assign('custom_keywords', strtolower($custom_keywords));
+    $this->assign('custom_description', $custom_description.' - '.strip_tags($p->description));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   // copied across from store.php
   public function getPromos($category_id)

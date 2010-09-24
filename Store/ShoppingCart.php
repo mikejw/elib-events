@@ -2,6 +2,7 @@
 
 namespace ELib\Store;
 use ELib\Model;
+use Empathy\Session;
 
 class ShoppingCart
 {
@@ -21,9 +22,9 @@ class ShoppingCart
     $ids = array();
     $product_data = array();
 
-    if(isset($_SESSION['cart']) && sizeof($_SESSION['cart']) > 0)
+    if(($cart = Session::get('cart')) != false)
       {
-	foreach($_SESSION['cart'] as $v => $qty)
+	foreach($cart as $v => $qty)
 	  {
 	    array_push($ids, $v);
 	  }	
@@ -34,7 +35,7 @@ class ShoppingCart
 	  {
 	    $id = $value['id'];
 	    $price = $value['price'];
-	    $qty = $_SESSION['cart'][$id];	
+	    $qty = $cart[$id];	
 	    $product_data[$index]['qty'] = $qty;
 	    $product_data[$index]['line'] = $qty * $price; 
 	  }    
@@ -45,30 +46,44 @@ class ShoppingCart
 
   public function add($variant_id, $qty)
   {
-    if(isset($_SESSION['cart'][$variant_id]))
+    if(($cart = Session::get('cart')) == false)
       {
-	$_SESSION['cart'][$variant_id] += (int)($qty);
+	$cart = array();
+      }
+
+    if(isset($cart[$variant_id]))
+      {
+	$cart[$variant_id] += (int)($qty);
       }
     else
       {
-	$_SESSION['cart'][$variant_id] = (int)($qty);
+	$cart[$variant_id] = (int)($qty);
       }      
+    Session::set('cart', $cart);
   }
 
   public function remove($variant_id)
   {
-    if(isset($_SESSION['cart'][$variant_id]))
-      {
-	unset($_SESSION['cart'][$variant_id]);
+    if(($cart = Session::get('cart')) != false)
+      {	      
+	if(isset($cart[$variant_id]))
+	  {
+	    unset($cart[$variant_id]);
+	    Session::set('cart', $cart);
+	  }	
       }
   }
 
 
   public function update($variant_id, $qty)
   {
-    if(isset($_SESSION['cart'][$variant_id]))
+    if(($cart = Session::get('cart')) != false)
       {
-	$_SESSION['cart'][$variant_id] = (int)($qty);
+	if(isset($cart[$variant_id]))
+	  {
+	    $cart[$variant_id] = (int)($qty);
+	    Session::set('cart', $cart);
+	  }
       }
   }
 
@@ -76,9 +91,9 @@ class ShoppingCart
   public static function getTotalItems()
   {
     $total = 0;
-    if(isset($_SESSION['cart']) && sizeof($_SESSION['cart']) > 0)
-      {
-	foreach($_SESSION['cart'] as $v => $qty)
+    if(($cart = Session::get('cart')) != false)
+      {    
+	foreach($cart as $v => $qty)
 	  {
 	    $total += $qty;
 	  }
@@ -89,13 +104,14 @@ class ShoppingCart
 
   public function emptyCart()
   {
-    $_SESSION['cart'] = array();
+    Session::set('cart', array());
   }
 
   public function isEmpty()
   {
     $empty = false;
-    if(sizeof($_SESSION['cart']) < 1)
+    if(($cart = Session::get('cart')) == false
+       || sizeof($cart) < 1)
       {
 	$empty = true;
       }
