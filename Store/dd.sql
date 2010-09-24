@@ -16,7 +16,9 @@ description	TEXT					NULL,
 image		VARCHAR(64)				NULL,
 upc		VARCHAR(32)				NULL,
 status		TINYINT(1)				NOT NULL DEFAULT 0,
-vendor_id	INT(11)					NULL);
+vendor_id	INT(11)					NULL,
+min_price		DECIMAL(6,2)				NULL);
+
 
 CREATE TABLE 	category(
 id		INT(11)					NOT NULL AUTO_INCREMENT PRIMARY KEY,
