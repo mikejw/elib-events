@@ -13,63 +13,61 @@ class StoreController extends EController
 {  
 
   public function default_event()
-  {            
+  {
+    $this->setTemplate('elib://store_category.tpl');
+  }
+
+  public function defaultLayout()
+  {
     $ui_array = array('page');
     $this->loadUIVars('ui_cats', $ui_array);
     if(!isset($_GET['page']))
       {
 	$_GET['page'] = 1;
       }
-
-    $category_id = 0;
-
     
+    $category_id = 0;
     
     if(isset($_GET['id']) && is_numeric($_GET['id']))
       {
 	$category_id = $_GET['id'];
       }
-       
-
+        
     if(isset($_GET['category_name']))
       {
 	$cl = Model::load('CategoryItem');
 	$category_id = $cl->loadIDByName($_GET['category_name']);
       }
-
+    
     $_GET['category_id'] = $category_id;   
     $_SESSION['last_cat'] = $category_id;
-
+    
     $_GET['product_id'] = 0;
     $_GET['option_id'] = 0;
-
+    
     
     $p = Model::load('ProductItem');
     $c = Model::load('CategoryItem');
     $v = Model::load('ProductVariant');
     $o = Model::load('ProductVariantPropertyOption');
-        
+    
     $c->id = $_GET['category_id'];
     $p->id = 0;
     $v->id = 0;
     $o->id = 0;
-
+    
     $l = new ProductsLayout($c, $p, $v, $o, $this); 
     
     $this->presenter->assign('breadcrumb', $l->getBreadCrumb());
     $this->presenter->assign('buttons', $l->getButtons());
     $this->presenter->assign('p_nav', $l->getPNav());
-
     
     $this->presenter->assign('category_id', $_GET['category_id']);
     $this->presenter->assign('product_id', $_GET['product_id']);
     $this->presenter->assign('option_id', $_GET['option_id']);
-
-    $this->getPromos($_GET['category_id']);
-
     
-    $this->setTemplate('elib://store_category.tpl');
-
+    $this->getPromos($_GET['category_id']);    
+        
     // seo
     if($category_id > 0)
       {
@@ -77,8 +75,7 @@ class StoreController extends EController
 	$this->presenter->assign('category_name', $c->name);
       }    
   }
-
-
+  
   // copied across from store.php
   public function getPromos($category_id)
   {
