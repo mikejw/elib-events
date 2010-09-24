@@ -83,7 +83,8 @@ class Store
     foreach($product as &$p_item)
       {
 	$p_item['status_text'] = StoreStatus::getStatus($p_item['status']);
-	$p_item['min_price'] = $p->getMinPrice($p_item['id']);
+	//$p_item['min_price'] = $p->getMinPrice($p_item['id']);
+	// min price is now stored in products table
       }
 
     $c = Model::load('CategoryItem');
@@ -291,6 +292,18 @@ class Store
     $this->c->redirect('storeadmin/product/'.$v->product_id);
   }
   
+  public function productAutoGetMinPrice($product_id)
+  {
+    $p = Model::load('ProductItem');
+    $price = $p->getMinPrice($product_id);
+    if($price > 0)
+      {		
+	$p->id = $product_id;
+	$p->load();
+	$p->min_price = $price;
+	$p->save(Model::getTable('ProductItem'), array(), 2);	
+      }
+  }
 
   public function productAutoHide($product_id)
   {
@@ -323,6 +336,8 @@ class Store
 
   public function setProductAvailable()
   {
+    $this->productAutoGetMinPrice($_GET['id']);
+
     $p = Model::load('ProductItem');
     $p->id = $_GET['id'];
     $p->load();
