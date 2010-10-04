@@ -34,6 +34,8 @@ class StoreControllerLite extends EController
   {
     $page = $this->filterInt('page');
     $vendor_id = $this->filterInt('vendor_id');
+    $category_id = $this->filterInt('id');
+
     $this->assign('cart_items', ShoppingCart::getTotalItems());
     $this->assign('top_cats', ProductsLayout::getTopCats());
     if(!isset($_GET['vendor_id']))
@@ -54,6 +56,26 @@ class StoreControllerLite extends EController
       {
 	$sql .= ' AND vendor_id = '.$vendor_id;
       }
+
+    if($category_id > 0)
+      {
+	$cats = array();
+	switch($category_id)
+	  {
+	  case 1:
+	    $cats = array(3,7,4,5,6);
+	    break;
+	  case 2:
+	    $cats = array(8);
+	    break;
+	  default:
+	    break;
+	  }
+
+	$sql .= ' AND category_id IN'.$p->buildUnionString($cats);
+      }
+
+
     $sql .= ' ORDER BY id DESC';
 
     if($page < 1)
@@ -69,6 +91,7 @@ class StoreControllerLite extends EController
     $this->assign('p_nav', $p_nav);
     $this->assign('vendor_id', $vendor_id);
     $this->assign('vendor_id', $_GET['vendor_id']);
+    $this->assign('category_id', $category_id);
   }
 
 
