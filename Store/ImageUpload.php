@@ -47,21 +47,43 @@ class ImageUpload
 	$this->upload();
 	if($this->error == '')
 	  {
-	    $this->create();
-	    foreach($this->deriv as $item)
-	      { 
-		$this->makeDerived($item[0], $item[1], $item[2]);
+	    if(!$this->create())
+	      {
+		foreach($this->deriv as $item)
+		  { 
+		    $this->makeDerived($item[0], $item[1], $item[2]);
+		  }
 	      }
 	    imageDestroy($this->orig);     	  
 	  }    
       }
   }
   
+  /*
   public function create()
   {
-    $this->orig = imagecreatefromjpeg($this->target);
+    $this->orig = imagecreatefromjpeg($this->target);   
     $this->origX = imagesx($this->orig);
     $this->origY = imagesy($this->orig);
+  }
+  */
+
+  // new
+  public function create()
+  {
+    $error = false;
+    $this->orig = imagecreatefromjpeg($this->target);   
+    $this->origX = imagesx($this->orig);
+    $this->origY = imagesy($this->orig);
+
+    if($this->origX != $this->origY
+       || $this->origX < 450)
+      {
+	$this->error = 'Image or not square or is too small. Minimum 450 x 450 pixels.';
+	$this->remove(array($this->file));
+	$error = true;
+      }
+    return $error;
   }
 
 

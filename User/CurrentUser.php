@@ -28,7 +28,7 @@ class CurrentUser
 
   public static function authenticate($c)
   {
-    if(self::$u->id < 1 || !self::$u->getAuth(self::$u->id))
+    if(self::$u->id < 1 || self::$u->getAuth(self::$u->id) != 2)
       {      
 	Session::down();
 	$c->redirect("user/login");

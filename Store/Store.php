@@ -500,7 +500,11 @@ class Store
    
     if(isset($_POST['upload']))
     {
-      $d = array(array('tn_', 100, 100), array('mid_', 400, 276));
+      $d = array(
+		 array('l_', 450, 450),
+		 array('tn_', 100, 100),
+		 array('mid_', 400, 276)
+		 );
       $u = new ImageUpload('products', true, $d);
       
       if($u->error != '')
@@ -515,6 +519,7 @@ class Store
 	}
 	// update db
 	$p->image = $u->file;
+	$p->status = StoreStatus::CREATED;
 	$p->save(Model::getTable('ProductItem'), array(), 2);
 	
 	//$this->redirect_cgi('archive.cgi?id='.$p->id);

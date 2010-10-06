@@ -9,8 +9,14 @@ use ELib\EController;
 use ELib\User\CurrentUser;
 use Empathy\Session;
 
-class StoreControllerLite extends EController
+class StoreControllerLite extends AuthedController
 {
+  public function __construct($boot)
+  {
+    parent::__construct($boot);
+    $this->assign('cart_items', ShoppingCart::getTotalItems());
+  }
+
 
   public function filterInt($name)
   {
@@ -36,7 +42,6 @@ class StoreControllerLite extends EController
     $vendor_id = $this->filterInt('vendor_id');
     $category_id = $this->filterInt('id');
 
-    $this->assign('cart_items', ShoppingCart::getTotalItems());
     $this->assign('top_cats', ProductsLayout::getTopCats());
     if(!isset($_GET['vendor_id']))
       {
