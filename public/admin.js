@@ -287,7 +287,7 @@ $(document).ready(function(){
 		    theme : "advanced",
 		    theme_advanced_buttons1 : "formatselect,bold,italic,link,unlink,code",
 		    theme_advanced_buttons2: "",
-		    theme_advanced_blockformats : "p,h2,h3",
+		    theme_advanced_blockformats : "p,h2,h3,h4",
 		    theme_advanced_toolbar_location : "top",
 		    plugins : "paste,inlinepopups",
 		    paste_remove_styles: true,
