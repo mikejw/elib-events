@@ -14,7 +14,11 @@ class BaseTemplate extends CustomController
   {
     parent::__construct($boot);
     $this->section = Model::load('SectionItem');
-    $this->data_item = Model::load('DataItem');
+    $this->data_item = Model::load('DataItem');    
+
+    $this->section->id = $_GET['section'];
+    $this->section->load();
+    $this->assign('template', $this->section->template);
   }
 
 
