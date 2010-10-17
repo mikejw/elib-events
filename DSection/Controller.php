@@ -346,7 +346,7 @@ class Controller extends AdminController
 	$s->id = $_GET['id'];
 	$s->load();
 
-	$t = array('0' => '0', 'A' => 'A', 'B' => 'B', 'C' => 'C');
+	$t = array('0' => '0', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F');
 
 	$this->presenter->assign('templates', $t);
 	$this->presenter->assign('section', $s);
