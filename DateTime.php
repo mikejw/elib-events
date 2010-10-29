@@ -65,6 +65,11 @@ class DateTime
     return $this->month;
   }
 
+  public function getMonthText()
+  {
+    return date('F', $this->time);
+  }
+
   public function getYear()
   {
     return $this->year;
@@ -90,6 +95,11 @@ class DateTime
     return $this->dow;
   }
   
+  public function getMySQLTime()
+  {
+    return $this->mysql_time;
+  }
+
 
   public function resetToFirst()
   {
@@ -98,10 +108,24 @@ class DateTime
     $this->init();
   }
 
+  public function resetToLast()
+  {
+    $this->time = mktime($this->hour, $this->minute, $this->second, $this->month,
+			 $this->getLastDay(), $this->year);
+    $this->init();
+  }
+
   public function adjustMonth($offset)
   {
     $this->time = mktime($this->hour, $this->minute, $this->second, ($this->month + $offset),
 			 $this->day, $this->year);
+    $this->init();
+  }
+
+  public function adjustDay($offset)
+  {
+    $this->time = mktime($this->hour, $this->minute, $this->second, $this->month,
+			 ($this->day + $offset), $this->year);
     $this->init();
   }
 

@@ -285,6 +285,16 @@ a#help_tab { padding-top: 0.2em; }
 
 
 
+/* events */
+#month tr td {
+    width: 100px;
+    height: 100px;
+/*    border-spacing: 3px;*/
+    border: 1px solid #ccc;
+}
+
+
+
 
 
 /* typography */
@@ -324,3 +334,11 @@ a#help_tab { text-decoration: none; font-size: 0.9em; }
         padding-bottom: 10px;
 }
 
+
+/* events */
+#month tr td span {
+    color: #ccc;
+}
+#month tr td.current span {
+    color: #000;
+}

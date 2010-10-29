@@ -35,7 +35,30 @@
 
 <div class="grey clear">
 
-<p>calendar goes here.</p>
+<h1>
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$prev_month_link}"><</a>
+{$month}
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_month_link}">></a>
+</h1>
+
+
+
+<table id="month">
+<tr>
+{foreach from=$cal_month item=m key=i}
+
+
+<td{if $m.current_month eq true} class="current"{/if}>
+<span class="day">{$m.day}</span></td>
+
+{if ($i+1) % 7 == 0 && $i < 35}
+</tr><tr>
+{/if}
+
+
+{/foreach}
+</tr>
+</table>
 
 </div>
 

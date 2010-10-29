@@ -21,5 +21,37 @@ class Calendar
     return $cal;
   }
 
+  public function newBuildByMonth(
+				  $start_day, $start_month, $start_year,
+				  $prev_month_end, $current_month_end)
+				  
+  {
+    $month = array();
+    $i = 0;
+    $leg = 0;    
+    while($i < 42)
+      {	
+	$date = "$start_year:$start_month:$start_day 00:00:00";
+	$month[$i]['date'] = $date;
+	$month[$i]['day'] = $start_day;
+	if($leg == 1)
+	  {
+	    $month[$i]['current_month'] = true;
+	  }
+	$i++;
+	$start_day++;
+
+	if(($start_day > $prev_month_end && $leg < 1) ||
+	   ($start_day > $current_month_end && $leg > 0))
+	  {
+	    $start_day = 1;
+	    $start_month++;
+	    $leg++;
+	  }
+      }
+    return $month;
+  }
+
+
 }
 ?>
