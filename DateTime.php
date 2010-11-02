@@ -35,6 +35,9 @@ class DateTime
     list($date, $time) = explode(' ', $this->mysql_time); 
     list($this->year, $this->month, $this->day) = explode(':', $date);
     list($this->hour, $this->minute, $this->second) = explode(':', $time);
+
+    $this->day = (int)$this->day;
+
     $this->setLastDay();
     $this->dow = date('N', $this->time);
   }
@@ -42,7 +45,7 @@ class DateTime
   public function setLastDay()
   {
     $last_day = self::$length[$this->month - 1];
-    if($this->year % 400 == 0 || ($this->year % 4 == 0 && $this->year % 100 != 0))
+    if($this->month == 2 && ($this->year % 400 == 0 || ($this->year % 4 == 0 && $this->year % 100 != 0)))
       {
 	$last_day++;
       }
@@ -104,7 +107,7 @@ class DateTime
   public function resetToFirst()
   {
     $this->time = mktime($this->hour, $this->minute, $this->second, $this->month,
-			 1, $this->year);
+			 1, $this->year);   
     $this->init();
   }
 

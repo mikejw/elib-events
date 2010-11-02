@@ -291,6 +291,25 @@ a#help_tab { padding-top: 0.2em; }
     height: 100px;
 /*    border-spacing: 3px;*/
     border: 1px solid #ccc;
+    position: relative;
+    clear: both;
+}
+
+#month tr td span.day {
+       float: left;
+       width: 10%;
+
+/*       position: absolute;
+       top: 0;
+       left: 0;*/
+}
+
+#month tr td span.add {
+       float: right;
+       width: 7%;
+/*       position: absolute;
+       top: 0;
+       right: 0;*/
 }
 
 
@@ -341,4 +360,7 @@ a#help_tab { text-decoration: none; font-size: 0.9em; }
 }
 #month tr td.current span {
     color: #000;
+}
+#month tr td span.add a {
+       text-decoration: none;
 }

@@ -25,10 +25,16 @@ class Calendar
 				  $start_day, $start_month, $start_year,
 				  $prev_month_end, $current_month_end)
 				  
-  {
+  {      
     $month = array();
     $i = 0;
-    $leg = 0;    
+    $leg = 0;
+
+    if($start_day == 1)
+      {
+	$leg++;
+      }
+    
     while($i < 42)
       {	
 	$date = "$start_year:$start_month:$start_day 00:00:00";

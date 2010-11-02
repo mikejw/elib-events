@@ -42,8 +42,10 @@ class Controller extends AdminController
       }
     else
       {
-	$time = mktime(0, 0, 0, substr($month, 0, 2),
-		       1, substr($month, 2, 4));
+	$y = substr($month, 0, 4);
+	$m = substr($month, 4, 2);
+	$time = mktime(0, 0, 0, $m,
+		       1, $y);	
       }
 
 
@@ -68,12 +70,6 @@ class Controller extends AdminController
     $date_next_month->adjustMonth(1);
 
 
-    //    echo $date_prev_month->getMySQLTime()."<br />";
-    //echo $date->getMySQLTime()."<br />";
-    //echo $date_next_month->getMySQLTime()."<br />";
-    
-
-
     $month = $c->newBuildByMonth($date_prev_month->getDay(),
 				 $date_prev_month->getMonth(),
 				 $date_prev_month->getYear(),
@@ -82,16 +78,22 @@ class Controller extends AdminController
 
     
     $this->assign('month', $date->getMonthText());
+    $this->assign('year', $date->getYear());
+    $this->assign('current_month', vsprintf("%02d", $date->getMonth()));
     $this->assign('cal_month', $month);
 
 
-    $prev_month_link = vsprintf("%02d", $date->getMonth()-1).$date->getYear();
-    $next_month_link = vsprintf("%02d", $date->getMonth()+1).$date->getYear();
+    $prev_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()-1);
+    $next_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()+1);
 
     $this->assign('prev_month_link', $prev_month_link);
     $this->assign('next_month_link', $next_month_link);
 
+    $prev_year_link = ($date->getYear() - 1).vsprintf("%02d", $date->getMonth());
+    $next_year_link = ($date->getYear() + 1).vsprintf("%02d", $date->getMonth());
 
+    $this->assign('prev_year_link', $prev_year_link);
+    $this->assign('next_year_link', $next_year_link);
 
     //    $cal = $c->buildByMonth($date);
 

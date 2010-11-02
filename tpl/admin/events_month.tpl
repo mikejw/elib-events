@@ -39,17 +39,27 @@
 <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$prev_month_link}"><</a>
 {$month}
 <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_month_link}">></a>
+&nbsp;&nbsp;
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$prev_year_link}"><</a>
+{$year}
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_year_link}">></a>
 </h1>
 
 
 
 <table id="month">
 <tr>
+<th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
+</tr>
+
+<tr>
 {foreach from=$cal_month item=m key=i}
 
 
 <td{if $m.current_month eq true} class="current"{/if}>
-<span class="day">{$m.day}</span></td>
+<span class="day">{$m.day}</span>
+<span class="add"><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/add_event/?date={$year}{$current_month}{$m.day|string_format:"%02d"}">+</a></span>
+</td>
 
 {if ($i+1) % 7 == 0 && $i < 35}
 </tr><tr>
