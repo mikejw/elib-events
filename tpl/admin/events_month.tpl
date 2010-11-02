@@ -10,8 +10,8 @@
 <div class="grey" style="padding:0.5em;">
 
 
-<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/add_section/{$section_id}" method="get">
-<div><button type="submit" name="add_section" value="1"{if $class eq 'data_item'} disabled="disabled"{/if}>Add Section</button></div>
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events" method="get">
+<div><button type="submit" name="today" value="1">Goto Today</button></div>
 </form>
 
 </div>
@@ -35,16 +35,18 @@
 
 <div class="grey clear">
 
+<div id="events_nav" class="clear">
 <h1>
 <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$prev_month_link}"><</a>
-{$month}
-<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_month_link}">></a>
-&nbsp;&nbsp;
+<span>{$month}</span>
+<a class="end" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_month_link}">></a>
+</h1>
+<h1>
 <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$prev_year_link}"><</a>
-{$year}
+<span>{$year}</span>
 <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/?month={$next_year_link}">></a>
 </h1>
-
+</div>
 
 
 <table id="month">
@@ -57,8 +59,15 @@
 
 
 <td{if $m.current_month eq true} class="current"{/if}>
+<div class="clear">
 <span class="day">{$m.day}</span>
 <span class="add"><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/add_event/?date={$year}{$current_month}{$m.day|string_format:"%02d"}">+</a></span>
+</div>
+{if isset($m.events)}
+{foreach from=$m.events item=e}
+<a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/view_event/{$e.id}">{$e.event_name}</a><br />
+{/foreach}
+{/if}
 </td>
 
 {if ($i+1) % 7 == 0 && $i < 35}

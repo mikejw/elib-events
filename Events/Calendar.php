@@ -23,7 +23,8 @@ class Calendar
 
   public function newBuildByMonth(
 				  $start_day, $start_month, $start_year,
-				  $prev_month_end, $current_month_end)
+				  $prev_month_end, $current_month_end,
+				  $events)
 				  
   {      
     $month = array();
@@ -40,6 +41,14 @@ class Calendar
 	$date = "$start_year:$start_month:$start_day 00:00:00";
 	$month[$i]['date'] = $date;
 	$month[$i]['day'] = $start_day;
+
+	$index = sprintf("%02d", $start_month)
+	  .sprintf("%02d", $start_day);
+	if(isset($events[$index]))
+	  {
+	    $month[$i]['events'] = $events[$index];
+	  }
+
 	if($leg == 1)
 	  {
 	    $month[$i]['current_month'] = true;

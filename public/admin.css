@@ -286,13 +286,13 @@ a#help_tab { padding-top: 0.2em; }
 
 
 /* events */
+.grey #month tr:hover { background-color: transparent; }
+
 #month tr td {
     width: 100px;
     height: 100px;
 /*    border-spacing: 3px;*/
     border: 1px solid #ccc;
-    position: relative;
-    clear: both;
 }
 
 #month tr td span.day {
@@ -315,6 +315,30 @@ a#help_tab { padding-top: 0.2em; }
     width: 7%;
 }
 
+
+#events_nav {
+    margin: 0 0 20px 0;
+}
+#events_nav span, #events_nav a {
+float: left;
+
+padding: 5px;
+}
+
+#events_nav a {
+    background-color: #eee;
+}
+#events_nav span {
+    text-align: center;
+}
+
+#events_nav a.end {
+    margin: 0 20px 0 0;
+}
+
+#events_nav span {
+    width: 80px;
+}
 
 
 
@@ -365,4 +389,13 @@ a#help_tab { text-decoration: none; font-size: 0.9em; }
 }
 #month tr td span.add a {
        text-decoration: none;
+}
+#month tr td a {
+    text-decoration: none;
+}
+#month tr td a:hover {
+    text-decoration: underline;
+}
+#events_nav a {
+    text-decoration: none;
 }

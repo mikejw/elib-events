@@ -29,6 +29,17 @@ class Controller extends AdminController
     $this->monthView();
   }
 
+  
+  public function view_event()
+  {
+    $id = $this->filterInt('id');
+    $e = Model::load('Event');
+    $e->id = $id;
+    $e->load();
+    $this->assign('event', $e);
+    $this->setTemplate('elib://admin/view_event.tpl');
+  }
+
 
   public function add_event()
   {
@@ -183,13 +194,16 @@ class Controller extends AdminController
     $date_next_month->adjustMonth(1);
 
 
+    $e = Model::load('Event');
+    $events = $e->getEvents($date_prev_month, $date_next_month);
+
     $month = $c->newBuildByMonth($date_prev_month->getDay(),
 				 $date_prev_month->getMonth(),
 				 $date_prev_month->getYear(),
 				 $date_prev_month->getLastDay(),
-				 $date->getLastDay());
+				 $date->getLastDay(),
+				 $events);
 
-    
     $this->assign('month', $date->getMonthText());
     $this->assign('year', $date->getYear());
     $this->assign('current_month', vsprintf("%02d", $date->getMonth()));
@@ -207,15 +221,6 @@ class Controller extends AdminController
 
     $this->assign('prev_year_link', $prev_year_link);
     $this->assign('next_year_link', $next_year_link);
-
-    //    $cal = $c->buildByMonth($date);
-
-    
-
-
-
-
-    //    print_r($cal);
 
     $this->setTemplate('elib://admin/events_month.tpl');
   }
