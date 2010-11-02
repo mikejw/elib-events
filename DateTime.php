@@ -20,14 +20,29 @@ class DateTime
 				 31, 31, 30, 31, 30, 31);
 
 
-  public function __construct($time, $do_init = true)
+  public function __construct($time = array(), $do_init = true)
   {
-    $this->time = $time;
+    if(sizeof($time) == 0)
+      {
+	$this->time = time();
+      }
+    elseif(sizeof($time) == 1)
+      {
+	$this->time = $time[0];
+      }
+    else
+      {
+	$this->time = mktime($time['hour'], $time['minute'], $time['second'], $time['month'],
+			     $time['day'], $time['year']);   
+      }
+
     if($do_init)
       {
 	$this->init();
       }
   }
+
+  
 
   public function init()
   {
