@@ -15,6 +15,7 @@ class DateTime
   private $second;
   private $last_day;
   private $dow;
+  private $valid;
 
   private static $length = array(31, 28, 31, 30, 31, 30,
 				 31, 31, 30, 31, 30, 31);
@@ -32,6 +33,7 @@ class DateTime
       }
     else
       {
+	$this->valid = checkdate($time['month'], $time['day'], $time['year']);
 	$this->time = mktime($time['hour'], $time['minute'], $time['second'], $time['month'],
 			     $time['day'], $time['year']);   
       }
@@ -42,7 +44,17 @@ class DateTime
       }
   }
 
+
+  public function getValid()
+  {
+    return $this->valid;
+  }
   
+  public function getTime()
+  {
+    return $this->time;
+  }
+
 
   public function init()
   {

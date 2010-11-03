@@ -9,5 +9,6 @@ title					VARCHAR(256)	NOT NULL,
 short_desc				TEXT		NULL,
 long_desc				TEXT		NULL,
 tickets_link				VARCHAR(256)	NULL,
-event_link				VARCHAR(256)	NULL);
+event_link				VARCHAR(256)	NULL,
+status					TINYINT(1)	NOT NULL DEFAULT 0);
 

@@ -53,6 +53,7 @@ class Controller extends AdminController
 		      'minute' => $_POST['start_minute'] * 5,
 		      'second' => 0);
 	$start = new DateTime($time);
+	
 
 	$time = array('day' => $_POST['end_day'],
 		      'month' => $_POST['end_month'] + 1,
@@ -62,34 +63,98 @@ class Controller extends AdminController
 		      'second' => 0);
 	$end = new DateTime($time);
 
-
 	$e = Model::load('Event');
+
+	if(!$start->getValid())
+	  {
+	    $e->addValError('invalid start date', 'start_time');
+	  }
+	if(!$end->getValid())
+	  {
+	    $e->addValError('invalid end date', 'end_time');
+	  }
+
 	$e->user_id = CurrentUser::getUserID();
 	$e->start_time = $start->getMySQLTime();
 	$e->end_time = $end->getMySQLTime();
+
+	if($end->getTime() <= $start->getTime())
+	  {
+	    $e->addValError('invalid end date/time', 'end_time');
+	  }
+
 	$e->event_name = $_POST['event_name'];
 	$e->short_desc = $_POST['short_desc'];
 	$e->long_desc = $_POST['long_desc'];
 	$e->tickets_link = $_POST['tickets_link'];
-	$e->event_link = $_POST['event_link'];				
-	$e->insert(Model::getTable('Event'), 1, array(), 1);
-	$this->redirect('admin/events');
+	$e->event_link = $_POST['event_link'];
+
+	$e->validates();
+	if($e->hasValErrors())
+	  {
+	    $e->start_day = $_POST['start_day'];
+	    $e->start_month = $_POST['start_month'];
+	    $e->start_year = $_POST['start_year'];
+	    $e->start_hour = $_POST['start_hour'];
+	    $e->start_minute = $_POST['start_minute'];
+
+	    $e->end_day = $_POST['end_day'];
+	    $e->end_month = $_POST['end_month'];
+	    $e->end_year = $_POST['end_year'];
+	    $e->end_hour = $_POST['end_hour'];
+	    $e->end_minute = $_POST['end_minute'];
+
+	    $this->assign('event', $e);
+	    $this->assign('errors', $e->getValErrors());
+	  }
+	else
+	  {	  
+	    $e->insert(Model::getTable('Event'), 1, array(), 1);
+	    $this->redirect('admin/events');
+	  }
+      }
+    else
+      {	
+	$e = Model::load('Event'); // default (mostly empty) event
+
+	$date = $this->filterInt('date');
+	if(strlen($date) != 8)
+	  {
+	    $date = 0;
+	  }
+	if($date != 0)
+	  {
+	    $y = substr($date, 0, 4);
+	    $m = substr($date, 4, 2);
+	    $d = substr($date, 6, 2);
+	    $time = mktime(0, 0, 0, $m,
+			   $d, $y);	
+
+
+	    $e->start_day = $d;
+	    $e->start_month = $m - 1;
+	    $e->start_year = $y;
+	    $e->start_hour = 20;
+	    $e->start_minute = 0;
+
+	    $e->end_day = $d;
+	    $e->end_month = $m - 1;
+	    $e->end_year = $y;
+	    $e->end_hour = 20;
+	    $e->end_minute = 0;
+	    $this->assign('event', $e);
+	  }
+	
       }
 
-
-
-    $date = $this->filterInt('date');
-    if(strlen($date) != 8)
-      {
-	$date = 0;
-      }
     
-    if($date == 0)
+    if(0) //$date == 0)
       {
 	//$time = time();
       }
     else
       {
+	/*
 	$y = substr($date, 0, 4);
 	$m = substr($date, 4, 2);
 	$d = substr($date, 6, 2);
@@ -101,7 +166,7 @@ class Controller extends AdminController
 	
 	$this->assign('hour', 20);
 	$this->assign('minute', 0);
-
+	*/
       }    
 
     $select_days = array();
@@ -210,8 +275,24 @@ class Controller extends AdminController
     $this->assign('cal_month', $month);
 
 
-    $prev_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()-1);
-    $next_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()+1);
+    if($date->getMonth() == 12)
+      {
+	$next_month_link = $date->getYear().'01';
+      }
+    else
+      {
+        $next_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()+1);
+      }
+
+    if($date->getMonth() == 1)
+      {
+	$prev_month_link = $date->getYear().'12';
+      }
+    else
+      {
+	$prev_month_link = $date->getYear().vsprintf("%02d", $date->getMonth()-1);
+      }
+
 
     $this->assign('prev_month_link', $prev_month_link);
     $this->assign('next_month_link', $next_month_link);

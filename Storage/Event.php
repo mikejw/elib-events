@@ -5,6 +5,7 @@ namespace ELib\Storage;
 use ELib\Model;
 use ELib\DateTime;
 use Empathy\Entity;
+use Empathy\Validate;
 
 class Event extends Entity
 {
@@ -19,6 +20,16 @@ class Event extends Entity
   public $long_desc;
   public $tickets_link;
   public $event_link;
+
+
+
+
+  public function validates()
+  {
+    $this->doValType(Validate::TEXT, 'event_name', $this->event_name, false);
+    $this->doValType(Validate::URL, 'tickets_link', $this->tickets_link, true);
+    $this->doValType(Validate::URL, 'event_link', $this->event_link, true);    
+  }
 
 
   public function getEvents($start_date, $end_date)

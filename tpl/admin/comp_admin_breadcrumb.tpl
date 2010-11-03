@@ -67,12 +67,22 @@
   {/if}
 {/if}
 
-
-
-
 {* password *}
 {if $class eq 'admin' && $event eq 'password'}
  &raquo; Change My Password
+{/if}
+
+{* events *}
+{if $class eq 'events'}
+{if $event eq 'default_event'}
+ &raquo; Events
+{elseif $event eq 'add_event'}
+ &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events">Events</a>
+ &raquo; Add Event
+{elseif $event eq 'view_event'}
+ &raquo; <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events">Events</a>
+ &raquo; View Event
+{/if}
 {/if}
 
 </h1>
