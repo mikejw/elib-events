@@ -38,12 +38,13 @@ class Controller extends EController
 	      $n->id = $user_id;
 	      $n->load();
 	      
-	      if(0 && $n->auth)
+	      if($n->auth)
 		{
 		  $this->redirect('admin');
 		}
 	      else
 		{
+		  
 		  $this->redirect('store');
 		}
 	    } 
