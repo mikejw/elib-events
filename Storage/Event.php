@@ -4,6 +4,7 @@ namespace ELib\Storage;
 
 use ELib\Model;
 use ELib\DateTime;
+use ELib\Events\Status;
 use Empathy\Entity;
 use Empathy\Validate;
 
@@ -20,6 +21,7 @@ class Event extends Entity
   public $long_desc;
   public $tickets_link;
   public $event_link;
+  public $status;
 
 
 
@@ -53,6 +55,7 @@ class Event extends Entity
 	$sql .= ' AND start_time < \''.$end_date->getMySQLTime().'\'';
       }
     
+    $sql .= ' AND status != '.Status::DELETED;
     $sql .= ' ORDER BY start_time';
     $error = 'Could not get events.';
     $result = $this->query($sql, $error);

@@ -11,13 +11,14 @@ class EventsFrontController extends CustomController
 
   public function default_event()
   {
-    $this->setTemplate('elib://events.tpl');
-    $now = new DateTime();
+    $this->setTemplate('events.tpl');
+    $now = new DateTime(time()-43200); // minus 12 hours
+
     $e = Model::load('Event');
     $events = $e->getEvents(true, $now);
 
 
-    //    print_r($events);
+    $this->assign('events', $events);
     
 
   }

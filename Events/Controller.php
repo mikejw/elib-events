@@ -88,6 +88,7 @@ class Controller extends AdminController
 	$e->long_desc = $_POST['long_desc'];
 	$e->tickets_link = $_POST['tickets_link'];
 	$e->event_link = $_POST['event_link'];
+	$e->status = 'DEFAULT';
 
 	$e->validates();
 	if($e->hasValErrors())
@@ -260,7 +261,7 @@ class Controller extends AdminController
 
 
     $e = Model::load('Event');
-    $events = $e->getEvents($date_prev_month, $date_next_month);
+    $events = $e->getEvents(false, $date_prev_month, $date_next_month);
 
     $month = $c->newBuildByMonth($date_prev_month->getDay(),
 				 $date_prev_month->getMonth(),
