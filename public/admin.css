@@ -1,9 +1,14 @@
 
-body { text-align: center; background-color: #eee; }
+body { text-align: center; background-color: #eee;
+       background-image: url('./new_back_grey2.png');
+}
+
 #page { width: 1000px; text-align: left; margin: 1em auto 0 auto;
       background-color: #fff; padding: 1em;
       -moz-border-radius: 15px;     
-      -webkit-border-radius: 15px; }
+      -webkit-border-radius: 15px;
+      min-height: 800px;
+}
 
 
 #admin { padding: 2em 0 0 0; }
