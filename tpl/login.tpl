@@ -1,10 +1,9 @@
-{include file="header.tpl"}
+{include file="elib://login_header.tpl"}
 
 <div id="content_inner">
 
-<h2>Sign In</h2>
+<h2>Please enter login details for <span>{$NAME}</span>.</h2>
 
-<p>&nbsp;</p><p>&nbsp;</p>
 
 <div id="user_form">
 
@@ -31,11 +30,10 @@ value="{$password}"{/if} /></p>
 {/if}
 
 
-
 </div>
 
 
 
 </div>
 
-{include file="footer.tpl"}
+{include file="elib://login_footer.tpl"}
