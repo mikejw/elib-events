@@ -26,9 +26,10 @@ class CurrentUser
       }
   }
 
-  public static function authenticate($c)
+  public static function assertAdmin($c)
   {
-    if(self::$u->id < 1 || self::$u->getAuth(self::$u->id) != 2)
+    $ua = Model::load('UserAccess', null, false);    
+    if(self::$u->id < 1 || self::$u->getAuth(self::$u->id) < $ua->getLevel('admin'))
       {      
 	Session::down();
 	$c->redirect("user/login");

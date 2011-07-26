@@ -11,7 +11,7 @@ class AdminController extends EController
   {
     parent::__construct($boot);  
 
-    CurrentUser::authenticate($this);
+    CurrentUser::assertAdmin($this);
    
     $this->detectHelp();
   }

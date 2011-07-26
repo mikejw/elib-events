@@ -8,6 +8,12 @@ body { text-align: center; background-color: #eee;
       -moz-border-radius: 15px;     
       -webkit-border-radius: 15px;
       min-height: 800px;
+
+     -moz-box-shadow: 0 0 17px 6px #333;
+     -webkit-box-shadow: 0 0 17px 6px #333;
+     -o-box-shadow: 0 0 17px 6px #333;
+     -khtml-box-shadow: 0 0 17px 6px #333;
+     box-shadow: 0 0 17px 6px #333;
 }
 
 

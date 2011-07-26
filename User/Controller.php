@@ -37,15 +37,15 @@ class Controller extends EController
 	      Session::set('user_id', $user_id);
 	      $n->id = $user_id;
 	      $n->load();
-	      
-	      if($n->auth)
+
+	      $ua = Model::load('UserAccess', null, false);    
+	      if(!($n->getAuth($n->id) < $ua->getLevel('admin')))
 		{
 		  $this->redirect('admin');
 		}
 	      else
 		{
-		  
-		  $this->redirect('store');
+		  $this->redirect('');
 		}
 	    } 
 	  else

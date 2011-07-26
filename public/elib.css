@@ -23,6 +23,12 @@ body {
     -moz-border-radius: 15px;     
     -webkit-border-radius: 15px;
 /*    background-image: url('./new_water.png');*/
+
+     -moz-box-shadow: 0 0 17px 6px #333;
+     -webkit-box-shadow: 0 0 17px 6px #333;
+     -o-box-shadow: 0 0 17px 6px #333;
+     -khtml-box-shadow: 0 0 17px 6px #333;
+     box-shadow: 0 0 17px 6px #333;
 }
 
 #page_inner {

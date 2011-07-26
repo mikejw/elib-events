@@ -6,7 +6,7 @@ use Empathy\Model as EmpModel;
 class Model extends EmpModel
 {
 
-  public static function load($model, $host = null)
+  public static function load($model, $host = null, $connect=true)
   {
     $storage_object = null;
     
@@ -24,7 +24,10 @@ class Model extends EmpModel
       }
     $storage_object = new $class();
 
-    self::connectModel($storage_object, $host);
+    if($connect)
+      {
+	self::connectModel($storage_object, $host);
+      }
 
     return $storage_object;
   }
