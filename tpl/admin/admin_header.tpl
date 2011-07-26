@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin.css" type="text/css" media="all" />
 
-<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/js/common.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/admin_ob.js"></script>
 <script type="text/javascript" src="http://{$WEB_ROOT}{$PUBLIC_DIR}/elib/tiny_mce/tiny_mce.js"></script>
