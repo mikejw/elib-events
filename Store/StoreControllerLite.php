@@ -85,6 +85,7 @@ class StoreControllerLite extends EController
 
 
     $sql .= ' ORDER BY id DESC';
+    
 
     if($page < 1)
       {
@@ -151,6 +152,10 @@ class StoreControllerLite extends EController
     $p->load();
 
 
+    $v = Model::load('Vendor');
+    $v->id = $p->vendor_id;
+    $v->load();
+
 
     if(isset($_POST['add']))
       {       
@@ -161,6 +166,7 @@ class StoreControllerLite extends EController
 
     $this->assign('vendor_id', $p->vendor_id);
     $this->assign('product', $p); 
+    $this->assign('vendor', $v);
   }  
   
   
