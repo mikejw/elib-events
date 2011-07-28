@@ -29,7 +29,7 @@ class VendorsController extends AdminController
 	    $p = Model::load('ProductItem');
 	    $p->verify($v->id);
 	  }
-	//$this->redirect('admin/vendors');
+	$this->redirect('admin/vendors');
       }
     else
       {
