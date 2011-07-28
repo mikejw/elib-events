@@ -12,6 +12,8 @@ use Empathy\Session;
 //class StoreControllerLite extends AuthedController
 class StoreControllerLite extends EController
 {
+  protected $pages;
+
   public function __construct($boot)
   {
     parent::__construct($boot);
@@ -89,9 +91,11 @@ class StoreControllerLite extends EController
 	$page = 1;
       }
         
-    $per_page = 4;
+    $per_page = 8;
     $products = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $page, $per_page);
     $p_nav = $p->getPaginatePages(Model::getTable('ProductItem'), $sql, $page, $per_page); 
+
+    $this->pages = $p_nav;
 
     $this->assign('products', $products);      
     $this->assign('p_nav', $p_nav);
@@ -146,13 +150,16 @@ class StoreControllerLite extends EController
     $p->id = $this->filterInt('id'); 
     $p->load();
 
+
+
     if(isset($_POST['add']))
       {       
 	$this->addProductToCart($p->id);
       }
 
     $this->getPropertiesAndOptions($p->id, 0);	
-                  	
+
+    $this->assign('vendor_id', $p->vendor_id);
     $this->assign('product', $p); 
   }  
   

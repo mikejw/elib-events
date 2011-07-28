@@ -15,6 +15,17 @@ class Controller extends EController
     $this->redirect('');    
   }
 
+
+  protected function loginSuccess($u)
+  {
+    //
+  }
+
+  protected function logoutSuccess($u)
+  {
+    //
+  }
+
   public function login()
   {
     $this->setTemplate('elib:/login.tpl');
@@ -39,6 +50,9 @@ class Controller extends EController
 	      $n->load();
 
 	      $ua = Model::load('UserAccess', null, false);    
+
+	      $this->loginSuccess($n);
+
 	      if(!($n->getAuth($n->id) < $ua->getLevel('admin')))
 		{
 		  $this->redirect('admin');
@@ -67,7 +81,9 @@ class Controller extends EController
   {    
     if(1 || isset($_POST['logout']))
       {
-	$this->sessionDown();
+	$u = CurrentUser::getUser();	
+	Session::down();
+	$this->logoutSuccess($u);
 	$this->redirect('');
       }
   }
