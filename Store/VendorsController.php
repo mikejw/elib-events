@@ -25,8 +25,11 @@ class VendorsController extends AdminController
 
 	    $v->verified = 'MYSQLTIME';
 	    $v->save(Model::getTable('Vendor'), array(), 2);	   
+
+	    $p = Model::load('ProductItem');
+	    $p->verify($v->id);
 	  }
-	$this->redirect('admin/vendors');
+	//$this->redirect('admin/vendors');
       }
     else
       {

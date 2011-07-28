@@ -151,18 +151,30 @@ class Store
 	    $p->name = 'New Product';
 	    $p->description = 'No description.';
 	    $p->status = 'DEFAULT';
-	    
+
 	    if(defined('ELIB_MULTIPLE_VENDORS') &&
 	       ELIB_MULTIPLE_VENDORS == true)	      
 	      {
 		$user_id = CurrentUser::getUserID();
 		$v = Model::load('Vendor');
-		$vendor_id = $v->getIDByUserID($user_id);
-		if($vendor_id > 0)
+		$v->id = $v->getIDByUserID($user_id);
+		if($v->id > 0)
 		  {
-		    $p->vendor_id = $vendor_id;
+		    $v->load();
+		    if($v->verified !== null)
+		      {
+			$p->vendor_verified = 1;
+		      }
+		    else
+		      {
+			$p->vendor_verified = 0;
+		      }
+		    $p->vendor_id = $v->id;
 		  }
 	      }
+	    
+	    //print_r($p); exit();
+	    
 	    $p->id = $p->insert(Model::getTable('ProductItem'), 1, array(), 0);
 	    $this->addProductVariantInternal($p->id); // create first variant 
 	    $this->c->redirect('storeadmin/edit_product/'.$p->id);

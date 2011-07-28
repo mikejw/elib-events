@@ -83,6 +83,7 @@ class StoreControllerLite extends EController
 	$sql .= ' AND category_id IN'.$p->buildUnionString($cats);
       }
 
+    $sql .= ' AND vendor_verified = 1';
 
     $sql .= ' ORDER BY id DESC';
     
