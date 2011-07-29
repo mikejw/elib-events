@@ -163,11 +163,24 @@ class StoreControllerLite extends EController
 	$this->addProductToCart($p->id);
       }
 
-    $this->getPropertiesAndOptions($p->id, 0);	
+    //$this->getPropertiesAndOptions($p->id, 0);	
+    $this->getPropertiesAndOptions($p, 0);	
+
+    // breadcrumb
+    $c = Model::load('CategoryItem');
+    $bc = array();
+    $c->buildBreadCrumb($p->category_id, $bc);
+    $bc = array_reverse($bc);
+    $this->assign('breadcrumb', $bc);
+
 
     $this->assign('vendor_id', $p->vendor_id);
     $this->assign('product', $p); 
     $this->assign('vendor', $v);
+
+
+    
+
   }  
   
   
@@ -245,7 +258,7 @@ class StoreControllerLite extends EController
 
 
   // taken from product admin (variant properties)
-  public function getPropertiesAndOptions($product_id, $colours)
+  public function getPropertiesAndOptions($p, $colours)
   {
     /*
     $v = new ProductVariant($this);
@@ -253,9 +266,9 @@ class StoreControllerLite extends EController
     $v->load(ProductVariant::$table);
     */
    
-    $p = Model::load('ProductItem');
-    $p->id = $product_id;
-    $p->load();
+    //$p = Model::load('ProductItem');
+    //$p->id = $product_id;
+    //$p->load();
 
     $c = Model::load('CategoryItem');
     $cats = $c->getAncestorIds($p->category_id, array());
