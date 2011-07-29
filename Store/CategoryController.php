@@ -231,7 +231,7 @@ class CategoryController extends AdminController
 	  }
 
 	$active = $cp->getPropertiesByCategory(array($_GET['id']));
-	array_push($inherited, 2); // always use colour
+	//array_push($inherited, 2); // always use colour
 	$this->presenter->assign('active_properties', $active);
 	$this->presenter->assign('inherited_properties', $inherited);
       }
