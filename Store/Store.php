@@ -713,7 +713,7 @@ class Store
     array_push($cats, $p->category_id);
     $props = $cp->getPropertiesByCategory($cats);
 
-    array_push($props, 2); // always allow colour property    
+    //array_push($props, 2); // always allow colour property    
 
     $this->c->assign('product', $p);
     $this->c->assign('variant', $v);
