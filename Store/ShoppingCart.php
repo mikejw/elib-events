@@ -31,9 +31,10 @@ class ShoppingCart
 	$v = Model::load('ProductVariant');
 	$id_string = $v->buildUnionString($ids);
 	$product_data = $v->getCartData($id_string);
+
 	foreach($product_data as $index => $value)
 	  {
-	    $id = $value['id'];
+	    $id = $value['id'];	   
 	    $price = $value['price'];
 	    $qty = $cart[$id];	
 	    $product_data[$index]['qty'] = $qty;

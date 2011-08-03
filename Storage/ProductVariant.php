@@ -127,7 +127,7 @@ class ProductVariant extends Entity
   {
     $products = array();
 
-    $sql = 'SELECT t5.name, t1.price, t1.id, t4.name AS p_name, t3.option_val, t1.weight_g, t1.weight_lb'
+    $sql = 'SELECT t5.name, t1.product_id, t1.price, t1.id, t4.name AS p_name, t3.option_val, t1.weight_g, t1.weight_lb'
       .' FROM '.Model::getTable('ProductItem').' t5, '.Model::getTable('ProductVariant').' t1'
       .' LEFT JOIN '.Model::getTable('ProductVariantPropertyOption').' t2'
       .' ON t2.product_variant_id = t1.id'
@@ -176,6 +176,7 @@ class ProductVariant extends Entity
 		    $item['properties'] = implode(', ', $properties);
 		    $item['id'] = $id;
 		    $item['price'] = $price;
+		    $item['product_id'] = $product_id;
 		    array_push($products, $item);
 		  }
 		$options = array();		
@@ -184,6 +185,7 @@ class ProductVariant extends Entity
 	    $name = $row['name'];
 	    $id = $row['id'];
 	    $price = $row['price'];
+	    $product_id = $row['product_id'];
 	    array_push($options, $row['option_val']);	    
 	    array_push($properties, $row['p_name']);	    
 	  }
@@ -192,6 +194,7 @@ class ProductVariant extends Entity
 	$item['properties'] = implode(', ', $properties);
 	$item['id'] = $id;
 	$item['price'] = $price;
+	$item['product_id'] = $product_id;
 	array_push($products, $item);
       }
     return $products;
