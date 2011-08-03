@@ -18,6 +18,7 @@ class StoreControllerLite extends EController
   {
     parent::__construct($boot);
     $this->assign('cart_items', ShoppingCart::getTotalItems());
+    //ShoppingCart::dump();
   }
 
 

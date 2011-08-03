@@ -36,10 +36,19 @@ class ShoppingCart
 	  {
 	    $id = $value['id'];	   
 	    $price = $value['price'];
-	    $qty = $cart[$id];	
+	    $qty = $cart[$id]['qty'];	
 	    $product_data[$index]['qty'] = $qty;
-	    $product_data[$index]['line'] = $qty * $price; 
+	    $product_data[$index]['line'] = $qty * $price;
+	    $product_data[$index]['stamp'] = $cart[$id]['stamp'];
 	  }    
+
+	// sort
+	foreach($product_data as $key => $row)
+	  {
+	    $stamp[$key] = $row['stamp'];
+	    unset($row['stamp']);
+	  }
+	array_multisort($stamp, SORT_ASC, $product_data);
       }
     
     return $product_data;
@@ -54,11 +63,12 @@ class ShoppingCart
 
     if(isset($cart[$variant_id]))
       {
-	$cart[$variant_id] += (int)($qty);
+	$cart[$variant_id]['qty'] += (int)($qty);
       }
     else
       {
-	$cart[$variant_id] = (int)($qty);
+	$cart[$variant_id]['qty'] = (int)($qty);
+	$cart[$variant_id]['stamp'] = time();
       }      
     Session::set('cart', $cart);
   }
@@ -82,7 +92,7 @@ class ShoppingCart
       {
 	if(isset($cart[$variant_id]))
 	  {
-	    $cart[$variant_id] = (int)($qty);
+	    $cart[$variant_id]['qty'] = (int)($qty);
 	    Session::set('cart', $cart);
 	  }
       }
@@ -96,7 +106,7 @@ class ShoppingCart
       {    
 	foreach($cart as $v => $qty)
 	  {
-	    $total += $qty;
+	    $total += $qty['qty'];
 	  }
       }
     return $total;
@@ -118,5 +128,13 @@ class ShoppingCart
       }
     return $empty;
   }
+
+
+  public static function dump()
+  {
+    $c = Session::get('cart');
+    print_r($c);
+  }
+
 }
 ?>
