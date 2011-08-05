@@ -42,10 +42,23 @@ class StoreControllerLite extends EController
   
   public function minimalLayout()
   {
-    $page = $this->filterInt('page');
-    $vendor_id = $this->filterInt('vendor_id');
-    $category_id = $this->filterInt('id');
-
+    if(0 && CurrentUser::loggedIn())
+      {    
+	$ui_array = array('page', 'vendor_id', 'id');
+	$this->loadUIVars('ui_blog', $ui_array);    
+      }
+    else
+      {
+	$page = $this->filterInt('page');
+	$vendor_id = $this->filterInt('vendor_id');
+	$category_id = $this->filterInt('id');
+      }
+    if(!isset($_GET['page']) || $_GET['page'] == '')
+      {
+	$_GET['page'] = 1;
+      }
+    
+   
     $this->assign('top_cats', ProductsLayout::getTopCats());
     if(!isset($_GET['vendor_id']))
       {
@@ -53,7 +66,7 @@ class StoreControllerLite extends EController
       }
     else 
       {
-	$_GET['vendor_id'] = (int)$_GET['vendor_id'];
+	$_GET['vendor_id'] = (int)$_GET['vendor_id'];	
       }
     $p = Model::load('ProductItem');
     $status = '('
@@ -61,15 +74,15 @@ class StoreControllerLite extends EController
       .StoreStatus::SOLD_OUT
       .')';
     $sql = ' WHERE status IN'.$status;
-    if($vendor_id > 0)
+    if($_GET['vendor_id'] > 0)
       {
-	$sql .= ' AND vendor_id = '.$vendor_id;
+	$sql .= ' AND vendor_id = '.$_GET['vendor_id'];
       }
 
-    if($category_id > 0)
+    if(isset($_GET['id']) && $_GET['id'] > 0)
       {
 	$cats = array();
-	switch($category_id)
+	switch($_GET['id'])
 	  {
 	  case 1:
 	    $cats = array(3,7,4,5,6);
@@ -89,22 +102,24 @@ class StoreControllerLite extends EController
     $sql .= ' ORDER BY id DESC';
     
 
-    if($page < 1)
+    if($_GET['page'] < 1)
       {
-	$page = 1;
+	$_GET['page'] = 1;
       }
         
     $per_page = 8;
-    $products = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $page, $per_page);
-    $p_nav = $p->getPaginatePages(Model::getTable('ProductItem'), $sql, $page, $per_page); 
+    $products = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $_GET['page'], $per_page);
+    $p_nav = $p->getPaginatePages(Model::getTable('ProductItem'), $sql, $_GET['page'], $per_page); 
 
     $this->pages = $p_nav;
 
     $this->assign('products', $products);      
     $this->assign('p_nav', $p_nav);
-    $this->assign('vendor_id', $vendor_id);
     $this->assign('vendor_id', $_GET['vendor_id']);
-    $this->assign('category_id', $category_id);
+    if(isset($_GET['id']))
+      {
+	$this->assign('category_id', $_GET['id']);
+      }
   }
 
 
