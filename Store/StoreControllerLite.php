@@ -13,12 +13,20 @@ use Empathy\Session;
 class StoreControllerLite extends EController
 {
   protected $pages;
+  protected $vendor_lock;
 
   public function __construct($boot)
   {
     parent::__construct($boot);
     $this->assign('cart_items', ShoppingCart::getTotalItems());
-    //ShoppingCart::dump();
+
+    // vendor lock
+    $vendor_lock = Session::get('vendor_lock');
+    if(is_numeric($vendor_lock))
+      {
+	$this->vendor_lock = $vendor_lock;
+	$this->assign('vlock', $this->vendor_lock);
+      }
   }
 
 
@@ -53,11 +61,18 @@ class StoreControllerLite extends EController
 	$vendor_id = $this->filterInt('vendor_id');
 	$category_id = $this->filterInt('id');
       }
+
     if(!isset($_GET['page']) || $_GET['page'] == '')
       {
 	$_GET['page'] = 1;
       }
-    
+
+    // vendor lock
+    if(isset($this->vendor_lock))
+      {
+	$_GET['vendor_id'] = $this->vendor_lock;
+      }    
+
    
     $this->assign('top_cats', ProductsLayout::getTopCats());
     if(!isset($_GET['vendor_id']))
@@ -115,6 +130,7 @@ class StoreControllerLite extends EController
 
     $this->assign('products', $products);      
     $this->assign('p_nav', $p_nav);
+
     $this->assign('vendor_id', $_GET['vendor_id']);
     if(isset($_GET['id']))
       {
@@ -153,7 +169,20 @@ class StoreControllerLite extends EController
     if(is_numeric($variant_id) && $variant_id > 0)
       {	    
 	$sc = new ShoppingCart();
-	$sc->add($variant_id, 1);		      		  
+	$sc->add($variant_id, 1);
+	
+	// set vendor lock
+	if(Session::get('vendor_lock') == false)
+	  {
+	    $v = Model::load('ProductVariant');
+	    $v->id = $variant_id;
+	    $v->load();
+	    $p = Model::load('ProductItem');
+	    $p->id = $v->product_id;
+	    $p->load();
+	    Session::set('vendor_lock', $p->vendor_id);
+	  }
+		      		  
 	$this->redirect('store/cart');	    
       }	    
   }
@@ -219,6 +248,12 @@ class StoreControllerLite extends EController
 	    elseif(is_numeric($qty) && $qty == 0)
 	      {
 		$c->remove($v);
+		
+		// vendor locking
+		if($c->isEmpty())
+		  {
+		    Session::clear('vendor_lock');
+		  }
 	      }
 	  }
 	$this->redirect('store/cart');
@@ -248,6 +283,11 @@ class StoreControllerLite extends EController
 	$this->assign('items', $items);
       }  
     
+    if(isset($this->vendor_lock))
+      {
+	$this->assign('vendor_id', $this->vendor_lock);
+      }
+
     $this->assign('last_cat', Session::get('last_cat'));
   }  
 
