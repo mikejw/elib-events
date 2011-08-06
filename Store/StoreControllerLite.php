@@ -85,8 +85,8 @@ class StoreControllerLite extends EController
       }
     $p = Model::load('ProductItem');
     $status = '('
-      .StoreStatus::AVAILABLE.', '
-      .StoreStatus::SOLD_OUT
+      .\ELib\Storage\ProductItemStatus::AVAILABLE.', '
+      .\ELib\Storage\ProductItemStatus::SOLD_OUT
       .')';
     $sql = ' WHERE status IN'.$status;
     if($_GET['vendor_id'] > 0)
@@ -166,6 +166,8 @@ class StoreControllerLite extends EController
 	  }
       }
     
+    
+
     if(is_numeric($variant_id) && $variant_id > 0)
       {	    
 	$sc = new ShoppingCart();

@@ -261,6 +261,7 @@ class ProductVariant extends Entity
 	$i++;
       }       
     $sql .= ' AND t1.product_id = '.$product_id;
+    $sql .= ' AND t1.status = '.\ELib\Storage\ProductVariantStatus::AVAILABLE;
 
     $error = 'Could not do search for variant.';
     $result = $this->query($sql, $error);

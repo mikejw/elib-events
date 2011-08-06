@@ -29,7 +29,9 @@ class ProductVariantPropertyOption extends Entity
       .' FROM '.Model::getTable('ProductVariantPropertyOption').' t1,'
       .' '.Model::getTable('ProductVariant').' t2'
       .' WHERE t2.id = t1.product_variant_id'
-      .' AND t2.product_id = '.$product_id;
+      .' AND t2.product_id = '.$product_id
+      .' AND t2.status = '.ProductVariantStatus::AVAILABLE;
+    
     $error = 'Could not get active option ids for product.';
     $result = $this->query($sql, $error);
     if($result->rowCount() > 0)

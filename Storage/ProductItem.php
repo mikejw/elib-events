@@ -139,7 +139,7 @@ class ProductItem extends Entity
     $price = 0;
     $sql = 'SELECT MIN(price) AS price FROM '.Model::getTable('ProductVariant')
       .' WHERE product_id = '.$id
-      .' AND status = '.\ELib\Store\StoreStatus::AVAILABLE;
+      .' AND status = '.ProductVariantStatus::AVAILABLE;
     $error = 'Could not get price.';
     $result = $this->query($sql, $error);
     if($result->rowCount() == 1)
