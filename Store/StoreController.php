@@ -180,8 +180,8 @@ class StoreController extends StoreControllerLite
 	      }
 	    $this->assign('product_view', 1);
 	    //$variant_count = $this->assignVariantsTableData($p, $v);
-	    $this->getPropertiesAndOptions($p->id, (sizeof($colours) > 0));
-
+	    //$this->getPropertiesAndOptions($p->id, (sizeof($colours) > 0));
+	    $this->getPropertiesAndOptions($p, (sizeof($colours) > 0));
 	  }   
         
 

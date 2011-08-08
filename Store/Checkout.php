@@ -11,7 +11,7 @@ class Checkout
   public function __construct($items, $c)
   {        
     $s = Model::load('ShippingAddress');
-    $s->id = $_SESSION['shipping_address_id'];
+    $s->id = \Empathy\Session::get('shipping_address_id');
     $s->load();
         
     $o = Model::load('OrderItem');

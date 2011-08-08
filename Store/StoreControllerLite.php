@@ -280,6 +280,7 @@ class StoreControllerLite extends EController
 	$cat = Model::load('CategoryItem');
 	$calc = new ShippingCalculator($c->calcTotal($items), $cat_ids, $cat, sizeof($items), false);
 	$shipping = $calc->getFee();
+	$shipping = 0;
 	$this->assign('shipping', $shipping);
 	$this->assign('total', $c->calcTotal($items) + $shipping);
 	$this->assign('items', $items);

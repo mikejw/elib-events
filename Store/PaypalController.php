@@ -8,8 +8,8 @@ use ELib\ThirdParty\PaypalClass;
 //require(DOC_ROOT.'/application/paypal-class/paypal.class.php');
 
 
-define('PAYPAL_URL', 'http://www.sandbox.paypal.com/cgi-bin/webscr');
-//define('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr');
+//define('PAYPAL_URL', 'http://www.sandbox.paypal.com/cgi-bin/webscr');
+define('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr');
 
 class PaypalController extends EController
 {
@@ -128,6 +128,8 @@ class PaypalController extends EController
     $calc = new ShippingCalculator($c->calcTotal($items), $cat_ids, $cat, sizeof($items), $intl);
     $shipping = $calc->getFee();
 
+    $shipping = $this->getShipping();
+
     $p->add_field('shipping_1', $shipping);
     $o->shipping = $shipping;
     $o->save(Model::getTable('OrderItem'), array(), 1);
@@ -137,7 +139,7 @@ class PaypalController extends EController
       {
 	$p->add_field('item_name_'.$i, $item['name']);
 	$p->add_field('amount_'.$i, $item['price']);
-	$p->add_field('item_number_'.$i, $item['id']);
+	$p->add_field('item_number_'.$i, $this->getItemNumber($item['id']));
 	$p->add_field('quantity_'.$i, $item['qty']);
 
 	$o = explode(', ', $item['options']);
@@ -152,13 +154,14 @@ class PaypalController extends EController
       }
 
     //    $p->add_field('image_url', 'http://'.WEB_ROOT.PUBLIC_DIR.'/img/pier.png');
-    $p->add_field('invoice', $invoice_no);
+    $p->add_field('invoice', $this->getInvoiceNumber($invoice_no));
     $p->add_field('no_shipping', 1);
     $p->add_field('currency_code', 'GBP');
         
     //$p->add_field('business', 'dev_1238707777_biz@mikejw.co.uk');
     //$p->add_field('business', 'rbhughes63@yahoo.co.uk');
-    
+    $p->add_field('business', $this->getBusiness());
+
     $p->add_field('return', $interface.'success');
     $p->add_field('notify_url', $interface.'ipn');
     $p->add_field('cancel_return', $interface.'cancel');    
@@ -169,7 +172,29 @@ class PaypalController extends EController
     $this->presenter->assign('paypal_url', $p->paypal_url);
     $this->presenter->assign('fields', $p->fields);
     //$p->dump_fields();
-
   }
+
+
+  protected function getBusiness()
+  {
+    return '';
+  }
+
+  protected function getItemNumber($id)
+  {
+    return $id;
+  }
+
+  protected function getInvoiceNumber($id)
+  {
+    return $id;
+  }
+
+  protected function getShipping()
+  {
+    return 0;
+  }
+
+
 }
 ?>
