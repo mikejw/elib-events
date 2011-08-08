@@ -151,6 +151,7 @@ class Controller extends EController
 	    $u->auth = 0;
 	    $u->active = 0;
 	    $u->registered = 'MYSQLTIME';
+	    $u->popups = 'DEFAULT';
 
 	    $u->user_profile_id = $p->insert(Model::getTable('UserProfile'), 1, array(), 0);
 
