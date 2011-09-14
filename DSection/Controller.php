@@ -465,7 +465,7 @@ class Controller extends AdminController
 	  }
 	else
 	  {
-	    $d->save(Model::getTable('DataItem'), array(), 1);
+	    $d->save(Model::getTable('DataItem'), array(), 2);
 	    $this->update_timestamps($d->id);
 	    $this->redirect('admin/dsection/data_item/'.$d->id);
 	  }
