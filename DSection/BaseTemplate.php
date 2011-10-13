@@ -2,10 +2,9 @@
 
 namespace ELib\DSection;
 use ELib\Model;
+use ELib\EController;
 
-use Empathy\Controller\CustomController;
-
-class BaseTemplate extends CustomController
+class BaseTemplate extends EController
 {
   protected $section;
   protected $data_item;
