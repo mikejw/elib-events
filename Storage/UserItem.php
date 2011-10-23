@@ -24,7 +24,7 @@ class UserItem extends Entity
   public $activated;
   
 
-  public function validates()
+  public function validates($email_check=true)
   {
     if($this->doValType(Validate::USERNAME, 'username', $this->username, false))
       {
@@ -35,11 +35,13 @@ class UserItem extends Entity
       }
     if($this->doValType(Validate::EMAIL, 'email', $this->email, false))
       {	
-        if($this->activeUser())
-          {
-            $this->addValError('That email address can\'t be used', 'email');
-          }
-	
+	if($email_check)
+	  {
+	    if($this->activeUser())
+	      {
+		$this->addValError('That email address can\'t be used', 'email');
+	      }
+	  }	
       }
   }
 
@@ -68,11 +70,14 @@ class UserItem extends Entity
   }
 
 
-  public function getID($username, $password)
+  public function getID($username, $password=null)
   {    
     $sql = "SELECT id FROM ".Model::getTable('UserItem')
-      ." WHERE username = '$username'"
-      ." AND password = '$password'";
+      ." WHERE username = '$username'";
+    if($password !== null)
+      {
+	$sql .= " AND password = '$password'";
+      }
     //." AND password = '".md5($this->password)."'";
     $error = "Could not verify user.";  
     $result = $this->query($sql, $error);
@@ -86,6 +91,47 @@ class UserItem extends Entity
       return 0;
     }
   }
+
+
+  public function oAuthSignIn($username, $name, $image)
+  {
+    $user_id = 0;
+    if(($this->id = $this->getID($username)))
+      {
+	$this->load();
+	$user_id = $this->id;
+      }
+    else
+      {
+	unset($this->id);
+	$this->email = 'twitter_user@example.com';
+	$this->auth = 'DEFAULT';
+	$this->username = $username;
+	$this->password = 'password';
+	$this->reg_code = '1';
+	$this->active = 1;
+	$this->registered = 'MYSQLTIME';
+	$this->activated = 'MYSQLTIME';
+	$this->validates(false);
+	if(!$this->hasValErrors())
+	  {
+	    $up = Model::load('UserProfile');
+	    $up->fullname = $name;
+	    $up->picture = $image;
+	    $up->about = '';
+	    $this->user_profile_id = $up->insert(Model::getTable('UserProfile'), true, array(), 0);
+	    $this->id = $this->insert(self::TABLE, true, array(), 0);
+	    $user_id = $this->id;	    
+	  }
+	else
+	  {
+	    $errors = $this->getValErrors();
+	    throw new \Exception('Could not validate new user: '.implode(' - ', $errors));
+	  }       
+      }  
+    return $user_id;
+  }
+
 
   public function login()
   {
