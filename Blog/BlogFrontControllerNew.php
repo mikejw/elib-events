@@ -9,114 +9,67 @@ use ELib\User\CurrentUser;
 class BlogFrontControllerNew extends EController
 { 
 
-
-  public function default_event()
+  private function submitComment()
   {
-    $b = Model::load('BlogItem');
-    $bt = Model::load('BlogTag');
-    $blogs = array();
-
-    $sql = '';
-        
-    if(isset($_GET['active_tags']))    
-    //if(isset($_SESSION['active_tags']) && sizeof($_SESSION['active_tags']) > 0)
-      {	
-	$active_tags = $_GET['active_tags'];
-
-	$this->presenter->assign('active_tags', $active_tags);      
-	$this->presenter->assign('active_tags_string', implode('+', $active_tags));
-
-	$t = Model::load('TagItem');
-	//$active_tags = $t->getIds(explode('+', $_GET['active_tags']), true);
-	$tags = $t->getIds($active_tags, true);		
-	$blogs = $b->buildUnionString($bt->getBlogs($tags));	      
-
-	if($blogs == '(0,)' || sizeof($tags) != sizeof($active_tags))
-	  {
-	    $this->presenter->assign('module', '');
-	    //$this->error('Intersection of tags produced no results.', true);
-	    $this->http_error(404);
-	  }
-	else
-	  {
-	    $sql = ' WHERE t1.id IN'.$blogs;
-	  }
-      }
-    else
-      {
-	$this->presenter->assign('active_tags', array());
-      }
-
-    if($sql != '')
-      {
-	$sql .= ' AND';
-      }
-    else
-      {
-	$sql .= ' WHERE';
-      }
-    $sql .= ' t1.user_id = t2.id';
-    $sql .= ' AND t1.status = 2';
-    $sql .= ' ORDER BY t1.stamp DESC';	  
-
-    $blogs = $b->getAllCustomPaginateSimpleJoin('*,UNIX_TIMESTAMP(stamp) AS stamp, t1.id AS blog_id', Model::getTable('BlogItem'), Model::getTable('UserItem'), $sql, 1, ELIB_BLOG_ENTRIES);    
-    //$this->presenter->assign('blogs', $blogs);
-
-
-    // truncate
+    $bc = Model::load('BlogComment');
+    $bc->blog_id = $_GET['id'];
+    $bc->status = 1;
+    $bc->body = $_POST['body'];
+    $bc->heading = '';
+    $bc->user_id = CurrentUser::getUserId();
+    $bc->validates();
     
-    foreach($blogs as $index => $item)
+    if($bc->hasValErrors())
       {
-	$body_arr = array();
-	$body_new = array();
-	$i = 0;    
+	$this->presenter->assign('comment', $bc);
+	$this->presenter->assign('errors', $bc->val->errors);
+      }
+    else
+      {
+	$bc->stamp = date('Y-m-d H:i:s', time());	    
+	$bc->insert(Model::getTable('BlogComment'), 1, array('body'), 1);
+	$this->redirect('blog/item/'.$bc->blog_id);
+      }       	
+  }
 
-	$body = $item['body'];
-	//$body_arr = preg_split('/<\/p>\s+<p>/', $body);      
 
-	$body_arr = preg_split('/<p>/', $body);      
+  private function getComments($id)
+  {
+    $bc = Model::load('BlogComment');   
+    $sql = ' WHERE t1.user_id = t2.id';
+    $sql .= ' AND t1.status = 1';
+    $sql .= ' AND t1.blog_id = '.$id;
+    $sql .= ' ORDER BY t1.stamp';
+    $comments = $bc->getAllCustomPaginateSimpleJoin('*,t1.id AS id', Model::getTable('BlogComment'), Model::getTable('UserItem'), $sql, 1, 200);    
 
-       	if(sizeof($body_arr) > 2)
-	  {	
-	    while($i < 2)
-	      {
-		array_push($body_new, $body_arr[$i]);
-		$i++;
-	      }	    
-	    $blogs[$index]['body'] = implode($body_new, '<p>');
-	    $blogs[$index]['truncated'] = 1;
-	  }
-	else
+    $this->assign('comments', $comments);
+  }
+
+
+  private function getTags()
+  {
+    return explode('+', urlencode($_GET['active_tags'])); 
+  }
+
+  private function setTagsTitle()
+  {
+    $title = 'Items tagged ';
+    $i = 0;
+    foreach($_GET['active_tags'] as $tag)
+      {
+	$title .= '"'.$tag.'" ';
+	if($i+1 != sizeof($_GET['active_tags']))
 	  {
-	    $blogs[$index]['truncated'] = 0;
+	    $title .= 'and ';
 	  }
-
-	$blogs[$index]['month_slug'] = strtolower(substr(date("F", $item['stamp']), 0, 3));
+	$i++;
       }
-        
-    // get images
-    $bi = Model::load('BlogImage');
-    $b_ids = array();
-    foreach($blogs as $item)
-      {
-	array_push($b_ids, $item['blog_id']);
-      }
-    $blog_images = $bi->getForIDs($b_ids);
+    $title .= 'in '.TITLE;
+    $this->assign('custom_title', $title);
+  }
 
-    foreach($blogs as $index => $item)
-      {
-	$id = $item['blog_id'];
-	if(isset($blog_images[$id]))
-	  {
-	    $blogs[$index]['image'] = $blog_images[$id];
-	  }
-      }
-    //    exit();
-
-    $this->presenter->assign('blogs', $blogs);
-    //$this->presenter->assign('blog_images', $images);
-
-    // get tags
+  private function getAvailableTags()
+  {
     $t = Model::load('TagItem');
     $tags = $t->getAllTags();
 
@@ -124,22 +77,161 @@ class BlogFrontControllerNew extends EController
       {
 	$tags[$index]['tag_esc_1'] = '/\+'.$tags[$index]['tag'].'/';
 	$tags[$index]['tag_esc_2'] = '/'.$tags[$index]['tag'].'\+/';
-
-	//$tags[$index]['share'] = $tags[$index]['share'] * $tags[$index]['share'];
 	$tags[$index]['share'] = ($tags[$index]['share'] / 10) * 2.5;
       }
+    $this->assign('tags', $tags);    
+  }
 
-    //    print_r($tags);
-    //shuffle($tags);
-
-    $this->presenter->assign('tags', $tags);    
-
-    // archive
-    $this->presenter->assign('archive', $b->getArchive()); // looks like main query but isn't
-
-    // categories
+  private function getArchive($b)
+  {
+    $this->assign('archive', $b->getArchive()); // looks like main query but isn't
+  }
+  
+  private function getCategories()
+  {
     $c = Model::load('BlogCategory');
     $cats = $c->getAllCustom(Model::getTable('BlogCategory'), '');
+    $this->assign('categories', $cats);
+  }
+   
+
+  private function getBlogs($b, $found_items)
+  {
+    $sql = ' WHERE';
+    if($found_items != '(0,)')
+      {
+	$sql .= ' t1.id IN'.$found_items.' AND';
+      }
+    $sql .= ' t1.user_id = t2.id';
+    $sql .= ' AND t1.status = 2';
+    $sql .= ' ORDER BY t1.stamp DESC';	  
+    $blogs =  $b->getAllCustomPaginateSimpleJoin('*,UNIX_TIMESTAMP(stamp) AS stamp, t1.id AS blog_id',
+						Model::getTable('BlogItem'),
+						Model::getTable('UserItem'),
+						$sql,
+						1,
+						ELIB_BLOG_ENTRIES);
+    if(defined('ELIB_TRUNCATE_BLOG_ITEMS') &&
+       ELIB_TRUNCATE_BLOG_ITEMS == true)
+      {
+	foreach($blogs as $index => $item)
+	  {
+	    $body_arr = array();
+	    $body_new = array();
+	    $i = 0;    
+	    
+	    $body = $item['body'];	 	    
+	    $body_arr = preg_split('/<p>/', $body);      
+	    
+	    if(sizeof($body_arr) > 2)
+	      {	
+		while($i < 2)
+		  {
+		    array_push($body_new, $body_arr[$i]);
+		    $i++;
+		  }	    
+		$blogs[$index]['body'] = implode($body_new, '<p>');
+		$blogs[$index]['truncated'] = 1;
+	      }
+	    else
+	      {
+		$blogs[$index]['truncated'] = 0;
+	      }	    
+	    $blogs[$index]['month_slug'] = strtolower(substr(date("F", $item['stamp']), 0, 3));
+	  }
+      }
+
+    // fetch all images associated with each blog item
+    if(defined('ELIB_FETCH_BLOG_IMAGES') &&
+       ELIB_FETCH_BLOG_IMAGES == true)
+      {
+	$bi = Model::load('BlogImage');
+	$b_ids = array();
+	foreach($blogs as $item)
+	  {
+	    array_push($b_ids, $item['blog_id']);
+	  }
+	$blog_images = $bi->getForIDs($b_ids);
+	
+	foreach($blogs as $index => $item)
+	  {
+	    $id = $item['blog_id'];
+	    if(isset($blog_images[$id]))
+	      {
+		$blogs[$index]['image'] = $blog_images[$id];
+	      }
+	  }
+	$this->assign('blog_images', $blog_images);
+      }
+    return $blogs;
+  }
+
+
+  private function getActiveTags()
+  {
+    $t = Model::load('TagItem');
+    $bt = Model::load('BlogTag');
+    
+    $active_tags = $_GET['active_tags'];
+    $active_tags_string = implode('+', $active_tags);
+    
+    $tags = $t->getIds($active_tags, true);		
+    
+    $found_items = $bt->buildUnionString($bt->getBlogs($tags));	      
+    
+    if($found_items == '(0,)' || sizeof($tags) != sizeof($active_tags))
+      {
+	$this->http_error(404);
+      }
+    else
+      {
+	$this->setTagsTitle();
+      }     
+
+    $this->assign('active_tags', $active_tags);
+    $this->assign('active_tags_string', $active_tags_string);
+    return $found_items;
+  }
+
+
+  public function tags()
+  {
+    if(!isset($_GET['active_tags']))
+      {
+	$this->redirect('');
+      }    
+    $_GET['active_tags'] = $this->getTags();
+    $this->default_event();    
+  }
+
+
+  public function default_event()
+  {
+    $b = Model::load('BlogItem');
+    $blogs = array();
+
+    $sql = '';
+        
+    $active_tags = array();
+    $active_tags_string = '';
+
+    $found_items = '(0,)';
+
+   if(isset($_GET['active_tags']))    
+      {	
+	$found_items = $this->getActiveTags();
+      }
+
+    $blogs = $this->getBlogs($b, $found_items);
+      
+    $this->assign('blogs', $blogs);
+    
+    $this->getAvailableTags();
+
+    $this->getArchive($b);
+
+    $this->getCategories();
+
     
     $this->assign('current_year', date('Y', time()));
     $this->assign('current_month', date('F', time()));
@@ -228,94 +320,12 @@ class BlogFrontControllerNew extends EController
   }
 
   
-  public function tags()
-  {
-    /*
-    $_GET['active_tags'] = $this->getTags();
-    if(sizeof($_GET['active_tags']) < 1)
-      {
-	$_SESSION['active_tags'] = array();
-      }
-    else
-      {
-	$_SESSION['active_tags'] = $_GET['active_tags'];
-      }   
-    $this->redirect('');
-    */
-
-    if(!isset($_GET['active_tags']))
-      {
-	$this->redirect('');
-      }    
-    $_GET['active_tags'] = $this->getTags();
-
-    $title = 'Items tagged ';
-    $i = 0;
-    foreach($_GET['active_tags'] as $tag)
-      {
-	$title .= '"'.$tag.'" ';
-	if($i+1 != sizeof($_GET['active_tags']))
-	  {
-	    $title .= 'and ';
-	  }
-	$i++;
-      }
-    $title .= 'in Mike Whiting\'s Blog';
-    $this->presenter->assign('custom_title', $title);
-
-    $this->presenter->assign('active_tags', $_GET['active_tags']);      
-    $this->presenter->assign('active_tags_string', implode('+', $_GET['active_tags']));
-    $this->default_event();    
-  }
-
-  
-  public function getTags()
-  {
-    /*
-    $fullURI = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-    $removeLength = strlen(WEB_ROOT.PUBLIC_DIR);
-    $uriString = substr($fullURI, $removeLength + 1);
-    $uri_arr = explode('/', $uriString);
-
-    $index = sizeof($uri_arr) - 1;
-    
-    if(sizeof($uri_arr) < 3 || $uri_arr[$index] == '')
-      {
-	return array();
-      }
-    else
-      {
-	$tags = $uri_arr[$index];
-	return explode('+', $tags);
-      }
-    */
-    return explode('+', urlencode($_GET['active_tags'])); 
-  }
-  
   
   public function item()
   {
     if(isset($_POST['submit']))
       {
-	$bc = Model::load('BlogComment');
-	$bc->blog_id = $_GET['id'];
-	$bc->status = 1;
-	$bc->body = $_POST['body'];
-	$bc->heading = '';
-	$bc->user_id = CurrentUser::getUserId();
-	$bc->validates();
-	
-	if($bc->hasValErrors())
-	  {
-	    $this->presenter->assign('comment', $bc);
-	    $this->presenter->assign('errors', $bc->val->errors);
-	  }
-	else
-	  {
-	    $bc->stamp = date('Y-m-d H:i:s', time());	    
-	    $bc->insert(Model::getTable('BlogComment'), 1, array('body'), 1);
-	    $this->redirect('blog/item/'.$bc->blog_id);
-	  }       	
+	$this->submitComment();
       }   
     
     if(isset($_GET['id']) && $_GET['id'] == 0)
@@ -324,11 +334,11 @@ class BlogFrontControllerNew extends EController
 	$_GET['id'] = $b->findByArchiveURL($this->convertMonth($_GET['month']), $_GET['year'], $_GET['day'], $_GET['slug']);
       }
 
-
     if(!$this->initID('id', -1, true))
       {
 	$this->http_error(400);
       }
+
     $b = Model::load('BlogItem');
     $b->id = $_GET['id'];
     if(!$b->load())
@@ -341,58 +351,17 @@ class BlogFrontControllerNew extends EController
     $u->id = $b->user_id;   
     $u->load();    
 
-    /*
-    $bi = new BlogImage($this);
-    $blog_images = $bi->getForIDs(array($b->id));
+    $this->getComments($b->id);
 
-    if(sizeof($blog_images) > 0)
-      {
-	$images = $blog_images[$b->id];
-      }
-    else
-      {
-	$images = array();
-      }
-    */
-
-    $bc = Model::load('BlogComment');   
-
-    $sql = ' WHERE t1.user_id = t2.id';
-    $sql .= ' AND t1.status = 1';
-    $sql .= ' AND t1.blog_id = '.$b->id;
-    $sql .= ' ORDER BY t1.stamp';
-    $comments = $bc->getAllCustomPaginateSimpleJoin('*,t1.id AS id', Model::getTable('BlogComment'), Model::getTable('UserItem'), $sql, 1, 200);    
-
-    $this->presenter->assign('comments', $comments);
-
-    //$this->presenter->assign('images', $images);
-
-    $this->presenter->assign('author', $u->username);
-    $this->presenter->assign('blog', $b);
-    $this->presenter->assign('custom_title', $b->heading.' - Mike Whiting\'s Blog');
+    $this->assign('author', $u->username);
+    $this->assign('blog', $b);
+    $this->assign('custom_title', $b->heading.' - '.TITLE);
 
     $this->setTemplate('blog_item.tpl');
 
-    // archive
-    $this->presenter->assign('archive', $b->getArchive());
-
-    // get tags
-    $t = Model::load('TagItem');
-    $tags = $t->getAllTags();
-
-    foreach($tags as $index => $item)
-      {
-	$tags[$index]['tag_esc_1'] = '/\+'.$tags[$index]['tag'].'/';
-	$tags[$index]['tag_esc_2'] = '/'.$tags[$index]['tag'].'\+/';
-
-	//$tags[$index]['share'] = $tags[$index]['share'] * $tags[$index]['share'];
-	$tags[$index]['share'] = ($tags[$index]['share'] / 10) * 2.5;
-      }
-
-    //    print_r($tags);
-    //shuffle($tags);
-
-    $this->presenter->assign('tags', $tags);
+    $this->getAvailableTags();
+    $this->getArchive($b);
+    $this->getCategories();
   }
 
 
