@@ -74,11 +74,17 @@ class Controller extends AdminController
 
     $blogs = $b->getAllCustomPaginateSimpleJoin($select, Model::getTable('BlogItem'), Model::getTable('UserItem'), $sql, $_GET['page'], REQUESTS_PER_PAGE);
 
+    
     foreach($blogs as $index => $item)
       {
-	$cat_id = $item['blog_category_id'];
-	$cat = $cats_arr[$cat_id];
-	$blogs[$index]['category'] = $cat;
+	$blog_cats = $c->getCategoriesForBlogItem($blogs[$index]['id']);
+
+	$cats = array();
+	foreach($blog_cats as $bc_id)
+	  {
+	    $cats[] = $cats_arr[$bc_id];
+	  }
+	$blogs[$index]['category'] = implode(', ', $cats);
       }
 
     $this->setTemplate('elib:/admin/blog_admin.tpl');   
@@ -254,9 +260,7 @@ class Controller extends AdminController
 	$b->heading = $_POST['heading'];
 	$b->body = $_POST['body'];
 	$b->status = DRAFT;
-	$b->blog_category_id = $_POST['category'];
-
-
+	
 	$b->checkForDuplicates($tags_arr);	
 	$b->validates();       
 
@@ -268,10 +272,14 @@ class Controller extends AdminController
 	  }
 	else
 	  {
-	    $b->assignFromPost(array('user_id', 'id', 'stamp', 'tags', 'status', 'blog_category_id'));
+	    $b->assignFromPost(array('user_id', 'id', 'stamp', 'tags', 'status'));
 	    $b->user_id = Session::get('user_id');	    
 	    $b->stamp = date('Y-m-d H:i:s', time());	    
-	    $b->id = $b->insert(Model::getTable('BlogItem'), 1, array(), 1);	    
+	    $b->id = $b->insert(Model::getTable('BlogItem'), 1, array(), 1);
+
+	    $bc = Model::load('BlogCategory');
+	    $bc->createForBlogItem($_POST['category'], $b->id);
+
 	    $this->processTags($b, $tags_arr);
 	    $this->redirect('admin/blog');
 	  }
@@ -302,8 +310,7 @@ class Controller extends AdminController
 
 	$b->load(Model::getTable('BlogItem'));
 
-	$b->blog_category_id = $_POST['category'];
-	$b->assignFromPost(array('stamp', 'id', 'tags', 'user_id', 'status', 'blog_category_id'));
+	$b->assignFromPost(array('stamp', 'id', 'tags', 'user_id', 'status'));
 	
 	$b->validates($tags_arr);
 	$b->checkForDuplicates($tags_arr);
@@ -336,6 +343,11 @@ class Controller extends AdminController
 
 	    $b->save(Model::getTable('BlogItem'), array(), 1);
 	    
+
+	    $bc = Model::load('BlogCategory');
+	    $bc->removeForBlogItem($b->id);
+	    $bc->createForBlogItem($_POST['category'], $b->id);
+
 	    $this->processTags($b, $tags_arr); 
 	    $this->redirect('admin/blog/view/'.$b->id);
 	  }
@@ -349,6 +361,14 @@ class Controller extends AdminController
 	//	$b->body = preg_replace('!<img src="http://'.WEB_ROOT.PUBLIC_DIR.'/uploads/(.*?)" alt="(.*?)" />!m', '<img src="" alt="$2" />', $b->body);		    
 
 	$this->presenter->assign('blog', $b);
+
+
+	// categories
+	$bc = Model::load('BlogCategory');       
+	$sql = ' WHERE blog_id = '.$b->id;
+	$blog_cats = $bc->getCategoriesForBlogItem($b->id);	
+	$this->assign('blog_cats', $blog_cats);    
+
 
 	// get tags
 	$bt = Model::load('BlogTag');

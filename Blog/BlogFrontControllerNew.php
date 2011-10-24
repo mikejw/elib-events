@@ -97,20 +97,14 @@ class BlogFrontControllerNew extends EController
 
   private function getBlogs($b, $found_items)
   {
-    $sql = ' WHERE';
-    if($found_items != '(0,)')
-      {
-	$sql .= ' t1.id IN'.$found_items.' AND';
-      }
-    $sql .= ' t1.user_id = t2.id';
-    $sql .= ' AND t1.status = 2';
-    $sql .= ' ORDER BY t1.stamp DESC';	  
-    $blogs =  $b->getAllCustomPaginateSimpleJoin('*,UNIX_TIMESTAMP(stamp) AS stamp, t1.id AS blog_id',
-						Model::getTable('BlogItem'),
-						Model::getTable('UserItem'),
-						$sql,
-						1,
-						ELIB_BLOG_ENTRIES);
+    $blogs = $b->getItems($found_items, ELIB_BLOG_ENTRIES);
+
+    $t = Model::load('TagItem');
+    foreach($blogs as &$b_item)
+      {	
+	$b_item['tags'] = $t->getTagsForBlogItem($b_item['blog_id']);
+      }   
+
     if(defined('ELIB_TRUNCATE_BLOG_ITEMS') &&
        ELIB_TRUNCATE_BLOG_ITEMS == true)
       {
@@ -227,11 +221,8 @@ class BlogFrontControllerNew extends EController
     $this->assign('blogs', $blogs);
     
     $this->getAvailableTags();
-
     $this->getArchive($b);
-
     $this->getCategories();
-
     
     $this->assign('current_year', date('Y', time()));
     $this->assign('current_month', date('F', time()));
@@ -272,53 +263,6 @@ class BlogFrontControllerNew extends EController
   }
 
 
-
-
-
-  public function default_event_old()
-  {
-    $b = Model::load('BlogItem');
-    $bt = Model::load('BlogTag');
-    $blogs = array();
-
-    if(isset($_GET['active_tags']))    
-    // if(sizeof($_SESSION['active_tag']) > 0)
-      {	
-	$t = Model::load('TagItem');
-	//$active_tags = $t->getIds(explode('+', $_GET['active_tags']), true);
-	$tags = $t->getIds($_GET['active_tags'], true);	
-	$blogs = $b->buildUnionString($bt->getBlogs($tags));	      
-
-	if($blogs == '(0,)')
-	  {
-	    $this->presenter->assign('module', '');
-	    $this->error('Intersection of tags produced no results.', true);
-	  }
-	else
-	  {
-	    $sql = ' WHERE id IN'.$blogs.' ORDER BY ID DESC';	  
-	  }
-      }
-    else
-      {
-	$sql = ' ORDER BY ID DESC';
-	$this->presenter->assign('active_tags', array());
-      }
-
-    $blogs = $b->getAllCustomPaginate(Model::getTable('BlogItem'), $sql, 1, 200);    
-    $this->presenter->assign('blogs', $blogs);
-
-    // get tags
-    $t = Model::load('TagItem');
-    $tags = $t->getAllCustom(Model::getTable('TagItem'), '');
-    foreach($tags as $index => $item)
-      {
-	$tags[$index]['tag_esc'] = '+'.$tags[$index]['tag'];
-      }
-
-    $this->presenter->assign('tags', $tags);    
-  }
-
   
   
   public function item()
@@ -358,7 +302,7 @@ class BlogFrontControllerNew extends EController
     $this->assign('custom_title', $b->heading.' - '.TITLE);
 
     $this->setTemplate('blog_item.tpl');
-
+    
     $this->getAvailableTags();
     $this->getArchive($b);
     $this->getCategories();
