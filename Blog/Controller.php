@@ -269,6 +269,7 @@ class Controller extends AdminController
 	    $this->presenter->assign('blog', $b);
 	    $this->presenter->assign('blog_tags', $_POST['tags']);
 	    $this->presenter->assign('errors', $b->getValErrors());
+	    $this->assign('blog_cats', $_POST['category']);
 	  }
 	else
 	  {
@@ -321,6 +322,7 @@ class Controller extends AdminController
 	    $b->body = $_POST['body'];
 	    $this->presenter->assign('blog', $b);
 	    $this->presenter->assign('blog_tags', $_POST['tags']);
+	    $this->presenter->assign('blog_cats', $_POST['category']);
 	    $this->presenter->assign('errors', $b->getValErrors());
 	  }
 	else

@@ -40,8 +40,8 @@
 </p>
 <p>
 <label>Category</label>
-<select name="category">
-{html_options options=$cats}
+<select name="category[]" multiple="yes">
+{html_options options=$cats selected=$blog_cats}
 </select>
 </p>
 <p>

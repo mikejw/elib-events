@@ -34,8 +34,8 @@
 <textarea rows="0" cols="0" name="body">{$blog->body|escape}</textarea>
 </p>
 <p><label>Category</label>
-<select name="category">
-{html_options options=$cats selected=$blog->blog_category_id}
+<select name="category[]" multiple="yes">
+{html_options options=$cats selected=$blog_cats}
 </select>
 </p>
 <p>
