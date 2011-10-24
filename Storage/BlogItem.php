@@ -12,13 +12,43 @@ class BlogItem extends Entity
   const TABLE = 'blog';
 
   public $id;
-  public $blog_category_id;
   public $status;
   public $user_id;
   public $stamp;
   public $heading;
   public $body;
   
+
+  public function getItems($found_items, $limit)
+  {
+    $blogs = array();
+    $sql = 'SELECT t1.heading, t1.body,COUNT(t3.id) AS comments,UNIX_TIMESTAMP(t1.stamp) AS stamp, t1.id AS blog_id'
+      .' FROM '.Model::getTable('BlogItem').' t1'
+      .' LEFT JOIN '.Model::getTable('BlogComment').' t3'
+      .' ON t1.id = t3.blog_id'
+
+      .', '.Model::getTable('UserItem').' t2'
+      .' WHERE';
+    if($found_items != '(0,)')
+      {
+	$sql .= ' t1.id IN'.$found_items.' AND';
+      }
+    $sql .= ' t1.user_id = t2.id'
+      .' AND t1.status = 2'
+      .' GROUP BY t1.id'
+      .' ORDER BY t1.stamp DESC'
+      .' LIMIT 0, '.$limit;
+    $error = 'Could not get blog items.';
+    $result = $this->query($sql, $error);
+
+    foreach($result as $row)
+      {
+	$blogs[] = $row;
+      }
+    return $blogs;
+  }
+
+
 
   public function validates()
   {

@@ -12,6 +12,27 @@ class TagItem extends Entity
   public $id;
   public $tag;
 
+
+
+  public function getTagsForBlogItem($blog_id)
+  {
+    $tags = array();
+    $sql = 'SELECT tag FROM '.self::TABLE.' t'
+      .', '.Model::getTable('BlogTag').' b'
+      .' WHERE b.tag_id = t.id'
+      .' AND b.blog_id = '.$blog_id;
+    $error = 'Could not get tags for blog item.';
+    $result = $this->query($sql, $error);
+    foreach($result as $row)
+      {
+	$tags[] = $row['tag'];
+      }
+    return $tags;
+  }
+
+
+
+
   public function getIds($tags, $locked)
   {
     $table = Model::getTable('TagItem');

@@ -12,6 +12,45 @@ class BlogCategory extends Entity
   public $id;  
   public $blog_category_id;
   public $label;
+
+
+  public function getCategoriesForBlogItem($blog_id)
+  {
+    $categories = array();
+    $sql = 'SELECT id FROM '.self::TABLE.' c'
+      .', '.Model::getTable('BlogItemCategory').' b'
+      .' WHERE b.blog_category_id = c.id'
+      .' AND b.blog_id = '.$blog_id;
+    $error = 'Could not get categories for blog item.';
+    $result = $this->query($sql, $error);
+    foreach($result as $row)
+      {
+	$categories[] = $row['id'];
+      }
+    return $categories;
+  }
+
+  public function removeForBlogItem($blog_id)
+  {
+    $sql = 'DELETE FROM '.Model::getTable('BlogItemCategory').' WHERE blog_id = '.$blog_id;
+    $error = 'Could not clear categories associated with blog item.';
+    $this->query($sql, $error);    
+  }
+
+  public function createForBlogItem($categories, $blog_id)
+  {
+    $bc = Model::load('BlogItemCategory');
+    foreach($categories as $cat)
+      {
+	$bc->blog_id = $blog_id;
+	$bc->blog_category_id = $cat;
+	$bc->insert(Model::getTable('BlogItemCategory'), false, array(), 1);
+      }
+  }
+
+
+
+
   
   public function validates()
   {
