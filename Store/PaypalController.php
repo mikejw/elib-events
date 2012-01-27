@@ -5,14 +5,31 @@ use ELib\Model;
 use ELib\EController;
 use ELib\ThirdParty\PaypalClass;
 
-//require(DOC_ROOT.'/application/paypal-class/paypal.class.php');
-
-
-//define('PAYPAL_URL', 'http://www.sandbox.paypal.com/cgi-bin/webscr');
-define('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr');
 
 class PaypalController extends EController
 {
+
+  
+
+  private function getPayPalURL()
+  {
+    $url = '';
+    if(!defined('ELIB_USE_PAYPAL_SANDBOX'))
+      {
+	throw new \Exception('Do not know whether to use paypal sandbox.');
+      }
+    if(ELIB_USE_PAYPAL_SANDBOX)
+      {
+        $url = 'https://www.sandbox.paypal.com/us/cgi-bin/webscr';
+      }
+    else
+      {
+	$url = 'https://www.paypal.com/cgi-bin/webscr';
+      }
+    return $url;
+  }
+
+
   public function success()
   {
     $this->assignMessage('Thank you for your order');
@@ -38,7 +55,7 @@ class PaypalController extends EController
   {    
     $p = new PaypalClass();
     $p->ipn_log = false;
-    $p->paypal_url = PAYPAL_URL;
+    $p->paypal_url = $this->getPayPalURL();
 
     if($p->validate_ipn())
       {
@@ -90,7 +107,6 @@ class PaypalController extends EController
     $message = '';
     $p = new PaypalClass();
     $p->ipn_log = false;
-    $p->paypal_url = PAYPAL_URL;
     $p->add_field('cmd', '_cart');
     $p->add_field('upload', '1');
 
@@ -158,20 +174,21 @@ class PaypalController extends EController
     $p->add_field('no_shipping', 1);
     $p->add_field('currency_code', 'GBP');
         
-    //$p->add_field('business', 'dev_1238707777_biz@mikejw.co.uk');
+    $p->add_field('business', 'dev_1238707777_biz@mikejw.co.uk');
     //$p->add_field('business', 'rbhughes63@yahoo.co.uk');
-    $p->add_field('business', $this->getBusiness());
+    //$p->add_field('business', $this->getBusiness());
 
     $p->add_field('return', $interface.'success');
     $p->add_field('notify_url', $interface.'ipn');
     $p->add_field('cancel_return', $interface.'cancel');    
+    $p->paypal_url = $this->getPayPalURL();
 
     
     $c->emptyCart();
 
     $this->presenter->assign('paypal_url', $p->paypal_url);
     $this->presenter->assign('fields', $p->fields);
-    //$p->dump_fields();
+    //$p->dump_fields();    
   }
 
 

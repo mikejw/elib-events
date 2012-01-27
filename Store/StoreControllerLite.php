@@ -309,7 +309,7 @@ class StoreControllerLite extends EController
     if(isset($_GET['checkout']))
       {    
 	Session::set('shipping_address_id', $_GET['shipping_address_id']);
-	$this->redirect('paypal');
+	$this->redirect('paypal/paypal');
       }
   }
 

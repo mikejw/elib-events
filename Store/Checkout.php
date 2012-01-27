@@ -28,6 +28,12 @@ class Checkout
     $o->country = $s->country;
 
     $this->invoice_no = $o->insert(Model::getTable('OrderItem'), 1, array(), 0);
+
+    if(!defined('ELIB_PAYPAL_TEST_MODE')
+       || (defined('ELIB_PAYPAL_TEST_MODE') && !ELIB_PAYPAL_TEST_MODE))
+    {
+    	$this->invoice_no = time().'/'.$this->invoice_no;
+    }
     
     $l = Model::load('LineItem');
     
