@@ -15,9 +15,16 @@ class AuthedController extends EController
     parent::__construct($boot);
     if(!CurrentUser::loggedIn())
       {
-	$this->redirect('');
+	$this->authFailed();
       }
   }
+
+  protected function authFailed()
+  {
+    $this->redirect('');
+  }
+  
+  
 
 }
 ?>
