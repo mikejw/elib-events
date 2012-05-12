@@ -4,11 +4,18 @@ namespace ELib;
 
 class YAML
 { 
-  public static function save($data, $file)
+  public static function save($data, $file, $append=false)
   {
     $s = new \spyc();    
     $yaml = self::dump($data);
-    $fh = fopen($file, "w");
+    $mode = 'w';
+    
+    if($append)
+      {
+	$mode = 'a';
+      }
+
+    $fh = fopen($file, $mode);
     fwrite($fh, $yaml);
     fclose($fh);   
   }
