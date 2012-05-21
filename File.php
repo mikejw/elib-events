@@ -193,7 +193,7 @@ class File
 	/* check for jpeg */
 	$mimeType = $this->getMimeType();
 	
-	if(!preg_match('/jpg|jpeg/', $ext)) // || $mimeType != 'image/jpeg')
+	if(!preg_match('/jpg|jpeg/', $ext) || $mimeType != 'image/jpeg')
 	  {
 	    $this->error .= "Invalid file format.";
 	  }
