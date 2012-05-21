@@ -15,9 +15,14 @@ class File
   public $origY;
   public $quality;
   public $gallery;
+  private $fs_depth;
+  private $fs_dpeth_prefix;
   
-  public function __construct($gallery, $upload, $deriv)
+
+  public function __construct($gallery, $upload, $deriv, $fs_depth=0)
   {
+    $this->fs_depth = $fs_depth;
+
     $this->gallery = $gallery;
     if($this->gallery != '')
       {
@@ -210,6 +215,16 @@ class File
 	      {
 		$name = $name_array[0];
 	      }
+
+
+	    // new fs depth stuff
+	    if($this->fs_depth > 0)
+	      {
+		$md_alpha_arr = str_split(preg_replace('/[^a-z]/', '', md5($this->filename)));
+		
+		$depth_arr = array_slice($md_alpha_arr, $this->fs_depth);		 
+	      }
+
 	    
 	    $this->target = $this->target_dir.$name.".".$ext;	    
 	    // deal with duplicates
@@ -218,7 +233,9 @@ class File
 	      {
 		$this->target = $this->target_dir.$name."_".$i++.".".$ext;
 	      }	    
-	    $this->filename = substr($this->target, strlen($this->target_dir));	    
+	    $this->filename = substr($this->target, strlen($this->target_dir));
+
+	   
 	    if(!@move_uploaded_file($_FILES['file']['tmp_name'], $this->target))
 	      {
 		$this->error .= "Internal error";
@@ -238,6 +255,12 @@ class File
     return htmlentities($this->filename);
   } 
   
+
+  public function getFsDepth()
+  {
+    return $this->fs_depth;
+  }
+
 
 }
 ?>
