@@ -13,6 +13,9 @@ class Stats
 
   public static function getVarKey($var_name)
   {
+    //echo $var_name;
+    //print_r(self::$shared_vars);
+    //echo "\n";
     return self::$shared_vars[$var_name];
   }
   

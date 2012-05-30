@@ -15,7 +15,7 @@ class EController extends CustomController
     $this->assignELibTemplateDir();	
   }
 
-  public function assignELibTemplateDir()
+  private function assignELibTemplateDir()
   {
     $this->assign('elibtpl', Util::getLocation().'/tpl');
   }

@@ -159,6 +159,13 @@ class DateTime
     $this->init();
   }
 
+  public function adjustMinute($offset)
+  {
+    $this->time = mktime($this->hour, $this->minute + $offset, $this->second, $this->month,
+			 ($this->day), $this->year);
+    $this->init();
+  }
+
 
 
 }

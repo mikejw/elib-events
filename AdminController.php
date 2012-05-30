@@ -17,7 +17,7 @@ class AdminController extends EController
   }
 
 
-  public function detectHelp()
+  protected function detectHelp()
   {
     if(!Session::get('help_shown'))
       {
@@ -93,6 +93,7 @@ class AdminController extends EController
 	$this->redirect('admin');
       }
   }
+
 
   public function toggle_help()
   {
