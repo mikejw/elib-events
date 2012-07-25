@@ -842,6 +842,12 @@ class Controller extends AdminController
   }
 
 
+  public function edit_body_raw()
+  {
+    $this->presenter->assign('event', 'edit_body');
+    $this->presenter->assign('raw_mode', true);
+    $this->edit_body();
+  }
 
 
 

@@ -37,6 +37,13 @@ class DataItem extends Entity
     return $container;
   }  
 
+
+  public function getData()
+  {
+    return $this->getAll(self::TABLE. ' where data_item_id = '.$this->id);    
+  }
+
+
   public function getSectionData($section_id)
   {
     $ids = array();

@@ -14,6 +14,10 @@
 <div><button type="submit" name="edit_body" value="1">Edit</button></div>
 </form>
 
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/dsection/edit_body_raw/{$data_item->id}" method="get">
+<div><button type="submit" name="edit_body" value="1">Edit Raw</button></div>
+</form>
+
 {$data_item->body}
 
 

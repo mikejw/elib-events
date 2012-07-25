@@ -6,7 +6,7 @@
 <p>
 <label>Body</label>
 {*<textarea name="body" rows="" cols="">{$data_item->body|replace:'</p><p>':"\r\n"|replace:'<p>':""|replace:'</p>':""}</textarea>*}
-<textarea name="body" rows="" cols="">{$data_item->body|escape}</textarea>
+<textarea name="body" rows="" cols=""{if $raw_mode eq true} class="raw"{/if}>{$data_item->body|escape}</textarea>
 </p>
 <p>
 <label>&nbsp;</label>

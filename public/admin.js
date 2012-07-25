@@ -281,6 +281,8 @@ $(document).ready(function(){
                     });
             }
 
+    if($('textarea.raw').length < 1)
+    {
 
 	tinyMCE.init({
 		mode : "textareas",
@@ -297,6 +299,6 @@ $(document).ready(function(){
 		    o.content = o.content.replace(/(<([^>]+)>)/gi, '');
 		}
 	    });
-	
-
-    });
+    }
+    
+});
