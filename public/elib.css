@@ -22,7 +22,7 @@ body {
     margin: -150px 0 0 -300px;
     -moz-border-radius: 15px;     
     -webkit-border-radius: 15px;
-    moz-border-radius: 15px;     
+    border-radius: 15px;     
 /*    background-image: url('./new_water.png');*/
 
      -moz-box-shadow: 0 0 17px 6px #333;
