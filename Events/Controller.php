@@ -41,6 +41,117 @@ class Controller extends AdminController
   }
 
 
+
+  public function edit_event()
+  {
+    $id = $this->filterInt('id');
+
+    if(isset($_POST['submit']))
+      {
+	$time = array('day' => $_POST['start_day'],
+		      'month' => $_POST['start_month'] + 1,
+		      'year' => $_POST['start_year'],
+		      'hour' => $_POST['start_hour'],
+		      'minute' => $_POST['start_minute'],
+		      'second' => 0);
+	$start = new DateTime($time);
+	
+	$time = array('day' => $_POST['end_day'],
+		      'month' => $_POST['end_month'] + 1,
+		      'year' => $_POST['end_year'],
+		      'hour' => $_POST['end_hour'],
+		      'minute' => $_POST['end_minute'],
+		      'second' => 0);
+	$end = new DateTime($time);
+
+	$e = Model::load('Event');
+	$e->id = $id;
+	$e->load();
+
+	if(!$start->getValid())
+	  {
+	    $e->addValError('invalid start date', 'start_time');
+	  }
+	if(!$end->getValid())
+	  {
+	    $e->addValError('invalid end date', 'end_time');
+	  }
+
+	$e->user_id = CurrentUser::getUserID();
+	$e->start_time = $start->getMySQLTime();
+	$e->end_time = $end->getMySQLTime();
+
+	if($end->getTime() <= $start->getTime())
+	  {
+	    $e->addValError('invalid end date/time', 'end_time');
+	  }
+
+	$e->event_name = $_POST['event_name'];
+	$e->short_desc = $_POST['short_desc'];
+	$e->long_desc = $_POST['long_desc'];
+	$e->tickets_link = $_POST['tickets_link'];
+	$e->event_link = $_POST['event_link'];
+	$e->status = 'DEFAULT';
+
+	$e->validates();
+	if($e->hasValErrors())
+	  {
+	    $e->start_day = $_POST['start_day'];
+	    $e->start_month = $_POST['start_month'];
+	    $e->start_year = $_POST['start_year'];
+	    $e->start_hour = $_POST['start_hour'];
+	    $e->start_minute = $_POST['start_minute'];
+
+	    $e->end_day = $_POST['end_day'];
+	    $e->end_month = $_POST['end_month'];
+	    $e->end_year = $_POST['end_year'];
+	    $e->end_hour = $_POST['end_hour'];
+	    $e->end_minute = $_POST['end_minute'];
+
+	    $this->assign('event', $e);
+	    $this->assign('errors', $e->getValErrors());
+	  }
+	else
+	  {	  
+	    $e->save(Model::getTable('Event'), array(), 1);
+	    $this->redirect('admin/events');
+	  }
+      }
+    elseif(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/events/view_event/'.$id);
+      }
+    else
+      {	
+	$e = Model::load('Event');
+	$e->id = $id;
+	$e->load();
+	
+	$start_time = strtotime($e->start_time);
+	$end_time = strtotime($e->end_time);
+    
+	$e->start_day = date('d', $start_time);
+	$e->start_month = date('m', $start_time) - 1;
+	$e->start_year = date('Y', $start_time);
+	$e->start_hour = date('H', $start_time);
+	$e->start_minute = date('i', $start_time);
+	
+	$e->end_day = date('d', $end_time);
+	$e->end_month = date('m', $end_time) - 1;
+	$e->end_year = date('Y', $end_time);
+	$e->end_hour = date('H', $end_time);
+	$e->end_minute = date('i', $end_time);
+	
+	$this->assign('event', $e);       
+	$this->assignEventDefs();
+	$this->setTemplate('elib://admin/edit_event.tpl');
+      }
+  }
+
+
+
+
+
   public function add_event()
   {
     if(isset($_POST['submit']))
@@ -50,7 +161,7 @@ class Controller extends AdminController
 		      'month' => $_POST['start_month'] + 1,
 		      'year' => $_POST['start_year'],
 		      'hour' => $_POST['start_hour'],
-		      'minute' => $_POST['start_minute'] * 5,
+		      'minute' => $_POST['start_minute'],
 		      'second' => 0);
 	$start = new DateTime($time);
 	
@@ -59,7 +170,7 @@ class Controller extends AdminController
 		      'month' => $_POST['end_month'] + 1,
 		      'year' => $_POST['end_year'],
 		      'hour' => $_POST['end_hour'],
-		      'minute' => $_POST['end_minute'] * 5,
+		      'minute' => $_POST['end_minute'],
 		      'second' => 0);
 	$end = new DateTime($time);
 
@@ -114,6 +225,10 @@ class Controller extends AdminController
 	    $this->redirect('admin/events');
 	  }
       }
+    elseif(isset($_POST['cancel']))
+      {
+	$this->redirect('admin/events');
+      }
     else
       {	
 	$e = Model::load('Event'); // default (mostly empty) event
@@ -147,29 +262,14 @@ class Controller extends AdminController
 	  }
 	
       }
+   
+    $this->assignEventDefs();
+    $this->setTemplate('elib://admin/add_event.tpl');
+  }
 
-    
-    if(0) //$date == 0)
-      {
-	//$time = time();
-      }
-    else
-      {
-	/*
-	$y = substr($date, 0, 4);
-	$m = substr($date, 4, 2);
-	$d = substr($date, 6, 2);
-	$time = mktime(0, 0, 0, $m,
-		       $d, $y);	
-	$this->assign('day', $d);
-	$this->assign('month', $m - 1);
-	$this->assign('year', $y);
-	
-	$this->assign('hour', 20);
-	$this->assign('minute', 0);
-	*/
-      }    
 
+  private function assignEventDefs()
+  {
     $select_days = array();
     $i = 1;
     while($i < 32)
@@ -199,24 +299,19 @@ class Controller extends AdminController
 
     $select_minutes = array();
     $i = 0;
-    $minute = 0;
-    while($minute < 60)
+    while($i < 60)
       {
-	$select_minutes[$i] = sprintf("%02d", $minute);
-	$minute += 5;
-	$i++;
+	$select_minutes[$i] = sprintf("%02d", $i);
+	$i += 5;
       }
-    
 
     $this->assign('select_days', $select_days);
     $this->assign('select_months', $select_months);
     $this->assign('select_years', $select_years);
     $this->assign('select_hours', $select_hours);
     $this->assign('select_minutes', $select_minutes);
- 
-
-    $this->setTemplate('elib://admin/add_event.tpl');
   }
+
 
   public function monthView()
   {

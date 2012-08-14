@@ -9,6 +9,10 @@
 
 <div class="grey clear">
 
+<form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/edit_event/{$event->id}" method="get">
+<p><button type="submit" name="edit">Edit</button></p>
+</form>
+
 
 <div class="event">
 

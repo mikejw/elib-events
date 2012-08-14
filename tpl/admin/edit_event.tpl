@@ -11,6 +11,7 @@
 
 {include file="elib://admin/comp_event.tpl"}
 
+
 </div>
 <div class="grey_bottom">
 <div class="bottom_right">
