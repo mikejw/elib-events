@@ -1,9 +1,8 @@
 <?php
 
-namespace ELib;
+namespace Empathy\ELib;
 
 class XMLRPC extends Curl
 { 
-  //
+    //
 }
-?>

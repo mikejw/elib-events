@@ -3,17 +3,14 @@
 namespace Empathy\ELib;
 
 class REST extends Curl
-{ 
+{
 
-  
-  
     public function configure()
     {
 
-        if($this->auth)
-        {
+        if ($this->auth) {
             $auth_string = $this->user.':'.$this->pass;
-            curl_setopt($this->ch, CURLOPT_USERPWD, $auth_string);       
+            curl_setopt($this->ch, CURLOPT_USERPWD, $auth_string);
         }
 
         curl_setopt($this->ch, CURLOPT_POST, 0);
@@ -22,6 +19,4 @@ class REST extends Curl
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
     }
 
-
 }
-?>

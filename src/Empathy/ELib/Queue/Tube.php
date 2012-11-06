@@ -1,11 +1,8 @@
 <?php
 
-namespace ELib\Queue;
+namespace Empathy\ELib\Queue;
 
 class Tube
-{  
-
-  
+{
 
 }
-?>

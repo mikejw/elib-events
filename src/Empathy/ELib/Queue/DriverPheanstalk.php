@@ -1,47 +1,43 @@
 <?php
 
-namespace ELib\Queue;
-use ELib\Queue\Job;
+namespace Empathy\ELib\Queue;
+
+use Empathy\ELib\Queue\Job;
 
 class DriverPheanstalk extends Driver
 {
-  protected static $job;
+    protected static $job;
 
-  public function load($h)
-  {
-    $this->d = new \Pheanstalk($h);
-  }
+    public function load($h)
+    {
+        $this->d = new \Pheanstalk($h);
+    }
 
-  public function put($job)
-  {
-    $tube = $job->getTube();
-    if($tube === null)
-      {
-	$tube = 'default';
-      }    
-    $this->d->useTube($tube)->put($job->getSerialized());
-  }
+    public function put($job)
+    {
+        $tube = $job->getTube();
+        if ($tube === null) {
+            $tube = 'default';
+        }
+        $this->d->useTube($tube)->put($job->getSerialized());
+    }
 
-  public function getNext($tube)
-  {
-    self::$job = $this->d->watch($tube)->ignore('default')->reserve();
-    $j = new Job(array(self::$job->getData()));   
-    return $j;
-  }
+    public function getNext($tube)
+    {
+        self::$job = $this->d->watch($tube)->ignore('default')->reserve();
+        $j = new Job(array(self::$job->getData()));
 
-  public function clear()
-  {
-    $this->d->delete(self::$job);
-  }
+        return $j;
+    }
 
-  public function info()
-  {
-    return $this->d->stats();
-  }
+    public function clear()
+    {
+        $this->d->delete(self::$job);
+    }
 
+    public function info()
+    {
+        return $this->d->stats();
+    }
 
 }
-
-
-
-?>

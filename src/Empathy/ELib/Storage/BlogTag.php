@@ -2,8 +2,8 @@
 
 namespace ELib\Storage;
 
-use ELib\Model;
-use Empathy\Entity;
+use ELib\Model,
+    Empathy\Entity;
 
 class BlogTag extends Entity
 {

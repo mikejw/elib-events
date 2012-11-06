@@ -1,40 +1,33 @@
 <?php
 
-namespace ELib\VCache;
+namespace Empathy\ELib\VCache;
 
 abstract class Driver
-{  
-  const DEF_D = 'memcached'; 
-  protected $host;
-  protected $port;
-  protected $name;
+{
+    const DEF_D = 'memcached';
+    protected $host;
+    protected $port;
+    protected $name;
 
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
-  public function __construct($name)
-  {
-    $this->name = $name;    
-  }
+    abstract public function load($h, $p);
 
-  abstract public function load($h, $p);
+    abstract public function get($key);
 
+    abstract public function set($key, $value);
 
-  abstract public function get($key);
+    /*
+      abstract public function put($job);
 
+      abstract public function getNext($tube);
 
-  abstract public function set($key, $value);
+      abstract public function clear();
 
+      abstract public function info();
+    */
 
-
-  /*
-  abstract public function put($job);
-
-
-  abstract public function getNext($tube);
-  
-  abstract public function clear();
-
-  abstract public function info();
-  */
-    
 }
-?>

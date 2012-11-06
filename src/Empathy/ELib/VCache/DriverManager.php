@@ -1,35 +1,31 @@
 <?php
 
-namespace ELib\VCache;
+namespace Empathy\ELib\VCache;
 
 class DriverManager
-{  
+{
 
+    public static function load($h, $p, $name = null)
+    {
+        $driver = null;
 
-  public static function load($h, $p, $name = null)
-  {
-    $driver = null;
+        if ($name === null) {
+            $name = \ELib\VCache::DEFAULT_DRIVER;
+        }
 
-    if($name === null)
-      {
-	$name = \ELib\VCache::DEFAULT_DRIVER;
-      }
+        switch ($name) {
+        case 'memcached':
+            $driver_name = 'ELib\VCache\Driver'.ucfirst($name);
+            $driver = new $driver_name($driver_name);
 
-    switch($name)
-      {
-      case 'memcached':
-	$driver_name = 'ELib\VCache\Driver'.ucfirst($name);
-	$driver = new $driver_name($driver_name);
-	
-	$driver->load($h, $p);
+            $driver->load($h, $p);
 
-	break;
-      default:
-	break;
-      }
+            break;
+        default:
+            break;
+        }
 
-    return $driver;
-  }
+        return $driver;
+    }
 
 }
-?>

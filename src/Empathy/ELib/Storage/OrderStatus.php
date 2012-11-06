@@ -1,18 +1,16 @@
 <?php
 
-namespace ELib\Storage;
-use ELib\Model;
-use Empathy\Entity as Entity;
+namespace Empathy\ELib\Storage;
 
+use Empathy\MVC\Entity;
 
 class OrderStatus extends Entity
 {
-  const TABLE = 'order_status';
+    const TABLE = 'order_status';
 
-  public $id;
-  public $user_id;
-  public $status;
-  public $stamp;
-    
+    public $id;
+    public $user_id;
+    public $status;
+    public $stamp;
+
 }
-?>

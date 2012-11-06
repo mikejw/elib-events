@@ -1,24 +1,25 @@
 <?php
 
-namespace ELib;
-use ELib\User\CurrentUser;
-use Empathy\Controller\CustomController;
+namespace Empathy\ELib;
+
+use Empathy\ELib\User\CurrentUser,
+    Empathy\MVC\Controller\CustomController;
+
 
 class EController extends CustomController
-{	
-  public function __construct($boot)
-  {
-    parent::__construct($boot);  
+{
+    public function __construct($boot)
+    {
+        parent::__construct($boot);
 
-    CurrentUser::detectUser($this);
+        CurrentUser::detectUser($this);
 
-    $this->assignELibTemplateDir();	
-  }
+        $this->assignELibTemplateDir();
+    }
 
-  private function assignELibTemplateDir()
-  {
-    $this->assign('elibtpl', Util::getLocation().'/tpl');
-  }
+    private function assignELibTemplateDir()
+    {
+        $this->assign('elibtpl', Util::getLocation().'/tpl');
+    }
 
 }
-?>

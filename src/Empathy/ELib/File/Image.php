@@ -1,12 +1,10 @@
 <?php
 
-namespace ELib\File;
-use ELib\File;
+namespace Empathy\ELib\File;
+
+use Empathy\ELib\File;
 
 class Image extends File
 {
   //
-
-
 }
-?>

@@ -1,20 +1,16 @@
 <?php
 
+namespace Empathy\ELib\Util;
 
-namespace ELib\Util;
-use ELib\YAML;
-
+use Empathy\ELib\YAML;
 
 class SQLLog
-{  
-  public static function log($data)
-  {    
-    $queries = YAML::load(DOC_ROOT.'/logs/sql_log');
-    $queries[] = $data;
-    YAML::save($queries, DOC_ROOT.'/logs/sql_log');   
-  }
-
-  
+{
+    public static function log($data)
+    {
+        $queries = YAML::load(DOC_ROOT.'/logs/sql_log');
+        $queries[] = $data;
+        YAML::save($queries, DOC_ROOT.'/logs/sql_log');
+    }
 
 }
-?>

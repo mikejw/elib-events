@@ -1,19 +1,17 @@
 <?php
 
-namespace ELib\Storage;
-use ELib\Model;
-use Empathy\Entity as Entity;
+namespace Empathy\ELib\Storage;
 
+use Empathy\MVC\Entity;
 
 class LineItem extends Entity
 {
-  const TABLE = 'line_item';
+    const TABLE = 'line_item';
 
-  public $id;
-  public $order_id;
-  public $variant_id;
-  public $price;
-  public $quantity;
-    
+    public $id;
+    public $order_id;
+    public $variant_id;
+    public $price;
+    public $quantity;
+
 }
-?>

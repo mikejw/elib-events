@@ -1,16 +1,18 @@
 <?php
 
 namespace Empathy\ELib\Tumblr;
-use Empathy\ELib\REST;
-use Empathy\ELib\YAML;
+
+use Empathy\ELib\REST,
+    Empathy\ELib\YAML;
+
 
 class Call
 {
-    private $url;  
+    private $url;
     private $username;
     private $call;
     private $auth;
-    private $xml; 
+    private $xml;
     private $ouput;
     private $output_arr;
     private $cache_dir;
@@ -23,11 +25,11 @@ class Call
     public function __construct($url, $username, $password, $auth, $signature, $timeout, $format)
     {
         $call_params = array(
-    	    'url' => $url,
-    	    'username' => $username,
-    	    'password' => $password,
-    	    'auth' => $auth);
-  	  
+            'url' => $url,
+            'username' => $username,
+            'password' => $password,
+            'auth' => $auth);
+
         $this->format = $format;
         $this->timeout = $timeout;
         $this->signature = $signature;
@@ -35,53 +37,43 @@ class Call
         $this->cache_dir = DOC_ROOT.'/data/tumblr';
         $restore = false;
 
-        if(!$this->checkCache() || $this->checkExpired())
-        {	
-            if(!$this->call($call_params))
-            {
-                $restore = true;	
-            }
-            else
-            {	  
-                if($this->format == 'xml')
-                {
+        if (!$this->checkCache() || $this->checkExpired()) {
+            if (!$this->call($call_params)) {
+                $restore = true;
+            } else {
+                if ($this->format == 'xml') {
                     $this->xml = simplexml_load_string($this->output);
-                    $this->output_arr = $this->objectToArray($this->xml);	
-                }
-                else
-                {
+                    $this->output_arr = $this->objectToArray($this->xml);
+                } else {
                     $this->output_arr = $this->objectToArray(json_decode($this->output));
                 }
                 $this->writeToCache();
             }
+        } else {
+            $restore = true;
         }
-        else
-        {
-            $restore = true;      	      
-        }
-            
-        if($restore) // and restore possible?
-        {
+
+        if ($restore) { // and restore possible?
             // TODO: need to update timestamp
             // otherwise will continue to make failed calls
             // on ever request?
 
-            $this->output_arr = $this->cached;      	      
+            $this->output_arr = $this->cached;
         }
-      
+
     }
 
     public function call($call_params)
     {
         $r = new REST($call_params['url'], array(), '', $call_params['username'],
-                      $call_params['password'], $call_params['auth']);       
-        if($r->fetch())
-        {
+                      $call_params['password'], $call_params['auth']);
+        if ($r->fetch()) {
             $this->output = $r->getResponse();
         }
+
         return $r->getSuccess();
     }
-  
+
     public function getOutput()
     {
         return $this->output;
@@ -101,10 +93,10 @@ class Call
     {
         $success = false;
         $this->cached = YAML::load($this->cache_dir.'/'.$this->signature.'.yml');
-        if(isset($this->cached['elib_stamp']) && is_numeric($this->cached['elib_stamp']))
-        {
+        if (isset($this->cached['elib_stamp']) && is_numeric($this->cached['elib_stamp'])) {
             $success = true;
         }
+
         return $success;
     }
 
@@ -115,7 +107,8 @@ class Call
            $this->timestamp - $this->cached['elib_stamp'] > $this->timeout)
         {
             $expired = true;
-        } 
+        }
+
         return $expired;
     }
 
@@ -125,20 +118,16 @@ class Call
         YAML::save($this->output_arr, $this->cache_dir.'/'.$this->signature.'.yml');
     }
 
-
-
-    function objectToArray($object)
+    public function objectToArray($object)
     {
-        if(!is_object( $object ) && !is_array($object))
-        {
+        if (!is_object( $object ) && !is_array($object)) {
             return $object;
         }
-        if(is_object($object))
-        {
+        if (is_object($object)) {
             $object = get_object_vars($object);
         }
+
         return array_map(array($this, 'objectToArray'), $object);
     }
 
 }
-?>

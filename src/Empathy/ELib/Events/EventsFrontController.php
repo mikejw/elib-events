@@ -1,32 +1,25 @@
 <?php
 
-namespace ELib\Events;
-use ELib\Model;
-use Empathy\Controller\CustomController;
+namespace Empathy\ELib\Events;
 
-use ELib\DateTime;
+use Empathy\ELib\Model,
+    Empathy\MVC\Controller\CustomController,
+    Empathy\ELib\DateTime;
+
 
 class EventsFrontController extends CustomController
-{ 
+{
 
-  public function default_event()
-  {
-    $this->setTemplate('events.tpl');
-    $now = new DateTime(array(time()-43200)); // minus 12 hours
+    public function default_event()
+    {
+        $this->setTemplate('events.tpl');
+        $now = new DateTime(array(time()-43200)); // minus 12 hours
 
-    $e = Model::load('Event');
-    $events = $e->getEvents(true, $now);
+        $e = Model::load('Event');
+        $events = $e->getEvents(true, $now);
 
+        $this->assign('events', $events);
 
-    $this->assign('events', $events);
-    
-
-  }
-
-
-
-
-
+    }
 
 }
-?>
