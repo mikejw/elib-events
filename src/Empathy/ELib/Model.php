@@ -6,6 +6,9 @@ use Empathy\MVC\Model as EmpModel;
 
 class Model extends EmpModel
 {
+    private static $elib_model_prefix = "Empathy\ELib\Storage\\";
+    private static $app_model_prefix = "Empathy\MVC\Model\\";
+
 
     public static function load($model, $host = null, $connect=true)
     {
@@ -16,10 +19,12 @@ class Model extends EmpModel
         $app_file = DOC_ROOT.'/storage/'.$file;
 
         if (!file_exists($app_file)) {
-            $class = 'ELib\\Storage\\'.$model;
+            $class = self::$elib_model_prefix.$model;
         } else {
-            $class = '\\Empathy\\Model\\'.$model;
+            $class = self::$app_model_prefix.$model;
         }
+        
+
         $storage_object = new $class();
 
         if ($connect) {
@@ -35,9 +40,9 @@ class Model extends EmpModel
         $app_file = DOC_ROOT.'/storage/'.$file;
 
         if (!file_exists($app_file)) {
-            $class = 'ELib\\Storage\\'.$model;
+            $class = self::$elib_model_prefix.$model;
         } else {
-            $class = '\\Empathy\\Model\\'.$model;
+            $class = self::$app_model_prefix.$model;
         }
 
         return $class::TABLE;
