@@ -17,6 +17,7 @@ class PromoCategoryController extends AdminController
 
     public function buildNav()
     {
+
         //$this->assertID();
         if (!isset($_GET['collapsed']) || !is_numeric($_GET['collapsed'])) {
             $_GET['collapsed'] = 0;
@@ -26,8 +27,10 @@ class PromoCategoryController extends AdminController
         $c->id = $_GET['id'];
         $c->load();
 
+ 
         $ct = new PromosTree($c, $_GET['collapsed']);
 
+ 
         $this->presenter->assign('category', $c);
         $this->presenter->assign('category_has_children', $c->hasChildren());
 
@@ -39,6 +42,7 @@ class PromoCategoryController extends AdminController
 
     public function default_event()
     {
+
         $this->setTemplate('elib://admin/promo_category.tpl');
         $ui_array = array('order_by', 'page', 'id');
         $this->loadUIVars('ui_catalogue', $ui_array);
@@ -56,7 +60,10 @@ class PromoCategoryController extends AdminController
         $this->presenter->assign('page', $_GET['page']);
         $this->presenter->assign('category_id', $_GET['id']);
 
+ 
+
         $this->buildNav();
+
 
         if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $showCat = $_GET['id'];

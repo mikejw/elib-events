@@ -45,6 +45,8 @@ class StoreControllerLite extends EController
 
     public function minimalLayout()
     {
+ 
+
         if (0 && CurrentUser::loggedIn()) {
             $ui_array = array('page', 'vendor_id', 'id');
             $this->loadUIVars('ui_blog', $ui_array);
@@ -53,6 +55,8 @@ class StoreControllerLite extends EController
             $vendor_id = $this->filterInt('vendor_id');
             $category_id = $this->filterInt('id');
         }
+
+    
 
         if (!isset($_GET['page']) || $_GET['page'] == '') {
             $_GET['page'] = 1;
@@ -63,21 +67,31 @@ class StoreControllerLite extends EController
             $_GET['vendor_id'] = $this->vendor_lock;
         }
 
+     
+
         $this->assign('top_cats', ProductsLayout::getTopCats());
         if (!isset($_GET['vendor_id'])) {
             $_GET['vendor_id'] = 0;
         } else {
             $_GET['vendor_id'] = (int) $_GET['vendor_id'];
         }
+
+
+
         $p = Model::load('ProductItem');
+
+
+
         $status = '('
-            .\ELib\Storage\ProductItemStatus::AVAILABLE.', '
-            .\ELib\Storage\ProductItemStatus::SOLD_OUT
+            .\Empathy\ELib\Storage\ProductItemStatus::AVAILABLE.', '
+            .\Empathy\ELib\Storage\ProductItemStatus::SOLD_OUT
             .')';
         $sql = ' WHERE status IN'.$status;
         if ($_GET['vendor_id'] > 0) {
             $sql .= ' AND vendor_id = '.$_GET['vendor_id'];
         }
+
+
 
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $cats = array();
@@ -102,6 +116,7 @@ class StoreControllerLite extends EController
         if ($_GET['page'] < 1) {
             $_GET['page'] = 1;
         }
+
 
         $per_page = 8;
         $products = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $_GET['page'], $per_page);

@@ -78,7 +78,7 @@ class PromosTree extends Tree
                 $markup .= "<span class=\"toggle\">&nbsp;</span>";
             }
             $markup .= "<img src=\"http://".WEB_ROOT.PUBLIC_DIR."/elib/$folder\" alt=\"\" />\n";
-            if ($current_id == $value['id']) // && $value['data'] != $current_is_section) {
+            if ($current_id == $value['id']) { // && $value['data'] != $current_is_section) 
                 $markup .= "<span class=\"label current\">".$value['label']."</span>";
             } else {
                 $markup .= "<span class=\"label\"><a href=\"http://".WEB_ROOT.PUBLIC_DIR."/admin/$url/".$value['id']."/?page=1\">".$value['label']."</a></span>";

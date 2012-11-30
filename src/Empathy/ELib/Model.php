@@ -13,24 +13,24 @@ class Model extends EmpModel
     public static function load($model, $host = null, $connect=true)
     {
         $storage_object = null;
-
         $file = $model.'.php';
-
         $app_file = DOC_ROOT.'/storage/'.$file;
 
-        if (!file_exists($app_file)) {
+        
+        if(!file_exists($app_file)) {
             $class = self::$elib_model_prefix.$model;
         } else {
+
+            require_once($app_file);
             $class = self::$app_model_prefix.$model;
         }
-        
 
         $storage_object = new $class();
 
         if ($connect) {
             self::connectModel($storage_object, $host);
         }
-
+         
         return $storage_object;
     }
 

@@ -2,21 +2,23 @@
 
 namespace Empathy\ELib\Blog;
 
-use Empthy\ELib\AdminController,
+
+use Empathy\ELib\AdminController,
     Empathy\ELib\File\Image as ImageUpload,
     Empathy\ELib\Model,
     Empathy\MVC\Session;
-
 
 define('REQUESTS_PER_PAGE', 12);
 define('DRAFT', 1);
 define('PUBLISHED', 2);
 define('DELETED', 3);
 
+
 class Controller extends AdminController
 {
     public function default_event()
-    {
+    {        
+
         $ui_array = array('page', 'status');
         $this->loadUIVars('ui_blog', $ui_array);
         if (!isset($_GET['page']) || $_GET['page'] == '') {
@@ -29,6 +31,8 @@ class Controller extends AdminController
         $this->presenter->assign('status', $_GET['status']);
 
         $super = 0;
+
+
 
         // is superuser?
         $u = Model::load('UserItem');
@@ -49,6 +53,8 @@ class Controller extends AdminController
 
         $b = Model::load('BlogItem');
         $blogs = array();
+
+
 
         $select = '*,t1.id AS id';
         $sql = ' WHERE status = '.$_GET['status'];
@@ -76,6 +82,8 @@ class Controller extends AdminController
             }
             $blogs[$index]['category'] = implode(', ', $cats);
         }
+
+
 
         $this->setTemplate('elib:/admin/blog_admin.tpl');
         $this->presenter->assign('blogs', $blogs);
@@ -230,6 +238,7 @@ class Controller extends AdminController
             $b->heading = $_POST['heading'];
             $b->body = $_POST['body'];
             $b->status = DRAFT;
+            $b->slug = $_POST['slug'];
 
             $b->checkForDuplicates($tags_arr);
             $b->validates();
@@ -242,9 +251,9 @@ class Controller extends AdminController
             } else {
                 $b->assignFromPost(array('user_id', 'id', 'stamp', 'tags', 'status'));
                 $b->user_id = Session::get('user_id');
-                $b->stamp = date('Y-m-d H:i:s', time());
+                $b->stamp = date('Y-m-d H:i:s', time());              
                 $b->id = $b->insert(Model::getTable('BlogItem'), 1, array(), 1);
-
+               
                 $bc = Model::load('BlogCategory');
                 $bc->createForBlogItem($_POST['category'], $b->id);
 
@@ -289,14 +298,20 @@ class Controller extends AdminController
             } else {
                 $bi = Model::load('BlogImage');
                 $images = $bi->getForIDs(array($b->id));
+             
+                $tt_width = 700;
+                //$tt_height = 100;
 
                 if (isset($images[$b->id])) {
                     // process blog images to create mid sized with id attributes - needs optimising?
                     foreach ($images[$b->id] as $item) {
+                        $tt_image = '<img src="http://'.WEB_ROOT.PUBLIC_DIR.'/tt/tt.php?src=http://'.WEB_ROOT.PUBLIC_DIR.'/uploads/'.$item['filename'].'&amp;w='.$tt_width.'&amp;h='.$tt_height.'" id="blog_image_'.$item['id'].'" alt="$2" />';
+                        
                         $b->body = preg_replace(
                             //'!<img +src=""(?: +id="(.*?)")?(?: +alt="(.*?)")? */>!m',
                             '!<img(?: +src="")?(?: +id="(.*?)")?(?: +alt="(.*?)")? */>!m',
-                            '<img src="http://'.WEB_ROOT.PUBLIC_DIR.'/uploads/mid_'.$item['filename'].'" id="blog_image_'.$item['id'].'" alt="$2" />',
+                            //'<img src="http://'.WEB_ROOT.PUBLIC_DIR.'/uploads/mid_'.$item['filename'].'" id="blog_image_'.$item['id'].'" alt="$2" />',
+                            $tt_image,
                             $b->body, 1);
                     }
                 }

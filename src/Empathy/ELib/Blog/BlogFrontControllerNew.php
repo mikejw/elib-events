@@ -206,6 +206,11 @@ class BlogFrontControllerNew extends EController
 
         $this->assign('current_year', date('Y', time()));
         $this->assign('current_month', date('F', time()));
+        if(defined('ELIB_BLOG_MODULE')) {
+            $this->assign('blog_module', ELIB_BLOG_MODULE);
+        } else {
+            $this->assign('blog_module', 'blog');
+        }
     }
 
 

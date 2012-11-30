@@ -149,8 +149,8 @@ class BlogFrontController extends CustomController
         $bt = Model::load('BlogTag');
         $blogs = array();
 
-        if(isset($_GET['active_tags']))
-            // if (sizeof($_SESSION['active_tag']) > 0) {
+        if(isset($_GET['active_tags'])) {
+            // if (sizeof($_SESSION['active_tag']) > 0) 
             $t = Model::load('TagItem');
             //$active_tags = $t->getIds(explode('+', $_GET['active_tags']), true);
             $tags = $t->getIds($_GET['active_tags'], true);

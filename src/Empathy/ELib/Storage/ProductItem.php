@@ -24,7 +24,7 @@ class ProductItem extends Entity
 
     public function validates()
     {
-        if ($this->name == '') // || !ctype_alnum(str_replace(' ', '', $this->name))) {
+        if ($this->name == '') { // || !ctype_alnum(str_replace(' ', '', $this->name))) 
             $this->addValError('Invalid product name');
         }
         if ($this->description == '') {

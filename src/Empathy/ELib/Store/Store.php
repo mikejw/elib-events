@@ -4,7 +4,11 @@ namespace Empathy\ELib\Store;
 
 use Empathy\ELib\Model,
     Empathy\ELib\User\CurrentUser,
-    Empathy\MVC\Session;
+    Empathy\MVC\Session,
+    Empathy\ELib\Storage\ProductItemStatus,
+    Empathy\ELib\Storage\ProductVariantStatus;
+
+
 
 
 define('REQUESTS_PER_PAGE', 12);
@@ -57,7 +61,7 @@ class Store
         }
 
         // status
-        $sql .= ' AND status != '.\ELib\Storage\ProductItemStatus::DELETED;
+        $sql .= ' AND status != '.ProductItemStatus::DELETED;
 
         // vendor
         $v = Model::load('Vendor');
@@ -72,7 +76,7 @@ class Store
 
         $product = $p->getAllCustomPaginate(Model::getTable('ProductItem'), $sql, $_GET['page'], REQUESTS_PER_PAGE);
         foreach ($product as &$p_item) {
-            $p_item['status_text'] = \ELib\Storage\ProductItemStatus::getStatus($p_item['status']);
+            $p_item['status_text'] = ProductItemStatus::getStatus($p_item['status']);
             //$p_item['min_price'] = $p->getMinPrice($p_item['id']);
             // min price is now stored in products table
         }
@@ -144,6 +148,9 @@ class Store
                     $v->id = $v->getIDByUserID($user_id);
                     if ($v->id > 0) {
                         $v->load();
+
+
+
                         if ($v->verified !== null) {
                             $p->vendor_verified = 1;
                         } else {
@@ -168,7 +175,7 @@ class Store
 
         $p->id = $_GET['id'];
         $p->load();
-        $this->c->assign('product_status', \ELib\Storage\ProductItemStatus::getStatus($p->status));
+        $this->c->assign('product_status', ProductItemStatus::getStatus($p->status));
 
         $this->c->assign("product", $p);
 
@@ -194,7 +201,7 @@ class Store
             $variants = array_merge($variants, $v->getAllCustom(Model::getTable('ProductVariant'), $sql));
         } else {
             $sql = ' WHERE product_id = '.$p->id;
-            $sql .= ' AND status != '.\ELib\Storage\ProductVariantStatus::DELETED;
+            $sql .= ' AND status != '.ProductVariantStatus::DELETED;
             $variants = $v->getAllCustom(Model::getTable('ProductVariant'), $sql);
         }
 
@@ -212,7 +219,7 @@ class Store
             {
                 $available_variant = true;
             }
-            $v['status_text'] = \ELib\Storage\ProductVariantStatus::getStatus($v['status']);
+            $v['status_text'] = ProductVariantStatus::getStatus($v['status']);
         }
 
         if($available_variant == true
@@ -220,13 +227,13 @@ class Store
            && !($p->description == 'No description.' || $p->description == '<p>No description.</p>')
            && $p->image != '')
         {
-            if ($p->status != \ELib\Storage\ProductItemStatus::AVAILABLE) {
+            if ($p->status != ProductItemStatus::AVAILABLE) {
                 $this->c->assign('product_available_link', true);
             }
-            if ($p->status != \ELib\Storage\ProductItemStatus::SOLD_OUT) {
+            if ($p->status != ProductItemStatus::SOLD_OUT) {
                 $this->c->assign('product_sold_out_link', true);
             }
-            if ($p->status != \ELib\Storage\ProductItemStatus::CREATED) {
+            if ($p->status != ProductItemStatus::CREATED) {
                 $this->c->assign('product_unavailable_link', true);
             }
         }
@@ -240,7 +247,7 @@ class Store
     {
         $available = false;
         if (isset($v['properties']) && $v['price'] > 0) {
-            if ($v['status'] != \ELib\Storage\ProductVariantStatus::AVAILABLE) {
+            if ($v['status'] != ProductVariantStatus::AVAILABLE) {
                 $v['available_link'] = true;
             } else {
                 $available = true;
@@ -256,7 +263,7 @@ class Store
         $v = Model::load('ProductVariant');
         $v->id = $_GET['id'];
         $v->load();
-        $v->status = \ELib\Storage\ProductVariantStatus::AVAILABLE;
+        $v->status = ProductVariantStatus::AVAILABLE;
         $v->save(Model::getTable('ProductVariant'), array(), 2);
         $this->c->redirect('storeadmin/product/'.$v->product_id);
     }
@@ -276,14 +283,14 @@ class Store
     public function productAutoHide($product_id)
     {
         $v = Model::load('ProductVariant');
-        $sql = ' WHERE status = '.\ELib\Storage\ProductVariantStatus::AVAILABLE
+        $sql = ' WHERE status = '.ProductVariantStatus::AVAILABLE
             .' AND product_id = '.$product_id;
         $variants = $v->getAllCustom(Model::getTable('ProductVariant'), $sql);
         if (sizeof($variants) < 1) {
             $p = Model::load('ProductItem');
             $p->id = $product_id;
             $p->load();
-            $p->status = \ELib\Storage\ProductItemStatus::CREATED;
+            $p->status = ProductItemStatus::CREATED;
             $p->save(Model::getTable('ProductItem'), array(), 2);
         }
     }
@@ -293,7 +300,7 @@ class Store
         $v = Model::load('ProductVariant');
         $v->id = $_GET['id'];
         $v->load();
-        $v->status = \ELib\Storage\ProductVariantStatus::CREATED;
+        $v->status = ProductVariantStatus::CREATED;
         $v->save(Model::getTable('ProductVariant'), array(), 2);
 
         $this->productAutoHide($v->product_id);
@@ -308,7 +315,7 @@ class Store
         $p = Model::load('ProductItem');
         $p->id = $_GET['id'];
         $p->load();
-        $p->status = \ELib\Storage\ProductItemStatus::AVAILABLE;
+        $p->status = ProductItemStatus::AVAILABLE;
         $p->save(Model::getTable('ProductItem'), array(), 2);
         $this->c->redirect('storeadmin/product/'.$p->id);
     }
@@ -318,7 +325,7 @@ class Store
         $p = Model::load('ProductItem');
         $p->id = $_GET['id'];
         $p->load();
-        $p->status = \ELib\Storage\ProductItemStatus::CREATED;
+        $p->status = ProductItemStatus::CREATED;
         $p->save(Model::getTable('ProductItem'), array(), 2);
         $this->c->redirect('storeadmin/product/'.$p->id);
     }
@@ -328,7 +335,7 @@ class Store
         $p = Model::load('ProductItem');
         $p->id = $_GET['id'];
         $p->load();
-        $p->status = \ELib\Storage\ProductItemStatus::SOLD_OUT;
+        $p->status = ProductItemStatus::SOLD_OUT;
         $p->save(Model::getTable('ProductItem'), array(), 2);
         $this->c->redirect('storeadmin/product/'.$p->id);
     }
@@ -457,7 +464,7 @@ class Store
                 }
                 // update db
                 $p->image = $u->file;
-                $p->status = \ELib\Storage\ProductItemStatus::CREATED;
+                $p->status = ProductItemStatus::CREATED;
                 $p->save(Model::getTable('ProductItem'), array(), 2);
 
                 //$this->redirect_cgi('archive.cgi?id='.$p->id);
@@ -473,7 +480,7 @@ class Store
         $p = Model::load('ProductItem');
         $p->id = $_GET['id'];
         $p->load();
-        $p->status = \ELib\Storage\ProductItemStatus::DELETED;
+        $p->status = ProductItemStatus::DELETED;
         $p->save(Model::getTable('ProductItem'), array(), 2);
         $this->c->redirect('storeadmin/products');
     }
@@ -484,7 +491,7 @@ class Store
         $v = Model::load('ProductVariant');
         $v->id = $_GET['id'];
         $v->load();
-        $v->status = \ELib\Storage\ProductVariantStatus::DELETED;
+        $v->status = ProductVariantStatus::DELETED;
         $v->save(Model::getTable('ProductVariant'), array(), 2);
 
         $this->productAutoHide($v->product_id);
