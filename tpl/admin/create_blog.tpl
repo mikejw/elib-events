@@ -45,6 +45,10 @@
 </select>
 </p>
 <p>
+<label>Friendly URL 'Slug'</label>
+<input type="text" name="slug" value="{$blog->slug}" />
+</p>
+<p>
 <label>&nbsp;</label>
 <input type="hidden" name="id" value="{$blog->id}" />
 <!--<input type="submit" name="save" value="Save" />-->
