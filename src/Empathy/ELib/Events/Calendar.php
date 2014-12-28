@@ -41,6 +41,7 @@ class Calendar
 
             $index = sprintf("%02d", $start_month)
                 .sprintf("%02d", $start_day);
+            
             if (isset($events[$index])) {
                 $month[$i]['events'] = $events[$index];
             }
@@ -57,9 +58,12 @@ class Calendar
                 $start_day = 1;
                 $start_month++;
                 $leg++;
+
+                if ($start_month == 13) {
+                    $start_month = 1;
+                }
             }
         }
-
         return $month;
     }
 

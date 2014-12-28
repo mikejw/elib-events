@@ -2,11 +2,11 @@
 
 namespace Empathy\ELib\Events;
 
-use Empathy\ELib\AdminController,
-    Empathy\ELib\Model,
-    Empathy\ELib\DateTime,
-    Empathy\ELib\User\CurrentUser;
-
+use Empathy\ELib\AdminController;
+use Empathy\ELib\Model;
+use Empathy\ELib\DateTime;
+use Empathy\ELib\User\CurrentUser;
+use Empathy\MVC\Session;
 
 class Controller extends AdminController
 {
@@ -272,6 +272,11 @@ class Controller extends AdminController
 
     public function monthView()
     {
+        if (isset($_GET['today'])) {
+            Session::clear('ui_events');
+        }
+        $this->loadUIVars('ui_events', array('month'));
+
         $month = $this->filterInt('month');
         if (strlen($month) != 6) {
             $month = 0;
@@ -304,7 +309,7 @@ class Controller extends AdminController
         $date_next_month->adjustMonth(1);
 
         $e = Model::load('Event');
-        $events = $e->getEvents(false, $date_prev_month, $date_next_month);
+        $events = $e->getEvents(false, $date_prev_month, $date_next_month);      
 
         $month = $c->newBuildByMonth($date_prev_month->getDay(),
                                      $date_prev_month->getMonth(),
