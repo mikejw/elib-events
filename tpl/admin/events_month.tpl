@@ -49,7 +49,7 @@
 </div>
 
 
-<table id="month">
+<table id="month" class="table">
 <tr>
 <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
 </tr>
