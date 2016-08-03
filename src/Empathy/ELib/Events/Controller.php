@@ -37,6 +37,8 @@ class Controller extends AdminController
 
     public function edit_event()
     {
+        $this->setTemplate('elib://admin/edit_event.tpl');
+        
         $id = $this->filterInt('id');
 
         if (isset($_POST['submit'])) {
@@ -125,8 +127,7 @@ class Controller extends AdminController
             $e->end_minute = date('i', $end_time);
 
             $this->assign('event', $e);
-            $this->assignEventDefs();
-            $this->setTemplate('elib://admin/edit_event.tpl');
+            $this->assignEventDefs();           
         }
     }
 
