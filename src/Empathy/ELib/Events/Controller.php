@@ -231,7 +231,7 @@ class Controller extends AdminController
         $this->setTemplate('elib://admin/add_event.tpl');
     }
 
-    private function assignEventDefs()
+    protected function assignEventDefs()
     {
         $select_days = array();
         $i = 1;
