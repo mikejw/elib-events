@@ -318,7 +318,7 @@ class Controller extends AdminController
                                      $date_prev_month->getLastDay(),
                                      $date->getLastDay(),
                                      $events);
-
+        
         $this->assign('month', $date->getMonthText());
         $this->assign('year', $date->getYear());
         $this->assign('current_month', vsprintf("%02d", $date->getMonth()));

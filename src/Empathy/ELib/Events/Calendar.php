@@ -38,6 +38,7 @@ class Calendar
             $date = "$start_year:$start_month:$start_day 00:00:00";
             $month[$i]['date'] = $date;
             $month[$i]['day'] = $start_day;
+            $month[$i]['month'] = $start_month;
 
             $index = sprintf("%02d", $start_month)
                 .sprintf("%02d", $start_day);
