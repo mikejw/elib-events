@@ -11,7 +11,7 @@
 
 
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events" method="get">
-<div><button type="submit" name="today" value="1">Goto Today</button></div>
+<div><button class="btn btn-default" type="submit" name="today" value="1">Goto Today</button></div>
 </form>
 
 </div>
