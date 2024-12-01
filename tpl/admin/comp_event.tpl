@@ -90,8 +90,8 @@
 
 <p>
 <label>&nbsp;</label>
-<button type="submit" name="submit">Save</button>
-<button type="submit" name="cancel">Cancel</button>
+<button class="btn btn-default" type="submit" name="submit">Save</button>
+<button class="btn btn-default" type="submit" name="cancel">Cancel</button>
 </p>
 </form>
 </div>

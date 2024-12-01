@@ -11,7 +11,7 @@
 
 
 <form action="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events" method="get">
-<div><button type="submit" name="today" value="1">Goto Today</button></div>
+<div><button class="btn btn-default" type="submit" name="today" value="1">Goto Today</button></div>
 </form>
 
 </div>
@@ -49,7 +49,7 @@
 </div>
 
 
-<table id="month">
+<table id="month" class="table">
 <tr>
 <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
 </tr>
@@ -59,9 +59,13 @@
 
 
 <td{if $m.current_month eq true} class="current"{/if}>
+
+
 <div class="clear">
 <span class="day">{$m.day}</span>
-<span class="add"><a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/add_event/?date={$year}{$current_month}{$m.day|string_format:"%02d"}">+</a></span>
+<span class="add">
+    <a href="http://{$WEB_ROOT}{$PUBLIC_DIR}/admin/events/add_event/?date={$year}{$m.month|string_format:"%02d"}{$m.day|string_format:"%02d"}">+</a>
+</span>
 </div>
 {if isset($m.events)}
 {foreach from=$m.events item=e}
