@@ -51,15 +51,14 @@
 
 <table id="month" class="table">
 <tr>
-<th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
+<th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th class="bg-light">S</th><th class="bg-light">S</th>
 </tr>
 
 <tr>
+{counter start=0 assign="j"}
 {foreach from=$cal_month item=m key=i}
 
-
-<td{if $m.current_month eq true} class="current"{/if}>
-
+<td class="{if $m.current_month eq true}current{/if} {if ($i + 1 - $j) % 6 == 0 or ($i + 1) % 7 == 0}bg-light{/if}">
 
 <div class="clear">
 <span class="day">{$m.day}</span>
@@ -75,6 +74,7 @@
 </td>
 
 {if ($i+1) % 7 == 0 && $i < 35}
+    {counter}
 </tr><tr>
 {/if}
 
