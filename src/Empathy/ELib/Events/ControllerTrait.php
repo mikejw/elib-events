@@ -28,8 +28,7 @@ trait ControllerTrait
     {
         $id = $this->filterInt('id');
         $e = Model::load('Event');
-        $e->id = $id;
-        $e->load();
+        $e->load($id);
         $this->assign('event', $e);
         $this->setTemplate('elib://admin/view_event.tpl');
     }
@@ -58,8 +57,7 @@ trait ControllerTrait
             $end = new DateTime($time);
 
             $e = Model::load('Event');
-            $e->id = $id;
-            $e->load();
+            $e->load($id);
 
             if (!$start->getValid()) {
                 $e->addValError('invalid start date', 'start_time');
@@ -100,15 +98,14 @@ trait ControllerTrait
                 $this->assign('event', $e);
                 $this->assign('errors', $e->getValErrors());
             } else {
-                $e->save(Model::getTable('Event'), array(), 1);
+                $e->save();
                 $this->redirect('admin/events');
             }
         } elseif (isset($_POST['cancel'])) {
             $this->redirect('admin/events/view_event/'.$id);
         } else {
             $e = Model::load('Event');
-            $e->id = $id;
-            $e->load();
+            $e->load($id);
 
             $start_time = strtotime($e->start_time);
             $end_time = strtotime($e->end_time);
@@ -191,7 +188,7 @@ trait ControllerTrait
                 $this->assign('event', $e);
                 $this->assign('errors', $e->getValErrors());
             } else {
-                $e->insert(Model::getTable('Event'), 1, array(), 1);
+                $e->insert();
                 $this->redirect('admin/events');
             }
         } elseif (isset($_POST['cancel'])) {
