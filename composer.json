@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1"
+        "mikejw/elib-base": "^1",
     },
     "autoload": {
         "psr-0": {
