@@ -2,11 +2,11 @@
 
 namespace Empathy\ELib\Storage;
 
-use Empathy\ELib\Model,
-    Empathy\ELib\Events\Status,
-    Empathy\MVC\Entity,
-    Empathy\MVC\Validate;
-
+use Empathy\MVC\Model;
+use Empathy\ELib\Events\Status;
+use Empathy\MVC\Entity;
+use Empathy\MVC\Validate;
+use Empathy\ELib\Storage\Event as EEvent;
 
 
 class Event extends Entity
@@ -41,7 +41,7 @@ class Event extends Entity
             $select = 'DAYOFMONTH(start_time) AS dom, event_name, MONTH(start_time) AS month, id';
         }
 
-        $sql = 'SELECT '.$select.' FROM '.Model::getTable('Event')
+        $sql = 'SELECT '.$select.' FROM '.Model::getTable(EEvent::class)
             .' WHERE start_time > ?';
         $params[] = $start_date->getMySQLTime();
 

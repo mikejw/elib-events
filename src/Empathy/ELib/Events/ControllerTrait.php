@@ -2,10 +2,12 @@
 
 namespace Empathy\ELib\Events;
 
-use Empathy\ELib\Model;
+
+use Empathy\MVC\Model;
 use Empathy\ELib\DateTime;
-use Empathy\ELib\User\CurrentUser;
 use Empathy\MVC\Session;
+use Empathy\ELib\Storage\Event;
+use Empathy\MVC\DI;
 
 trait ControllerTrait 
 {
@@ -27,7 +29,7 @@ trait ControllerTrait
     public function view_event()
     {
         $id = $this->filterInt('id');
-        $e = Model::load('Event');
+        $e = Model::load(Event::class);
         $e->load($id);
         $this->assign('event', $e);
         $this->setTemplate('elib://admin/view_event.tpl');
@@ -56,7 +58,7 @@ trait ControllerTrait
                 'second' => 0);
             $end = new DateTime($time);
 
-            $e = Model::load('Event');
+            $e = Model::load(Event::class);
             $e->load($id);
 
             if (!$start->getValid()) {
@@ -66,7 +68,7 @@ trait ControllerTrait
                 $e->addValError('invalid end date', 'end_time');
             }
 
-            $e->user_id = CurrentUser::getUserID();
+            $e->user_id = DI::getContainer()->get('CurrentUser')->getUserID();
             $e->start_time = $start->getMySQLTime();
             $e->end_time = $end->getMySQLTime();
 
@@ -104,7 +106,7 @@ trait ControllerTrait
         } elseif (isset($_POST['cancel'])) {
             $this->redirect('admin/events/view_event/'.$id);
         } else {
-            $e = Model::load('Event');
+            $e = Model::load(Event::class);
             $e->load($id);
 
             $start_time = strtotime($e->start_time);
@@ -147,7 +149,7 @@ trait ControllerTrait
                 'second' => 0);
             $end = new DateTime($time);
 
-            $e = Model::load('Event');
+            $e = Model::load(Event::class);
 
             if (!$start->getValid()) {
                 $e->addValError('invalid start date', 'start_time');
@@ -156,7 +158,7 @@ trait ControllerTrait
                 $e->addValError('invalid end date', 'end_time');
             }
 
-            $e->user_id = CurrentUser::getUserID();
+            $e->user_id = DI::getContainer()->get('CurrentUser')->getUserID();
             $e->start_time = $start->getMySQLTime();
             $e->end_time = $end->getMySQLTime();
 
@@ -194,7 +196,7 @@ trait ControllerTrait
         } elseif (isset($_POST['cancel'])) {
             $this->redirect('admin/events');
         } else {
-            $e = Model::load('Event'); // default (mostly empty) event
+            $e = Model::load(Event::class); // default (mostly empty) event
 
             $date = $this->filterInt('date');
             if (strlen($date) != 8) {
@@ -305,7 +307,7 @@ trait ControllerTrait
         $date_next_month = clone $date;
         $date_next_month->adjustMonth(1);
 
-        $e = Model::load('Event');
+        $e = Model::load(Event::class);
         $events = $e->getEvents(false, $date_prev_month, $date_next_month);
 
         $month = $c->newBuildByMonth($date_prev_month->getDay(),
