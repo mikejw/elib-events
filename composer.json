@@ -9,12 +9,12 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Mike Whiting",
+            "name": "Michael J. Whiting",
             "email": "mikejw3@gmail.com"
         }
     ],
     "require": {
-        "php": ">=8.1"
+        "mikejw/elib-base": "^3"
     },
     "autoload": {
         "psr-0": {

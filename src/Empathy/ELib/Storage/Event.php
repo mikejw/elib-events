@@ -2,11 +2,11 @@
 
 namespace Empathy\ELib\Storage;
 
-use Empathy\ELib\Model,
-    Empathy\ELib\Events\Status,
-    Empathy\MVC\Entity,
-    Empathy\MVC\Validate;
-
+use Empathy\MVC\Model;
+use Empathy\ELib\Events\Status;
+use Empathy\MVC\Entity;
+use Empathy\MVC\Validate;
+use Empathy\ELib\Storage\Event as EEvent;
 
 
 class Event extends Entity
@@ -33,25 +33,27 @@ class Event extends Entity
 
     public function getEvents($full, $start_date, $end_date = null)
     {
-        $events = array();
-
+        $events = [];
+        $params = [];
         if ($full) {
             $select = '*';
         } else {
             $select = 'DAYOFMONTH(start_time) AS dom, event_name, MONTH(start_time) AS month, id';
         }
 
-        $sql = 'SELECT '.$select.' FROM '.Model::getTable('Event')
-            .' WHERE start_time > \''.$start_date->getMySQLTime().'\'';
+        $sql = 'SELECT '.$select.' FROM '.Model::getTable(EEvent::class)
+            .' WHERE start_time > ?';
+        $params[] = $start_date->getMySQLTime();
 
         if ($end_date !== null) {
-            $sql .= ' AND start_time < \''.$end_date->getMySQLTime().'\'';
+            $sql .= ' AND start_time < ?';
+            $params[] = $end_date->getMySQLTime();
         }
 
         $sql .= ' AND status != '.Status::DELETED;
         $sql .= ' ORDER BY start_time';
         $error = 'Could not get events.';
-        $result = $this->query($sql, $error);
+        $result = $this->query($sql, $error, $params);
 
         if ($full) {
             foreach ($result as $row) {
