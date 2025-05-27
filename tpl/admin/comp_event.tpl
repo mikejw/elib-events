@@ -25,21 +25,21 @@
         
         <select
           name="start_day"
-          class="col-sm-3 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_days selected=$event->getStartDay()}
         </select>
         
         <select
            name="start_month"
-           class="col-sm-3 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
+           class="col-sm-2 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_months selected=$event->getStartMonth()}
         </select>
 
         <select
           name="start_year"
-          class="col-sm-3 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_years selected=$event->getStartYear()}
         </select>
@@ -51,14 +51,14 @@
         
         <select
           name="start_hour"
-          class="col-sm-3 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_hours selected=$event->getStartHour()}
         </select>
         
         <select
            name="start_minute"
-           class="col-sm-3 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
+           class="col-sm-2 form-control {if isset($errors.start_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_minutes selected=$event->getStartMinute()}
         </select>
@@ -76,21 +76,21 @@
         
         <select
           name="end_day"
-          class="col-sm-3 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
            {html_options options=$select_days selected=$event->getEndDay()}
         </select>
         
         <select
            name="end_month"
-           class="col-sm-3 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
+           class="col-sm-2 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_months selected=$event->getEndMonth()}
         </select>
 
         <select
           name="end_year"
-          class="col-sm-3 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_years selected=$event->getEndYear()}
         </select>
@@ -102,14 +102,14 @@
         
         <select
           name="end_hour"
-          class="col-sm-3 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
+          class="col-sm-2 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
                 {html_options options=$select_hours selected=$event->getEndHour()}
             </select>
         
         <select
            name="end_minute"
-           class="col-sm-3 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
+           class="col-sm-2 form-control {if isset($errors.end_time)}is-invalid{elseif $submitted}is-valid{/if}"
         >
             {html_options options=$select_minutes selected=$event->getEndMinute()}
         </select>
@@ -127,7 +127,7 @@
         <label for="short_desc">Short Description</label>
         <textarea
                 name="short_desc"
-                class="form-control raw {if isset($errors.short_desc)}is-invalid{elseif $submitted}is-valid{/if}"
+                class="form-control {if isset($errors.short_desc)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="short_desc"
                 rows="10"
                 placeholder="Type your short description here&hellip;"
@@ -143,7 +143,7 @@
         <label for="long_desc">Long Description</label>
         <textarea
                 name="long_desc"
-                class="form-control raw {if isset($errors.long_desc)}is-invalid{elseif $submitted}is-valid{/if}"
+                class="form-control {if isset($errors.long_desc)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="long_desc"
                 rows="10"
                 placeholder="Type your long description here&hellip;"
@@ -163,7 +163,7 @@
                 type="text"
                 class="form-control {if isset($errors.event_link)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="event_link"
-                placeholder="https://www.facebook.com/..."
+                placeholder="URL&hellip;"
                 value="{if $event->event_link neq ''}{$event->event_link}{else}{$event->event_link}{/if}"
         >
         {if isset($errors.event_link)}
@@ -181,7 +181,7 @@
                 type="text"
                 class="form-control {if isset($errors.tickets_link)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="tickets_link"
-                placeholder=""
+                placeholder="URL&hellip;"
                 value="{if $event->tickets_link neq ''}{$event->tickets_link}{else}{$event->tickets_link}{/if}"
         >
         {if isset($errors.tickets_link)}
