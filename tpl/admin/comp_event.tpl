@@ -130,7 +130,7 @@
                 class="form-control {if isset($errors.short_desc)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="short_desc"
                 rows="10"
-                placeholder="Type your short description here&hellip;"
+                placeholder="Type your short description here&hellip; (Optional)"
         >{$event->short_desc}</textarea>
         {if isset($errors.short_desc)}
             <div class="invalid-feedback">
@@ -146,7 +146,7 @@
                 class="form-control {if isset($errors.long_desc)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="long_desc"
                 rows="10"
-                placeholder="Type your long description here&hellip;"
+                placeholder="Type your long description here&hellip; (Optional)"
         >{$event->long_desc}</textarea>
         {if isset($errors.long_desc)}
             <div class="invalid-feedback">
@@ -163,7 +163,7 @@
                 type="text"
                 class="form-control {if isset($errors.event_link)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="event_link"
-                placeholder="URL&hellip;"
+                placeholder="URL&hellip; (Optional)"
                 value="{if $event->event_link neq ''}{$event->event_link}{else}{$event->event_link}{/if}"
         >
         {if isset($errors.event_link)}
@@ -181,7 +181,7 @@
                 type="text"
                 class="form-control {if isset($errors.tickets_link)}is-invalid{elseif $submitted}is-valid{/if}"
                 id="tickets_link"
-                placeholder="URL&hellip;"
+                placeholder="URL&hellip; (Optional)"
                 value="{if $event->tickets_link neq ''}{$event->tickets_link}{else}{$event->tickets_link}{/if}"
         >
         {if isset($errors.tickets_link)}
