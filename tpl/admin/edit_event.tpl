@@ -1,4 +1,4 @@
-{include file="elib:/admin/admin_header.tpl"}
+{include file="elib:admin/admin_header.tpl"}
 
 
 <div class="grey_top">
@@ -9,7 +9,7 @@
 
 <div class="grey clear">
 
-{include file="elib://admin/comp_event.tpl"}
+{include file="elib:admin/comp_event.tpl"}
 
 
 </div>
@@ -22,4 +22,4 @@
 
 
 
-{include file="elib:/admin/admin_footer.tpl"}
+{include file="elib:admin/admin_footer.tpl"}

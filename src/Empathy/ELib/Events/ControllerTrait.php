@@ -32,12 +32,12 @@ trait ControllerTrait
         $e = Model::load(Event::class);
         $e->load($id);
         $this->assign('event', $e);
-        $this->setTemplate('elib://admin/view_event.tpl');
+        $this->setTemplate('elib:admin/view_event.tpl');
     }
 
     public function edit_event()
     {
-        $this->setTemplate('elib://admin/edit_event.tpl');
+        $this->setTemplate('elib:admin/edit_event.tpl');
 
         $id = $this->filterInt('id');
 
@@ -85,19 +85,23 @@ trait ControllerTrait
 
             $e->validates();
             if ($e->hasValErrors()) {
-                $e->start_day = $_POST['start_day'];
-                $e->start_month = $_POST['start_month'];
-                $e->start_year = $_POST['start_year'];
-                $e->start_hour = $_POST['start_hour'];
-                $e->start_minute = $_POST['start_minute'];
+                $start = $start->getTime();
+                $end = $end->getTime();
 
-                $e->end_day = $_POST['end_day'];
-                $e->end_month = $_POST['end_month'];
-                $e->end_year = $_POST['end_year'];
-                $e->end_hour = $_POST['end_hour'];
-                $e->end_minute = $_POST['end_minute'];
+                $e->setStartDay(date('d', $start));
+                $e->setStartMonth(date('m', $start) - 1);
+                $e->setStartYear(date('Y', $start));
+                $e->setStartHour(date('H', $start));
+                $e->setStartMinute(date('i', $start));
+
+                $e->setEndDay(date('d', $end));
+                $e->setEndMonth(date('m', $end) - 1);
+                $e->setEndYear(date('Y', $end));
+                $e->setEndHour(date('H', $end));
+                $e->setEndMinute(date('i', $end));
 
                 $this->assign('event', $e);
+                $this->assignEventDefs();
                 $this->assign('errors', $e->getValErrors());
             } else {
                 $e->save();
@@ -110,19 +114,20 @@ trait ControllerTrait
             $e->load($id);
 
             $start_time = strtotime($e->start_time);
+
             $end_time = strtotime($e->end_time);
 
-            $e->start_day = date('d', $start_time);
-            $e->start_month = date('m', $start_time) - 1;
-            $e->start_year = date('Y', $start_time);
-            $e->start_hour = date('H', $start_time);
-            $e->start_minute = date('i', $start_time);
+            $e->setStartDay(date('d', $start_time));
+            $e->setStartMonth(date('m', $start_time) - 1);
+            $e->setStartYear(date('Y', $start_time));
+            $e->setStartHour(date('H', $start_time));
+            $e->setStartMinute(date('i', $start_time));
 
-            $e->end_day = date('d', $end_time);
-            $e->end_month = date('m', $end_time) - 1;
-            $e->end_year = date('Y', $end_time);
-            $e->end_hour = date('H', $end_time);
-            $e->end_minute = date('i', $end_time);
+            $e->setEndDay(date('d', $end_time));
+            $e->setEndMonth(date('m', $end_time) - 1);
+            $e->setEndYear(date('Y', $end_time));
+            $e->setEndHour(date('H', $end_time));
+            $e->setEndMinute(date('i', $end_time));
 
             $this->assign('event', $e);
             $this->assignEventDefs();
@@ -175,17 +180,16 @@ trait ControllerTrait
 
             $e->validates();
             if ($e->hasValErrors()) {
-                $e->start_day = $_POST['start_day'];
-                $e->start_month = $_POST['start_month'];
-                $e->start_year = $_POST['start_year'];
-                $e->start_hour = $_POST['start_hour'];
-                $e->start_minute = $_POST['start_minute'];
-
-                $e->end_day = $_POST['end_day'];
-                $e->end_month = $_POST['end_month'];
-                $e->end_year = $_POST['end_year'];
-                $e->end_hour = $_POST['end_hour'];
-                $e->end_minute = $_POST['end_minute'];
+                $e->setStartDay($_POST['start_day']);
+                $e->setStartMonth($_POST['start_month']);
+                $e->setStartYear($_POST['start_year']);
+                $e->setStartHour($_POST['start_hour']);
+                $e->setStartMinute($_POST['start_minute']);
+                $e->setEndDay($_POST['end_day']);
+                $e->setEndMonth($_POST['end_month']);
+                $e->setEndYear($_POST['end_year']);
+                $e->setEndHour($_POST['end_hour']);
+                $e->setEndMinute($_POST['end_minute']);
 
                 $this->assign('event', $e);
                 $this->assign('errors', $e->getValErrors());
@@ -209,24 +213,24 @@ trait ControllerTrait
                 $time = mktime(0, 0, 0, $m,
                     $d, $y);
 
-                $e->start_day = $d;
-                $e->start_month = $m - 1;
-                $e->start_year = $y;
-                $e->start_hour = 20;
-                $e->start_minute = 0;
+                $e->setStartDay($d);
+                $e->setStartMonth($m - 1);
+                $e->setStartYear($y);
+                $e->setStartHour(20);
+                $e->setStartMinute(0);
 
-                $e->end_day = $d;
-                $e->end_month = $m - 1;
-                $e->end_year = $y;
-                $e->end_hour = 20;
-                $e->end_minute = 0;
+                $e->setEndDay($d);
+                $e->setEndMonth($m - 1);
+                $e->setEndYear($y);
+                $e->setEndHour(20);
+                $e->setEndMinute(0);
                 $this->assign('event', $e);
             }
 
         }
 
         $this->assignEventDefs();
-        $this->setTemplate('elib://admin/add_event.tpl');
+        $this->setTemplate('elib:admin/add_event.tpl');
     }
 
     protected function assignEventDefs()
@@ -251,14 +255,14 @@ trait ControllerTrait
         $select_hours = array();
         $i = 0;
         while ($i < 24) {
-            $select_hours[$i] = sprintf("%02d", $i);
+            $select_hours[$i] = sprintf('%02d', $i);
             $i++;
         }
 
         $select_minutes = array();
         $i = 0;
         while ($i < 60) {
-            $select_minutes[$i] = sprintf("%02d", $i);
+            $select_minutes[sprintf('%02d', $i)] = sprintf('%02d', $i);
             $i += 5;
         }
 
@@ -343,7 +347,7 @@ trait ControllerTrait
         $this->assign('prev_year_link', $prev_year_link);
         $this->assign('next_year_link', $next_year_link);
 
-        $this->setTemplate('elib://admin/events_month.tpl');
+        $this->setTemplate('elib:admin/events_month.tpl');
     }
 
 }
