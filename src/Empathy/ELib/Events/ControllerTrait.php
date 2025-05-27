@@ -12,6 +12,14 @@ use Empathy\MVC\DI;
 trait ControllerTrait 
 {
 
+    private function trimUrl($url) {
+        $trimmed = preg_replace('/^https?:\/\//', '', $url);
+        return [
+            $trimmed,
+            $url !== '' ? 'https://' . $trimmed : ''
+        ];
+    }
+
     public function filterInt($name)
     {
         if (isset($_GET[$name])) {
@@ -79,12 +87,19 @@ trait ControllerTrait
             $e->event_name = $_POST['event_name'];
             $e->short_desc = $_POST['short_desc'];
             $e->long_desc = $_POST['long_desc'];
-            $e->tickets_link = $_POST['tickets_link'];
-            $e->event_link = $_POST['event_link'];
+
+            $tickets_link = $this->trimUrl($_POST['tickets_link']);
+            $e->tickets_link = $tickets_link[1];
+
+            $event_link = $this->trimUrl($_POST['event_link']);
+            $e->event_link = $event_link[1];
+            
             $e->status = 'DEFAULT';
 
             $e->validates();
             if ($e->hasValErrors()) {
+                $e->tickets_link = $tickets_link[0];
+                $e->event_link = $event_link[0];
                 $start = $start->getTime();
                 $end = $end->getTime();
 
@@ -174,12 +189,20 @@ trait ControllerTrait
             $e->event_name = $_POST['event_name'];
             $e->short_desc = $_POST['short_desc'];
             $e->long_desc = $_POST['long_desc'];
-            $e->tickets_link = $_POST['tickets_link'];
-            $e->event_link = $_POST['event_link'];
+
+            $tickets_link = $this->trimUrl($_POST['tickets_link']);
+            $e->tickets_link = $tickets_link[1];
+
+            $event_link = $this->trimUrl($_POST['event_link']);
+            $e->event_link = $event_link[1];
+
             $e->status = 'DEFAULT';
 
             $e->validates();
             if ($e->hasValErrors()) {
+
+                $e->tickets_link = $tickets_link[0];
+                $e->event_link = $event_link[0];
                 $e->setStartDay($_POST['start_day']);
                 $e->setStartMonth($_POST['start_month']);
                 $e->setStartYear($_POST['start_year']);
@@ -222,7 +245,7 @@ trait ControllerTrait
                 $e->setEndDay($d);
                 $e->setEndMonth($m - 1);
                 $e->setEndYear($y);
-                $e->setEndHour(20);
+                $e->setEndHour(21);
                 $e->setEndMinute(0);
                 $this->assign('event', $e);
             }
@@ -255,7 +278,7 @@ trait ControllerTrait
         $select_hours = array();
         $i = 0;
         while ($i < 24) {
-            $select_hours[$i] = sprintf('%02d', $i);
+            $select_hours[sprintf('%02d', $i)] = sprintf('%02d', $i);
             $i++;
         }
 
